@@ -85,6 +85,8 @@ You might find that it fails at one point or another. This is probably because s
 
 h2. How I Use It
 
+First, I moved all my email off Google with "larch":https://github.com/rgrove/larch/. It worked like a charm. Calendars and contacts were even easier: just export and then import the standard formats with your clients of choice; no issues with Calendar.app and Contacts.app.
+
 I use this setup from my Mac like this:
 
 * I read email in "Airmail":https://itunes.apple.com/us/app/airmail/id573171375?mt=12.
