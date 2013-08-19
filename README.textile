@@ -63,7 +63,7 @@ This does a lot for you automatically but there's still some stuff you have to d
 # Put your SSL certificate's components in the respective files that start with @wildcard_ca@ in @roles/common/files@, and a combined version in @roles/ircbouncer/files/etc_ssl_znc-combined.pem@.
 # You should probably disable remote root login and password-based logins in @/etc/ssh/sshd_config@ but that's up to you.
 
-Now, the time-consuming part: grep through the files for the string `TODO` and replace as necessary. You'll probably want to check out all the files in the respective `vars/` sub-directories in each playbook directory.
+Now, the time-consuming part: grep through the files for the string @TODO@ and replace as necessary. You'll probably want to check out all the files in the respective @vars/@ sub-directories in each playbook directory.
 
 h2. Running It
 
