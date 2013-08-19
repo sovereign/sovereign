@@ -1,6 +1,6 @@
 h1. Introduction
 
-Sovereign is a set of "Ansible":http://ansibleworks.com playbooks that you can use to build and maintain your own *wince* "personal cloud":http://www.urbandictionary.com/define.php?term=clown%20computing. It's based entirely on open source software, so you're in control.
+Sovereign is a set of "Ansible":http://ansibleworks.com playbooks that you can use to build and maintain your own "personal cloud":http://www.urbandictionary.com/define.php?term=clown%20computing (I know I know). It's based entirely on open source software, so you're in control.
 
 If you've never used Ansible before, you a) are in for a treat and b) might find these playbooks useful to learn from, since they show off a fair bit of what the tool can do.
 
@@ -40,7 +40,7 @@ What do you get if you point this thing at a VPS? All kinds of good stuff!
 * Nightly backups to "Tarsnap":https://www.tarsnap.com/.
 * A bunch of nice-to-have tools like "mosh":http://mosh.mit.edu and "htop":http://htop.sourceforge.net that make life with a server a little easier.
 
-No setup is perfect, but the general idea is to provide a bunch of useful services while being reasonably secure and low-maintainance. Set it up, SSH in every couple weeks, but mostly forget about it.
+No setup is perfect, but the general idea is to provide a bunch of useful services while being reasonably secure and low-maintenance. Set it up, SSH in every couple weeks, but mostly forget about it.
 
 Don't want one or more of the above services? Comment out the relevant role in `site.yml`. Or get more granular and comment out the associated `include:` directive in one of the playbooks.
 
@@ -49,7 +49,7 @@ h1. Usage
 h2. What You'll Need
 
 # A VPS (or bare-metal server if you wanna ball hard). My VPS is hosted at "Linode":http://www.linode.com/?r=45405878277aa04ee1f1d21394285da6b43f963b. You'll probably want at least 512 MB of RAM between Apache, Solr, and MySQL. Mine has 1024.
-# "Debian 7":http://www.debian.org/News/2013/20130504 or an equivalent Linux distribution. (You can use whatever distro you want, but deviating from Debian will require more tweaks to the playbooks.)
+# "Debian 7":http://www.debian.org/News/2013/20130504 or an equivalent Linux distribution. (You can use whatever distro you want, but deviating from Debian will require more tweaks to the playbooks. See Ansible's different "packaging":http://www.ansibleworks.com/docs/modules.html#packaging modules.)
 # A wildcard SSL certificate. I bought one. You could self-sign if you wanna save money.
 # A "Tarsnap":http://www.tarsnap.com account with some credit in it. You could comment this out if you want to use a different backup service. I pay for backups at Linode in addition to the Tarsnap nightlies because you can never be too sure.
 
@@ -71,11 +71,11 @@ First, make sure you've "got Ansible installed":http://ansibleworks.com/docs/get
 
 To run the whole dang thing:
 
-  ansible-playbook -i ./hosts site.yml
+    ansible-playbook -i ./hosts site.yml
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
-  ansible-playbook -i ./hosts --tags=ferm site.yml
+    ansible-playbook -i ./hosts --tags=ferm site.yml
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary. OpenVPN in particular requires a bunch of manual command line stuff to get running.
 
