@@ -42,7 +42,7 @@ What do you get if you point this thing at a VPS? All kinds of good stuff!
 
 No setup is perfect, but the general idea is to provide a bunch of useful services while being reasonably secure and low-maintenance. Set it up, SSH in every couple weeks, but mostly forget about it.
 
-Don't want one or more of the above services? Comment out the relevant role in `site.yml`. Or get more granular and comment out the associated `include:` directive in one of the playbooks.
+Don't want one or more of the above services? Comment out the relevant role in @site.yml@. Or get more granular and comment out the associated @include:@ directive in one of the playbooks.
 
 h1. Usage
 
