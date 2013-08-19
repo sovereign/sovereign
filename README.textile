@@ -59,9 +59,9 @@ This does a lot for you automatically but there's still some stuff you have to d
 
 # Set up EncFS as per "these instructions":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/.
 # Create a user account for Ansible to do its thing through. This account should be set up for passwordless sudo.
-# Put your Tarsnap key in `roles/common/files/root_tarsnap.key`.
-# Put your SSL certificate's components in the respective files that start with `wildcard_ca` in `roles/common/files`, and a combined version in `roles/ircbouncer/files/etc_ssl_znc-combined.pem`.
-# You should probably disable remote root login and password-based logins in `/etc/ssh/sshd_config` but that's up to you.
+# Put your Tarsnap key in @roles/common/files/root_tarsnap.key@.
+# Put your SSL certificate's components in the respective files that start with @wildcard_ca@ in @roles/common/files@, and a combined version in @roles/ircbouncer/files/etc_ssl_znc-combined.pem@.
+# You should probably disable remote root login and password-based logins in @/etc/ssh/sshd_config@ but that's up to you.
 
 Now, the time-consuming part: grep through the files for the string `TODO` and replace as necessary. You'll probably want to check out all the files in the respective `vars/` sub-directories in each playbook directory.
 
@@ -71,11 +71,11 @@ First, make sure you've "got Ansible installed":http://ansibleworks.com/docs/get
 
 To run the whole dang thing:
 
-    ansible-playbook -i ./hosts site.yml
+bc. ansible-playbook -i ./hosts site.yml
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
-    ansible-playbook -i ./hosts --tags=ferm site.yml
+bc. ansible-playbook -i ./hosts --tags=ferm site.yml
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary. OpenVPN in particular requires a bunch of manual command line stuff to get running.
 
