@@ -63,7 +63,7 @@ This does a lot for you automatically but there's still some stuff you have to d
 # Create a user account for Ansible to do its thing through. This account should be set up for passwordless sudo.
 # Put your Tarsnap key in @roles/common/files/root_tarsnap.key@.
 # Put your SSL certificate's components in the respective files that start with @wildcard_ca@ in @roles/common/files@, and a combined version in @roles/ircbouncer/files/etc_ssl_znc-combined.pem@.
-# Set up SPF and reverse DNS "as per the inspirational post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to @check-auth@verifier.port25.com@ and reviewing the report that will be emailed back to you.
+# Set up SPF and reverse DNS "as per the inspirational post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 # Sign in to the ZNC web interface and set things up to your liking.
 # You should probably disable remote root login and password-based logins in @/etc/ssh/sshd_config@ but that's up to you.
 
