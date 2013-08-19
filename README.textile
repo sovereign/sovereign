@@ -13,11 +13,13 @@ I had been a paying Google Apps customer for personal and corporate use since th
 # A "lack of long-term commitment to products":http://www.quora.com/Google-Products/What-are-all-the-Google-products-that-have-been-shut-down.
 # Development of Google+: a cynical and "unimaginative Facebook ripoff":http://gigaom.com/2012/03/15/google-plus-the-problem-isnt-design-its-a-lack-of-demand/ that's "intruding into progressively more Google products":http://bits.blogs.nytimes.com/2012/03/06/google-defending-google-plus-shares-usage-numbers/?_r=0.
 
-To each her/his own, but personally I saw little reason to continue participating in the Google ecosystem. It had been years since I last ran my own server for email and such, but it's only gotten cheaper and easier to do so.
+To each her/his own, but personally I saw little reason to continue participating in the Google ecosystem. It had been years since I last ran my own server for email and such, but it's only gotten cheaper and easier to do so. Plus, none of the commercial alternatives I looked at provided all the services I was looking for.
 
 Rather than writing up a long and hard-to-follow set of instructions, I decided to share my server setup in a format that you can more or less just clone, configure, and run. Ansible seemed like the most appropriate way to do that: it's simple, straightforward, and easy to pick up.
 
 I've been using this setup for about a month now and it's been great. It's also replaced a couple of non-Google services I used, saving me money and making me feel like I've got a little more privacy.
+
+The backbone of this was inspired by "this post by Drew Crawford":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Unlike him, my goal is not "NSA-proofing" my email, just providing a reasonable alternative to Google Apps that isn't wildly insecure. My view is that if the NSA or any other motivated party really wants to pwn me, they're gonna, simple as that, no matter where I host my email.
 
 h2. Services Provided
 
@@ -61,6 +63,8 @@ This does a lot for you automatically but there's still some stuff you have to d
 # Create a user account for Ansible to do its thing through. This account should be set up for passwordless sudo.
 # Put your Tarsnap key in @roles/common/files/root_tarsnap.key@.
 # Put your SSL certificate's components in the respective files that start with @wildcard_ca@ in @roles/common/files@, and a combined version in @roles/ircbouncer/files/etc_ssl_znc-combined.pem@.
+# Set up SPF and reverse DNS "as per the inspirational post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to @check-auth@verifier.port25.com@ and reviewing the report that will be emailed back to you.
+# Sign in to the ZNC web interface and set things up to your liking.
 # You should probably disable remote root login and password-based logins in @/etc/ssh/sshd_config@ but that's up to you.
 
 Now, the time-consuming part: grep through the files for the string @TODO@ and replace as necessary. You'll probably want to check out all the files in the respective @vars/@ sub-directories in each playbook directory.
