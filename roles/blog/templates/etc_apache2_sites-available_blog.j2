@@ -1,0 +1,26 @@
+NameVirtualHost *:80
+
+<VirtualHost *:80>
+    ServerName {{ blog_domain }}
+    ServerAlias www.{{ blog_domain }}
+
+    Redirect / https://{{ blog_domain }}/
+</VirtualHost>
+
+NameVirtualHost *:443
+
+<VirtualHost *:443>
+    ServerName {{ blog_domain }}
+    ServerAlias www.{{ blog_domain }}
+
+    SSLEngine on
+    SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+
+    SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
+    SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
+    SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
+
+    DocumentRoot            "/var/www/{{ blog_domain }}"
+    DirectoryIndex          index.html
+    HostnameLookups         Off
+</VirtualHost>

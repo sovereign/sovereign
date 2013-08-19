@@ -1,0 +1,27 @@
+- name: Install Postfix and related packages
+  apt: pkg=$item state=installed
+  with_items:
+    - postfix
+    - mysql-server
+    - postfix-mysql
+    - python-mysqldb
+    - libsasl2-modules
+    - sasl2-bin
+    - postgrey
+
+- name: Create database user for mail server
+  mysql_user: user={{ mail_mysql_username }} password={{ mail_mysql_password }} state=present priv="mailserver.*:ALL"
+
+- name: Create database for mail server
+  mysql_db: name={{ mail_mysql_database }} state=present
+
+  # i don't know why this import is failing but it is, so did this manually
+  # mysql_db: name={{ mail_mysql_database }} state=import target=templates/mailserver.sql.j2
+
+- name: Copy Postfix config files into place
+  template: src=etc_postfix_main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root
+- copy: src=etc_postfix_master.cf dest=/etc/postfix/master.cf owner=root group=root
+- template: src=etc_postfix_mysql-virtual-mailbox-domains.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-domains.cf owner=root group=root
+- template: src=etc_postfix_mysql-virtual-mailbox-maps.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-maps.cf owner=root group=root
+- template: src=etc_postfix_mysql-virtual-alias-maps.cf.j2 dest=/etc/postfix/mysql-virtual-alias-maps.cf owner=root group=root
+  notify: restart postfix

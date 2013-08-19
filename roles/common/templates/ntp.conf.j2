@@ -1,0 +1,49 @@
+# /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
+
+driftfile /var/lib/ntp/ntp.drift
+
+# Enable this if you want statistics to be logged.
+#statsdir /var/log/ntpstats/
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+# Use servers from the NTP Pool Project
+server 0.north-america.pool.ntp.org
+server 1.north-america.pool.ntp.org
+server 2.north-america.pool.ntp.org
+server 3.north-america.pool.ntp.org
+
+# fallback
+server tick.usno.navy.mil
+
+# Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
+# details.  The web page <http://support.ntp.org/bin/view/Support/AccessRestrictions>
+# might also be helpful.
+#
+# Note that "restrict" applies to both servers and clients, so a configuration
+# that might be intended to block requests from certain clients could also end
+# up blocking replies from your own upstream servers.
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Clients from this (example!) subnet have unlimited access, but only if
+# cryptographically authenticated.
+#restrict 192.168.123.0 mask 255.255.255.0 notrust
+
+# If you want to provide time to your local subnet, change the next line.
+# (Again, the address is an example only.)
+#broadcast 192.168.123.255
+
+# If you want to listen to time broadcasts on your local subnet, de-comment the
+# next lines.  Please do this only if you trust everybody on the network!
+#disable auth
+#broadcastclient

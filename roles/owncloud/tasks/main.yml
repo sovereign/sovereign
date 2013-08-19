@@ -1,0 +1,3 @@
+---
+
+- include: owncloud.yml tags=owncloud

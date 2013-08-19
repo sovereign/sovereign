@@ -1,0 +1,6 @@
+check process dovecot with pidfile /var/run/dovecot/master.pid
+  group mail
+  start program = "/etc/init.d/dovecot start"
+  stop program = "/etc/init.d/dovecot stop"
+  if failed port 993 type tcpssl sslauto protocol imap for 5 cycles then restart
+  if 3 restarts within 5 cycles then timeout

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+For fts-solr:
+
+This is the Solr schema file, place it into solr/conf/schema.xml. You may
+want to modify the tokenizers and filters.
+-->
+<schema name="dovecot" version="1.4">
+  <types>
+    <!-- IMAP has 32bit unsigned ints but java ints are signed, so use longs -->
+    <fieldType name="string" class="solr.StrField" omitNorms="true"/>
+    <fieldType name="long" class="solr.LongField" omitNorms="true"/>
+    <fieldType name="slong" class="solr.SortableLongField" omitNorms="true"/>
+    <fieldType name="float" class="solr.FloatField" omitNorms="true"/>
+    <fieldType name="boolean" class="solr.BoolField" omitNorms="true"/>
+
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>
+        <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
+      </analyzer>
+    </fieldType>
+ </types>
+
+
+ <fields>
+   <field name="id" type="string" indexed="true" stored="true" required="true" />
+   <field name="uid" type="slong" indexed="true" stored="true" required="true" />
+   <field name="box" type="string" indexed="true" stored="true" required="true" />
+   <field name="user" type="string" indexed="true" stored="true" required="true" />
+
+   <field name="hdr" type="text" indexed="true" stored="false" />
+   <field name="body" type="text" indexed="true" stored="false" />
+
+   <field name="from" type="text" indexed="true" stored="false" />
+   <field name="to" type="text" indexed="true" stored="false" />
+   <field name="cc" type="text" indexed="true" stored="false" />
+   <field name="bcc" type="text" indexed="true" stored="false" />
+   <field name="subject" type="text" indexed="true" stored="false" />
+ </fields>
+
+ <uniqueKey>id</uniqueKey>
+ <defaultSearchField>body</defaultSearchField>
+ <solrQueryParser defaultOperator="AND" />
+</schema>

@@ -1,0 +1,5 @@
+- include: postfix.yml tags=postfix
+- include: dovecot.yml tags=dovecot
+- include: opendkim.yml tags=opendkim
+- include: dspam.yml tags=dspam
+- include: solr.yml tags=solr

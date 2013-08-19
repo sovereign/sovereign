@@ -1,0 +1,8 @@
+127.0.0.1
+# TODO add your server's IP and DNS hosts
+{% for domain in mail_virtual_domains %}
+{{ domain.name }}
+{% endfor %}
+{% for domain in mail_virtual_domains %}
+mail.{{ domain.name }}
+{% endfor %}

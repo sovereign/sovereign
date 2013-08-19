@@ -1,0 +1,17 @@
+- name: Install monit
+  apt: pkg=monit state=installed
+
+- name: Copy monit master config file into place
+  copy: src=etc_monit_monitrc dest=/etc/monit/monitrc
+
+- name: Copy monit service config files into place
+  copy: src=etc_monit_conf.d_${item} dest=/etc/monit/conf.d/${item}
+  with_items:
+    - apache2
+    - dovecot
+    - mysql
+    - postfix
+    - sshd
+    - tomcat
+    - znc
+  notify: restart monit

@@ -1,0 +1,41 @@
+---
+# Installs the ownCloud personal cloud software
+# as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
+
+- name: Create database user for ownCloud
+  mysql_user: user={{ owncloud_mysql_username }} password={{ owncloud_mysql_password }} state=present priv="owncloud.*:ALL"
+
+- name: Create database for ownCloud
+  mysql_db: name={{ owncloud_mysql_database }} state=present
+
+- name: Install ownCloud dependencies
+  apt: pkg=python-software-properties
+
+- name: Ensure repository key for ownCloud is in place
+  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
+
+- name: Add ownCloud OpenSuSE repository
+  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
+
+- name: Install ownCloud from OpenSuSE repository
+  apt: pkg=owncloud update_cache=yes
+
+- name: Store ownCloud data securely
+  command: mv /var/www/owncloud/data /decrypted-mail/owncloud-data creates=/decrypted-mail/owncloud-data
+- file: src=/decrypted-mail/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
+
+- name: Enable Apache module dependencies for ownCloud
+  command: a2enmod $item
+  with_items:
+    - rewrite
+    - headers
+  notify: restart apache
+
+- name: Configure the Apache HTTP server for ownCloud
+  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud group=www-data owner=www-data
+- command: a2ensite owncloud
+  notify: restart apache
+
+- name: Install ownCloud cronjob
+  cron: name="ownCloud" user="www-data" minute="*/5" job="php -f /var/www/owncloud/cron.php > /dev/null"
+

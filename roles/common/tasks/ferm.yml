@@ -1,0 +1,11 @@
+---
+# Installs and configures ferm, which in turn uses iptables for firewall management
+
+- name: Install ferm
+  apt: pkg=ferm state=present
+
+- name: Copy ferm firewall rules into place
+  file: path=/etc/ferm state=directory
+- copy: src=etc_ferm_ferm.conf dest=/etc/ferm/ferm.conf
+  notify:
+    - reload ferm rules

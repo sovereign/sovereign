@@ -1,0 +1,23 @@
+NameVirtualHost *:443
+
+<VirtualHost *:443>
+    ServerName {{ owncloud_domain }}
+
+    SSLEngine on
+    SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+
+    SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
+    SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
+    SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
+
+    DocumentRoot            /var/www/owncloud
+
+    ErrorLog                /var/log/apache2/owncloud.info-error_log
+    CustomLog               /var/log/apache2/owncloud.info-access_log common
+
+    <Directory /var/www/owncloud>
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+</VirtualHost>

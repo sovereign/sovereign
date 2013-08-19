@@ -1,0 +1,34 @@
+- name: Install Dovecot and related packages
+  apt: pkg=$item state=installed
+  with_items:
+    - dovecot-core
+    - dovecot-imapd
+    - mysql-server
+    - dovecot-mysql
+    - dovecot-lmtpd
+
+- name: Create vmail group
+  group: name=vmail state=present gid=5000
+
+- name: Create vmail user
+  user: name=vmail group=vmail state=present uid=5000 home=/decrypted-mail
+
+- name: Ensure mail directories are in place
+  file: state=directory path=/decrypted-mail/${item.name}/${item.primary_user} owner=vmail group=dovecot
+  with_items:
+    - ${mail_virtual_domains}
+
+- name: Put Dovecot configuration files in place
+  copy: src=etc_dovecot_dovecot.conf dest=/etc/dovecot/dovecot.conf
+- copy: src=etc_dovecot_conf.d_10-mail.conf dest=/etc/dovecot/conf.d/10-mail.conf
+- copy: src=etc_dovecot_conf.d_10-auth.conf dest=/etc/dovecot/conf.d/10-auth.conf
+- copy: src=etc_dovecot_conf.d_auth-sql.conf.ext dest=/etc/dovecot/conf.d/auth-sql.conf.ext
+- copy: src=etc_dovecot_conf.d_10-master.conf dest=/etc/dovecot/conf.d/10-master.conf
+- copy: src=etc_dovecot_conf.d_10-ssl.conf dest=/etc/dovecot/conf.d/10-ssl.conf
+- template: src=etc_dovecot_conf.d_15-lda.conf.j2 dest=/etc/dovecot/conf.d/15-lda.conf
+- template: src=etc_dovecot_dovecot-sql.conf.ext.j2 dest=/etc/dovecot/dovecot-sql.conf.ext
+
+- name: Ensure correct permissions on Dovecot config directory
+  shell: chown -R vmail:dovecot /etc/dovecot
+- shell: chmod -R o-rwx /etc/dovecot
+  notify: restart dovecot

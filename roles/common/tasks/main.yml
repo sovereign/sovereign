@@ -1,0 +1,44 @@
+---
+# Defines tasks applicable across all machines in the infrastructure.
+
+- name: Install necessities and nice-to-haves
+  apt: pkg=$item state=installed
+  with_items:
+    - sudo
+    - vim
+    - htop
+    - iftop
+    - iotop
+    - mosh
+    - zsh
+    - git
+    - encfs
+    - libfuse-dev
+    - fuse-utils
+    - ruby1.9.3
+    - screen
+    - apache2
+    - build-essential
+    - apticron
+    - update-notifier-common
+    - debian-goodies
+
+- name: Install ntp
+  apt: pkg=ntp state=installed
+
+- name: Configure ntp
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  notify:
+    - restart ntp
+
+- name: Ensure ntpd is running and enabled
+  service: name=ntp state=running enabled=yes
+
+- name: Disable default Apache site
+  command: a2dissite default
+
+- include: users.yml tags=users
+- include: ssl.yml tags=ssl
+- include: ferm.yml tags=ferm
+- include: security.yml tags=security
+- include: tarsnap.yml tags=tarsnap

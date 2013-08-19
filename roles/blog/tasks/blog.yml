@@ -1,0 +1,8 @@
+- name: Create directory for blog HTML
+  file: state=directory path=/var/www/${blog_domain} group=www-data owner=www-data
+
+- name: Configure the Apache HTTP server for the blog
+  template: src=etc_apache2_sites-available_blog.j2 dest=/etc/apache2/sites-available/${blog_domain} group=www-data owner=www-data
+- command: a2ensite ${blog_domain}
+  notify: restart apache
+  

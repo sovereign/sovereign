@@ -1,0 +1,36 @@
+CREATE TABLE `virtual_domains` (
+	`id` int(11) NOT NULL auto_increment,
+	`name` varchar(50) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `virtual_users` (
+	`id` int(11) NOT NULL auto_increment,
+	`domain_id` int(11) NOT NULL,
+	`password` varchar(106) NOT NULL,
+	`email` varchar(100) NOT NULL,
+	PRIMARY KEY (`id`),
+	UNIQUE KEY `email` (`email`),
+	FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `virtual_aliases` (
+	`id` int(11) NOT NULL auto_increment,
+	`domain_id` int(11) NOT NULL,
+	`source` varchar(100) NOT NULL,
+	`destination` varchar(100) NOT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+{% for virtual_domain in mail_virtual_domains %}
+	INSERT INTO `mailserver`.`virtual_domains` (`id`, `name`)
+	VALUES
+		('{{ virtual_domain.pk_id }}', '{{ virtual_domain.name }}');
+{% endfor %}
+
+{% for virtual_user in mail_virtual_users %}
+	INSERT INTO `mailserver`.`virtual_users`  (`domain_id`, `password` , `email`)
+	VALUES
+  	('{{ virtual_domain.domain_pk_id }}', '{{ virtual_user.password_hash }}', '{{ virtual_user.address }}');
+{% endfor %}

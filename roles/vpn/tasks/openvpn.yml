@@ -1,0 +1,63 @@
+---
+# Installs the OpenVPN virtual private network server.
+# ref: https://library.linode.com/networking/openvpn/debian-6-squeeze
+
+- name: Install OpenVPN and dependencies from apt
+  apt: pkg=$item state=installed
+  with_items:
+    - openvpn
+    - udev
+    - dnsmasq
+
+- name: Copy setup scripts into place
+  command: cp -R /usr/share/doc/openvpn/examples/easy-rsa/ /etc/openvpn
+
+- name: Put easy-rsa parameter settings in place
+  template: src=etc_openvpn_easy-rsa_2.0_vars.j2 dest=/etc/openvpn/easy-rsa/2.0/vars
+
+###### manually:
+# cd /etc/openvpn/easy-rsa/2.0/
+# . /etc/openvpn/easy-rsa/2.0/vars
+# . /etc/openvpn/easy-rsa/2.0/clean-all
+# . /etc/openvpn/easy-rsa/2.0/build-ca
+# . /etc/openvpn/easy-rsa/2.0/build-key-server server
+#
+# for each client:
+# . /etc/openvpn/easy-rsa/2.0/build-key $client_name
+#####
+
+- name: Generate Diffie-Hellman parameters
+  command: . /etc/openvpn/easy-rsa/2.0/build-dh creates=/etc/openvpn/easy-rsa/2.0/keys/dh1024.pem
+
+- name: Copy certificates and key files into place
+  command: cp /etc/openvpn/easy-rsa/2.0/keys/$item /etc/openvpn creates=/etc/openvpn/$item
+  with_items:
+    - ca.crt
+    - ca.key
+    - dh1024.pem
+    - server.crt
+    - server.key
+
+- name: Copy rc.local with firewall and dnsmasq rules into place
+  copy: src=etc_rc.local dest=/etc/rc.local
+
+- name: Enable IPv4 traffic forwarding
+  lineinfile: dest=/etc/sysctl.conf regexp="^net.ipv4.ip_forward" line="net.ipv4.ip_forward=1"
+- command: echo 1 > /proc/sys/net/ipv4/ip_forward
+
+- name: Allow OpenVPN through firewall
+  command: $item
+  with_items:
+    - iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+    - iptables -A FORWARD -s 10.8.0.0/24 -j ACCEPT
+    - iptables -A FORWARD -j REJECT
+    - iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+
+- name: Copy OpenVPN configuration file into place
+  template: src=etc_openvpn_server.conf.j2 dest=/etc/openvpn/server.conf
+  notify: restart openvpn
+
+- name: Copy dnsmasq configuration file into place
+  copy: src=etc_dnsmasq.conf dest=/etc/dnsmasq.conf
+  notify: restart dnsmasq
+

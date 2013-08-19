@@ -1,0 +1,8 @@
+check process apache2 with pidfile /var/run/apache2.pid
+  group www
+  start program = "/etc/init.d/apache2 start"
+  stop program = "/etc/init.d/apache2 stop"
+  if failed host localhost port 80 protocol http
+    with timeout 10 seconds
+    then restart
+  if 5 restarts within 5 cycles then timeout

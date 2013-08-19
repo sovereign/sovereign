@@ -1,0 +1,4 @@
+---
+
+- name: reload ferm rules
+  command: /etc/init.d/ferm reload

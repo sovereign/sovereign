@@ -1,0 +1,8 @@
+check process znc with pidfile /var/run/znc/znc.pid
+  group irc
+  start program = "/etc/init.d/znc start"
+  stop program = "/etc/init.d/znc stop"
+  if failed host localhost port 6697 type tcpSSL protocol http
+    with timeout 10 seconds
+    then restart
+  if 5 restarts within 5 cycles then timeout
