@@ -1,2 +1,6 @@
+#- name: Create group account for main user
+#  group: name=${main_user_name}
+
 - name: Create main user account
-  user: name=${main_user_name} state=present shell=/usr/bin/zsh groups=${main_user_name},sudo,fuse
+  user: name=${main_user_name} state=present 
+#  user: name=${main_user_name} state=present shell=/usr/bin/zsh groups=sudo,fuse

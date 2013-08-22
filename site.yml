@@ -2,17 +2,17 @@
 # This is the top-level playbook that defines our entire infrastructure.
 
 - hosts: all
-  user: TODO
+  user: vagrant
   sudo: True
   gather_facts: False
 
   roles:
     - common
     - mailserver
-    - blog
-    - ircbouncer
-    - monitoring
-    - owncloud
-    - vpn
+#    - blog
+#    - ircbouncer
+#    - monitoring
+#    - owncloud
+#    - vpn
 
 
