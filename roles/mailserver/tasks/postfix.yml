@@ -15,8 +15,13 @@
 - name: Create database for mail server
   mysql_db: name={{ mail_mysql_database }} state=present
 
-  # i don't know why this import is failing but it is, so did this manually
-  # mysql_db: name={{ mail_mysql_database }} state=import target=templates/mailserver.sql.j2
+- name: copy over mailserver sql
+  template: src=mailserver.sql.j2 dest=/etc/postfix/import.sql owner=root group=root mode=0600
+  tags: import_mysql_postfix
+
+- name: import mysql postfix
+  mysql_db: name={{ mail_mysql_database }} state=import target=/etc/postfix/import.sql
+  tags: import_mysql_postfix
 
 - name: Copy Postfix config files into place
   template: src=etc_postfix_main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root

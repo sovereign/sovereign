@@ -4,16 +4,16 @@ mail_mysql_username: mailuser
 mail_mysql_password: TODO
 mail_mysql_database: mailserver
 mail_virtual_domains:
-  - name: TODO
+  - name: relaxism.com
     pk_id: 1
-    primary_user: TODO
-  - name: TODO
+    primary_user: tj
+  - name: sheergoodness.com
     pk_id: 2
-    primary_user: TODO
+    primary_user: tj
 mail_virtual_users:
-  - address: TODO@TODO.com
-    password_hash: TODO
+  - address: jheeta@jheeta.com
+    password_hash: $6$M6ZebZ6g$Xhf0WopvXkHRMUHYFU1JghNzWabwoDqceXYHnSKx6Rl/W5dg995zh8N1JjyWB6T2HwmNR4pDdDZ9bLICHE3z11
     domain_pk_id: 1
-  - address: TODO@TODO.com
-    password_hash: TODO@TODO.com
+  - address: test@relaxism.com
+    password_hash: $6$M6ZebZ6g$Xhf0WopvXkHRMUHYFU1JghNzWabwoDqceXYHnSKx6Rl/W5dg995zh8N1JjyWB6T2HwmNR4pDdDZ9bLICHE3z11
     domain_pk_id: 2
