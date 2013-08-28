@@ -23,7 +23,7 @@
   command: tar xzf /root/znc-${znc_version}.tar.gz chdir=/root creates=/root/znc-${znc_version}/configure
 
 - name: Build and install znc
-  command: ./configure --enable-python ; make ; make install executable=/bin/bash chdir=/root/znc-${znc_version} creates=/usr/local/bin/znc
+  shell: ./configure --enable-python ; make ; make install executable=/bin/bash chdir=/root/znc-${znc_version} creates=/usr/local/bin/znc
 
 - name: Create znc group
   group: name=znc state=present
