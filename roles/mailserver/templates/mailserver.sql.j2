@@ -30,10 +30,11 @@ CREATE TABLE IF NOT EXISTS `virtual_aliases` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 {% for virtual_domain in mail_virtual_domains %}
-INSERT INTO `mailserver`.`virtual_domains` (`id`, `name`) VALUES ('{{ virtual_domain.pk_id }}', '{{ virtual_domain.name }}');
+INSERT INTO {{ mail_mysql_database }}.`virtual_domains` (`id`, `name`)
+        VALUES ('{{ virtual_domain.pk_id }}', '{{ virtual_domain.name }}');
 {% endfor %}
 
 {% for virtual_user in mail_virtual_users %}
-INSERT INTO `mailserver`.`virtual_users`  (`domain_id`, `password` , `email`)
+INSERT INTO {{ mail_mysql_database }}.`virtual_users`  (`domain_id`, `password` , `email`)
 	VALUES ('{{ virtual_user.domain_pk_id }}', '{{ virtual_user.password_hash }}', '{{ virtual_user.address }}');
 {% endfor %}
