@@ -28,7 +28,7 @@ enableWhitelist=on
 statisticalSedation=5
 
 # Signature Location: message, headers, attachment
-signatureLocation=headers  # { message | headers } -> default:message
+signatureLocation=headers
 
 # Whitelist Threshold: the minimum number of innocent hits from a recipient to
 # be automatically whitelisted. Do not set this value too low!
