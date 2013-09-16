@@ -32,7 +32,7 @@
     - restart ntp
 
 - name: Ensure ntpd is running and enabled
-  service: name=ntp state=running enabled=yes
+  service: name=ntp state=started enabled=yes
 
 - name: Disable default Apache site
   command: a2dissite default
