@@ -25,8 +25,16 @@
 
 - name: Copy Postfix config files into place
   template: src=etc_postfix_main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root
-- copy: src=etc_postfix_master.cf dest=/etc/postfix/master.cf owner=root group=root
-- template: src=etc_postfix_mysql-virtual-mailbox-domains.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-domains.cf owner=root group=root
-- template: src=etc_postfix_mysql-virtual-mailbox-maps.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-maps.cf owner=root group=root
-- template: src=etc_postfix_mysql-virtual-alias-maps.cf.j2 dest=/etc/postfix/mysql-virtual-alias-maps.cf owner=root group=root
+  notify: restart postfix
+
+- name: Copy master.cf
+  copy: src=etc_postfix_master.cf dest=/etc/postfix/master.cf owner=root group=root
+  notify: restart postfix
+
+- name: Copy additional postfix configuration files
+  template: src=etc_postfix_${item}.j2 dest=/etc/postfix/${item} owner=root group=root
+  with_items:
+    - mysql-virtual-mailbox-domains.cf
+    - mysql-virtual-mailbox-maps.cf
+    - mysql-virtual-alias-maps.cf
   notify: restart postfix

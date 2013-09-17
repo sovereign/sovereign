@@ -32,7 +32,8 @@
   service: name=ntp state=started enabled=yes
 
 - name: Disable default Apache site
-  command: a2dissite default
+  command: a2dissite default removes=/etc/apache2/sites-enabled/default
+  notify: restart apache
 
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users

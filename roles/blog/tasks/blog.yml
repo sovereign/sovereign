@@ -3,6 +3,9 @@
 
 - name: Configure the Apache HTTP server for the blog
   template: src=etc_apache2_sites-available_blog.j2 dest=/etc/apache2/sites-available/${blog_domain} group=www-data owner=www-data
-- command: a2ensite ${blog_domain}
   notify: restart apache
-  
+
+- name: Enable blog site
+  command: a2ensite ${blog_domain} creates=/etc/apache2/sites-enabled/${blog_domain}
+  notify: restart apache
+

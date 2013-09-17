@@ -8,4 +8,4 @@
   copy: src=wildcard_ca.pem dest=/etc/ssl/certs/wildcard_ca.pem group=root owner=root
 
 - name: Enable Apache SSL module
-  command: a2enmod ssl
+  command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load

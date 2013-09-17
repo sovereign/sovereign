@@ -20,15 +20,25 @@
   with_items:
     - ${mail_virtual_domains}
 
-- name: Put OpenDKIM configuration files into place
-  template: src=etc_opendkim_KeyTable.j2 dest=/etc/opendkim/KeyTable owner=opendkim group=opendkim
-- template: src=etc_opendkim_SigningTable.j2 dest=/etc/opendkim/SigningTable owner=opendkim group=opendkim
-- template: src=etc_opendkim_TrustedHosts.j2 dest=/etc/opendkim/TrustedHosts owner=opendkim group=opendkim
-- copy: src=etc_opendkim.conf dest=/etc/opendkim.conf owner=opendkim group=opendkim
+- name: Put opendkim.conf into place
+  copy: src=etc_opendkim.conf dest=/etc/opendkim.conf owner=opendkim group=opendkim
+  notify:
+    - restart opendkim
+    - restart postfix
+
+- name: Put additional OpenDKIM configuration files into place
+  template: src=etc_opendkim_{{item}}.j2 dest=/etc/opendkim/{{item}} owner=opendkim group=opendkim
+  with_items:
+    - KeyTable
+    - SigningTable
+    - TrustedHosts
+  notify:
+    - restart opendkim
+    - restart postfix
 
 - name: Set OpenDKIM config directory permissions
-  command: chmod -R go-rwx /etc/opendkim
-- command: chown -R opendkim:opendkim /etc/opendkim
+  file: state=directory path=/etc/opendkim
+          group=opendkim owner=opendkim mode=700 recurse=yes
   notify:
     - restart opendkim
     - restart postfix
