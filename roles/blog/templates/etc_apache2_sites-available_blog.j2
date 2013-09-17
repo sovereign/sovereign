@@ -14,7 +14,9 @@ NameVirtualHost *:443
     ServerAlias www.{{ blog_domain }}
 
     SSLEngine on
-    SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+    SSLProtocol ALL -SSLv2
+    SSLHonorCipherOrder On
+    SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS
 
     SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
     SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
@@ -22,5 +24,7 @@ NameVirtualHost *:443
 
     DocumentRoot            "/var/www/{{ blog_domain }}"
     DirectoryIndex          index.html
+    Options                 -Indexes
+
     HostnameLookups         Off
 </VirtualHost>
