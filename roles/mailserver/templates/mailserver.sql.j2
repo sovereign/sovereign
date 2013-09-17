@@ -38,3 +38,10 @@ INSERT INTO {{ mail_mysql_database }}.`virtual_domains` (`id`, `name`)
 INSERT INTO {{ mail_mysql_database }}.`virtual_users`  (`domain_id`, `password` , `email`)
 	VALUES ('{{ virtual_user.domain_pk_id }}', '{{ virtual_user.password_hash }}', '{{ virtual_user.address }}');
 {% endfor %}
+
+{% if mail_virtual_aliases is defined %}
+{% for virtual_alias in mail_virtual_aliases %}
+INSERT INTO {{ mail_mysql_database }}.`virtual_aliases` (`domain_id`, `source`, `destination`)
+    VALUES ('{{ virtual_alias.domain_pk_id }}', '{{ virtual_alias.source }}', '{{virtual_alias.destination }}');
+{% endfor %}
+{% endif %}
