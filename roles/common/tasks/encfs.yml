@@ -1,0 +1,34 @@
+- name: Install encfs & fuse
+  apt: pkg=$item state=installed
+  with_items:
+    - encfs
+    - libfuse-dev
+    - fuse-utils
+
+- name: Create encrypted directory
+  file: state=directory path=/encrypted
+
+- name: Create decrypted directory
+  file: state=directory path=/decrypted
+
+- name: Add mail user to fuse group
+  user: name=mail append=yes groups=fuse
+
+# Check if the /encrypted directory is empty
+- name: Check for existing encfs
+  shell: ls /encrypted/*
+  ignore_errors: True
+  register: encfs_check
+
+# If it is empty, we need to create the encfs
+- name: Create encfs
+  shell: printf "p\n${encfs_password}" | encfs /encrypted /decrypted --public --stdinpass && touch /decrypted/test
+  when: encfs_check.rc > 0
+
+# If it isn't empty, we simply need to mount it (but only if /decrypted/test doesn't exist)
+- name: Mount encfs
+  shell: printf "${encfs_password}" | encfs /encrypted /decrypted --public --stdinpass creates="/decrypted/test"
+  when: encfs_check.rc == 0
+
+- name: Set decrypted directory permissions
+  file: state=directory path=/decrypted group=mail mode=775

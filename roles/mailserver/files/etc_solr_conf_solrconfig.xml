@@ -114,7 +114,7 @@
        replication is in use, this should match the replication
        configuration.
     -->
-  <dataDir>/decrypted-mail/solr</dataDir>
+  <dataDir>/decrypted/solr</dataDir>
 
 
   <!-- The DirectoryFactory to use for indexes.
