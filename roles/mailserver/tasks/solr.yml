@@ -12,5 +12,5 @@
 - copy: src=etc_solr_conf_solrconfig.xml dest=/etc/solr/conf/solrconfig.xml group=root owner=root
 
 - name: Create Solr index directory
-  file: state=directory path=/decrypted-mail/solr group=tomcat6 owner=tomcat6
+  file: state=directory path=/decrypted/solr group=tomcat6 owner=tomcat6
   notify: restart solr

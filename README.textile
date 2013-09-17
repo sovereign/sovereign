@@ -60,7 +60,6 @@ h2. Manual Steps
 
 This does a lot for you automatically but there's still some stuff you have to do by hand.
 
-# Set up EncFS as per "these instructions":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/.
 # Create a user account for Ansible to do its thing through. This account should be set up for passwordless sudo.
 # Put your Tarsnap key in @roles/common/files/root_tarsnap.key@.
 # Put your SSL certificate's components in the respective files that start with @wildcard_ca@ in @roles/common/files@, and a combined version in @roles/ircbouncer/files/etc_ssl_znc-combined.pem@.

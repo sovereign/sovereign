@@ -11,10 +11,10 @@
   group: name=vmail state=present gid=5000
 
 - name: Create vmail user
-  user: name=vmail group=vmail state=present uid=5000 home=/decrypted-mail
+  user: name=vmail group=vmail state=present uid=5000 home=/decrypted
 
 - name: Ensure mail directories are in place
-  file: state=directory path=/decrypted-mail/${item.name}/${item.primary_user} owner=vmail group=dovecot
+  file: state=directory path=/decrypted/${item.name}/${item.primary_user} owner=vmail group=dovecot
   with_items:
     - ${mail_virtual_domains}
 

@@ -12,9 +12,6 @@
     - mosh
     - zsh
     - git
-    - encfs
-    - libfuse-dev
-    - fuse-utils
     - ruby1.9.3
     - screen
     - apache2
@@ -37,6 +34,7 @@
 - name: Disable default Apache site
   command: a2dissite default
 
+- include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl
 - include: ferm.yml tags=ferm

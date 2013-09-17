@@ -18,7 +18,7 @@ passdb {
 
 userdb {
   driver = static
-  args = uid=vmail gid=vmail home=/decrypted-mail/%d/%n
+  args = uid=vmail gid=vmail home=/decrypted/%d/%n
 }
 
 # If you don't have any user-specific settings, you can avoid the user_query
