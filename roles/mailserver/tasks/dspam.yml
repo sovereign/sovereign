@@ -6,8 +6,8 @@
     - postfix-pcre
     - dovecot-sieve
 
-- name: Create dspam directory 
-  file: state=directory path=/decrypted-mail/dspam group=dspam owner=dspam
+- name: Create dspam directory
+  file: state=directory path=/decrypted/dspam group=dspam owner=dspam
 
 - name: Put dspam configuration files in place
   copy: src=etc_dspam_default.prefs dest=/etc/dspam/default.prefs owner=dspam group=dspam
@@ -15,7 +15,7 @@
 - copy: src=etc_postfix_dspam_filter_access dest=/etc/postfix/dspam_filter_access owner=root group=root
 - copy: src=etc_dovecot_conf.d_20-imap.conf dest=/etc/dovecot/conf.d/20-imap.conf owner=vmail group=dovecot
 - copy: src=etc_dovecot_conf.d_90-plugin.conf dest=/etc/dovecot/conf.d/90-plugin.conf owner=vmail group=dovecot
-- copy: src=dot_dovecot.sieve dest=/decrypted-mail/${item.name}/${item.primary_user}/.dovecot.sieve owner=vmail group=dovecot
+- copy: src=dot_dovecot.sieve dest=/decrypted/${item.name}/${item.primary_user}/.dovecot.sieve owner=vmail group=dovecot
   with_items:
     - ${mail_virtual_domains}
   notify:

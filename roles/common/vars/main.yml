@@ -1,3 +1,4 @@
 main_user_name: TODO
 admin_email: TODO@TODO.com
-tarsnap_version: 1.0.34
+tarsnap_version: 1.0.35
+encfs_password: TODO

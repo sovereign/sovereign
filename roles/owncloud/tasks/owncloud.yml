@@ -21,8 +21,8 @@
   apt: pkg=owncloud update_cache=yes
 
 - name: Store ownCloud data securely
-  command: mv /var/www/owncloud/data /decrypted-mail/owncloud-data creates=/decrypted-mail/owncloud-data
-- file: src=/decrypted-mail/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
+  command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
+- file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
 - name: Enable Apache module dependencies for ownCloud
   command: a2enmod $item
