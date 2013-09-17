@@ -10,4 +10,7 @@
 - name: restart fail2ban
   service: name=fail2ban state=restarted
 
+- name: restart sshd
+  service: name=ssh state=restarted
+
 - include: ferm.yml
