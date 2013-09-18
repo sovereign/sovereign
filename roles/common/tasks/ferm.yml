@@ -4,7 +4,7 @@
 - name: Install ferm
   apt: pkg=ferm state=present
 
-- name: Create ferm confiruation directory
+- name: Create ferm configuration directory
   file: path=/etc/ferm state=directory
 
 - name: Copy ferm firewall rules into place
