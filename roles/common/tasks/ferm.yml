@@ -4,8 +4,10 @@
 - name: Install ferm
   apt: pkg=ferm state=present
 
-- name: Copy ferm firewall rules into place
+- name: Create ferm confiruation directory
   file: path=/etc/ferm state=directory
-- copy: src=etc_ferm_ferm.conf dest=/etc/ferm/ferm.conf
+
+- name: Copy ferm firewall rules into place
+  copy: src=etc_ferm_ferm.conf dest=/etc/ferm/ferm.conf
   notify:
     - reload ferm rules

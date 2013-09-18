@@ -1,6 +1,12 @@
 ---
 # Defines tasks applicable across all machines in the infrastructure.
 
+- name: Update apt cache
+  apt: update_cache=yes
+
+- name: Upgrade all safe packages
+  apt: upgrade=safe
+
 - name: Install necessities and nice-to-haves
   apt: pkg=$item state=installed
   with_items:
@@ -32,7 +38,8 @@
   service: name=ntp state=started enabled=yes
 
 - name: Disable default Apache site
-  command: a2dissite default
+  command: a2dissite default removes=/etc/apache2/sites-enabled/default
+  notify: restart apache
 
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
