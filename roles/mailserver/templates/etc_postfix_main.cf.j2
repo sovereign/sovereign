@@ -38,7 +38,9 @@ unverified_recipient_reject_code = 554
 unverified_sender_reject_code = 554
  
 # TLS parameters
-smtpd_tls_cert_file=/etc/ssl/certs/wildcard_ca.pem
+smtp_tls_CAfile = /etc/ssl/certs/wildcard_ca.pem
+smtpd_tls_CAfile = /etc/ssl/certs/wildcard_ca.pem
+smtpd_tls_cert_file=/etc/ssl/certs/wildcard_public_cert.crt
 smtpd_tls_key_file=/etc/ssl/private/wildcard_private.key
 smtpd_use_tls=yes
 #smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
@@ -48,7 +50,6 @@ smtp_tls_security_level = may
 smtp_tls_loglevel = 2
 smtpd_tls_received_header = yes
 smtp_tls_note_starttls_offer = yes
-smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
