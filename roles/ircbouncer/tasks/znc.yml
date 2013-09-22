@@ -34,9 +34,6 @@
 - name: Copy znc init file into place
   copy: src=etc_init.d_znc dest=/etc/init.d/znc mode=0755
 
-- name: Copy znc combined SSL cert into place
-  copy: src=etc_ssl_znc-combined.pem dest=/etc/ssl/znc-combined.pem owner=znc group=znc
-
 # NOTE: you should probably just generate this using the directions above and then edit via the web panel
 #- name: Copy znc configuration file into place
 #  template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
