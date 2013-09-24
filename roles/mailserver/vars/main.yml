@@ -12,10 +12,10 @@ mail_virtual_domains:
     primary_user: TODO
 mail_virtual_users:
   - address: TODO@TODO.com
-    password_hash: TODO
+    password: TODO
     domain_pk_id: 1
   - address: TODO@TODO.com
-    password_hash: TODO@TODO.com
+    password: TODO
     domain_pk_id: 2
 mail_virtual_aliases:
   - source: postmaster@TODO.com

@@ -36,7 +36,7 @@ INSERT INTO {{ mail_mysql_database }}.`virtual_domains` (`id`, `name`)
 
 {% for virtual_user in mail_virtual_users %}
 INSERT INTO {{ mail_mysql_database }}.`virtual_users`  (`domain_id`, `password` , `email`)
-	VALUES ('{{ virtual_user.domain_pk_id }}', '{{ virtual_user.password_hash }}', '{{ virtual_user.address }}');
+	VALUES ('{{ virtual_user.domain_pk_id }}', ENCRYPT('{{ virtual_user.password }}', CONCAT('$6$', SUBSTRING(SHA(RAND()), -16))), '{{ virtual_user.address }}');
 {% endfor %}
 
 {% if mail_virtual_aliases is defined %}
