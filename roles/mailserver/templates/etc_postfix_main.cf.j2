@@ -1,11 +1,6 @@
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 # Modified as per http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/
  
-# Debian specific:  Specifying a file name will cause the first
-# line of that file to be used as the name.  The Debian default
-# is /etc/mailname.
-#myorigin = /etc/mailname
- 
 smtpd_banner = $myhostname ESMTP $mail_name
 biff = no
  
@@ -80,6 +75,7 @@ smtpd_recipient_restrictions =
 # information on enabling SSL in the smtp client.
  
 myhostname = {{ mail_server_hostname }}
+myorigin = $mydomain
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 mydestination = localhost
