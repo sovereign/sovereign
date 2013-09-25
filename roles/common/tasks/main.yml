@@ -46,4 +46,3 @@
 - include: ssl.yml tags=ssl
 - include: ferm.yml tags=ferm
 - include: security.yml tags=security
-- include: tarsnap.yml tags=tarsnap
