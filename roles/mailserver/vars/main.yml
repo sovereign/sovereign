@@ -18,6 +18,9 @@ mail_virtual_users:
     password_hash: TODO@TODO.com
     domain_pk_id: 2
 mail_virtual_aliases:
+  - source: root@TODO.com
+    destination: TODO@TODO.com
+    domain_pk_id: 1
   - source: postmaster@TODO.com
     destination: TODO@TODO.com
     domain_pk_id: 1
