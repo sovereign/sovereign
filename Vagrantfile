@@ -1,19 +1,6 @@
 # The following patch needs to be applied for ansible to run cleanly on vagrant up:
 # https://github.com/mitchellh/vagrant/pull/1723.diff on /opt/vagrant/embedded/gems/gems/vagrant-1.2.x
 
-$boxes = [
-  {
-    :name => 'ansible.local',
-    :forwards => { 22  => 22222,
-                   80  => 80,
-                   25  => 25,
-                   143 => 143,
-                   465 => 465,
-                   993 => 993 
-    }
-  }
-]
-
 Vagrant.configure('2') do |config|
   config.vm.provider :lxc do |lxc, override|
     override.vm.box     = 'precise64'
@@ -25,7 +12,19 @@ Vagrant.configure('2') do |config|
     override.vm.box_url = 'http://files.vagrantup.com/precise64.box'
   end
 
-  $boxes.each do |opts| 
+  boxes = [
+    {
+      :name => 'ansible.local',
+      :forwards => { 22  => 22222,
+                     80  => 80,
+                     25  => 25,
+                     143 => 143,
+                     465 => 465,
+                     993 => 993 }
+    }
+  ]
+
+  boxes.each do |opts|
     config.vm.hostname = opts[:name]
 
     opts[:forwards].each do |guest_port, host_port|
@@ -38,7 +37,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision :ansible do |ansible|
       ansible.playbook = 'site.yml'
     end
-    
+
     config.vm.provision :shell,
                         :inline => "echo [test] > /vagrant/hosts.autogen && ifconfig eth0 | grep 'inet addr' | awk '{print $2}' | cut -d: -f2 >> /vagrant/hosts.autogen"
   end
