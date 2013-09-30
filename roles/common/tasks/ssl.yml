@@ -13,3 +13,6 @@
 
 - name: Enable Apache SSL module
   command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load
+
+- name: Enable NameVirtualHost for HTTPS
+  lineinfile: dest=/etc/apache2/ports.conf regexp='^    NameVirtualHost \*:443' insertafter='^<IfModule mod_ssl.c>' line='    NameVirtualHost *:443'
