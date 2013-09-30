@@ -1,0 +1,68 @@
+---
+###############################################################################
+# Uncomment and set your variables here. For a complete reference look at the
+# `vars/defaults.yml` file.
+###############################################################################
+#
+# # blog
+# blog_domain: TODO.com
+
+# # common
+# main_user_name: TODO
+# admin_email: TODO@TODO.com
+# encfs_password: TODO
+
+# # ircbouncer
+# znc_version: 1.0
+
+# # mailserver
+# mail_server_hostname: mail.TODO.com
+# mail_mysql_username: mailuser
+# mail_mysql_password: TODO
+# mail_mysql_database: mailserver
+# mail_virtual_domains:
+#   - name: TODO
+#     pk_id: 1
+#     primary_user: TODO
+#   - name: TODO
+#     pk_id: 2
+#     primary_user: TODO
+# mail_virtual_users:
+#   - address: TODO@TODO.com
+#     password_hash: TODO
+#     domain_pk_id: 1
+#   - address: TODO@TODO.com
+#     password_hash: TODO@TODO.com
+#     domain_pk_id: 2
+# mail_virtual_aliases:
+#   - source: root@TODO.com
+#     destination: TODO@TODO.com
+#     domain_pk_id: 1
+#   - source: postmaster@TODO.com
+#     destination: TODO@TODO.com
+#     domain_pk_id: 1
+
+# # monitoring
+
+
+# # owncloud
+# owncloud_domain: cloud.TODO.com
+# owncloud_mysql_username: owncloud
+# owncloud_mysql_password: TODO
+# owncloud_mysql_database: owncloud
+
+# # tarsnap
+# tarsnap_version: 1.0.35
+
+# # vpn
+# openvpn_key_country: TODO
+# openvpn_key_province: TODO
+# openvpn_key_city: TODO
+# openvpn_key_org: TODO
+# openvpn_key_email: TODO
+# openvpn_key_ou: TODO
+# openvpn_key_cn: TODO
+# openvpn_key_name: TODO
+
+# # webmail
+# webmail_domain: TODO.com

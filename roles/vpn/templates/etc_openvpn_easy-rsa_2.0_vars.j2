@@ -60,13 +60,13 @@ export KEY_EXPIRE=3650
 # These are the default values for fields
 # which will be placed in the certificate.
 # Don't leave any of these fields blank.
-export KEY_COUNTRY="{{ key_country }}"
-export KEY_PROVINCE="{{ key_province }}"
-export KEY_CITY="{{ key_city }}"
-export KEY_ORG="{{ key_org }}"
-export KEY_EMAIL="{{ key_email }}"
-export KEY_CN={{ key_cn }}
-export KEY_NAME={{ key_name }}
-export KEY_OU={{ key_ou }}
+export KEY_COUNTRY="{{ openvpn_key_country }}"
+export KEY_PROVINCE="{{ openvpn_key_province }}"
+export KEY_CITY="{{ openvpn_key_city }}"
+export KEY_ORG="{{ openvpn_key_org }}"
+export KEY_EMAIL="{{ openvpn_key_email }}"
+export KEY_CN={{ openvpn_key_cn }}
+export KEY_NAME={{ openvpn_key_name }}
+export KEY_OU={{ openvpn_key_ou }}
 export PKCS11_MODULE_PATH=changeme
 export PKCS11_PIN=1234
