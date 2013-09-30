@@ -4,7 +4,7 @@ Sovereign is a set of "Ansible":http://ansibleworks.com playbooks that you can u
 
 If you've never used Ansible before, you a) are in for a treat and b) might find these playbooks useful to learn from, since they show off a fair bit of what the tool can do.
 
-h2. Background/Motivations
+h2. Background and Motivations
 
 I had been a paying Google Apps customer for personal and corporate use since the service was in beta. Until several weeks ago, that is. I was about to set up another Google Apps account for a new project when I stopped to consider what I would be funding with my USD $50 per user per year:
 
@@ -17,9 +17,9 @@ To each her/his own, but personally I saw little reason to continue participatin
 
 Rather than writing up a long and hard-to-follow set of instructions, I decided to share my server setup in a format that you can more or less just clone, configure, and run. Ansible seemed like the most appropriate way to do that: it's simple, straightforward, and easy to pick up.
 
-I've been using this setup for about a month now and it's been great. It's also replaced a couple of non-Google services I used, saving me money and making me feel like I've got a little more privacy.
+I've been using this setup for about a month now and it's been great. It's also replaced some non-Google services I used, saving me money and making me feel like I've got a little more privacy.
 
-The backbone of this was inspired by "this post by Drew Crawford":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Unlike him, my goal is not "NSA-proofing" my email, just providing a reasonable alternative to Google Apps that isn't wildly insecure. My view is that if the NSA or any other motivated party really wants to pwn me, they're gonna, simple as that, no matter where I host my email.
+A big chunk of the initial version was inspired by "this post by Drew Crawford":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Unlike Drew, my goal is not "NSA-proofing" email, just providing a reasonable alternative to Google Apps that isn't wildly insecure. If you need serious privacy and security (ex: for dissident activities), Sovereign might be useful as a starting point but will require additional work. Be careful out there.
 
 h2. Services Provided
 
@@ -54,14 +54,14 @@ h2. What You'll Need
 
 # A VPS (or bare-metal server if you wanna ball hard). My VPS is hosted at "Linode":http://www.linode.com/?r=45405878277aa04ee1f1d21394285da6b43f963b. You'll probably want at least 512 MB of RAM between Apache, Solr, and MySQL. Mine has 1024.
 # "Debian 7":http://www.debian.org/News/2013/20130504 or an equivalent Linux distribution. (You can use whatever distro you want, but deviating from Debian will require more tweaks to the playbooks. See Ansible's different "packaging":http://www.ansibleworks.com/docs/modules.html#packaging modules.)
-# A wildcard SSL certificate. I bought one. You could self-sign if you wanna save money.
-# A "Tarsnap":http://www.tarsnap.com account with some credit in it. You could comment this out if you want to use a different backup service. I pay for backups at Linode in addition to the Tarsnap nightlies because you can never be too sure.
+# A wildcard SSL certificate. You can either buy one or self-sign if you want to save money.
+# A "Tarsnap":http://www.tarsnap.com account with some credit in it. You could comment this out if you want to use a different backup service. Consider paying your hosting provider for backups or using an additional backup service for redundancy.
 
 h2. Installation
 
 h3. 1. Get a wildcard SSL certificate
 
-Create a private key and a certificate signing request (CSR):
+Generate a private key and a certificate signing request (CSR):
 
 bc. openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -out mycert.csr
 
@@ -76,7 +76,7 @@ bc. security verify-cert -L -p ssl -s example.com -c roles/common/files/wildcard
 
 h3. 2. Get a Tarsnap machine key
 
-If you haven't already, "download and install tarsnap":https://www.tarsnap.com/download.html, or use @brew install tarsnap@ if you use "Homebrew":http://brew.sh.
+If you haven't already, "download and install Tarsnap":https://www.tarsnap.com/download.html, or use @brew install tarsnap@ if you use "Homebrew":http://brew.sh.
 
 Create a new machine key for your server:
 
@@ -122,7 +122,7 @@ To run just one or more piece, use tags. I try to tag all my includes for easy i
 
 bc. ansible-playbook -i ./hosts --tags=ferm site.yml
 
-You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary. OpenVPN in particular requires a bunch of manual command line stuff to get running.
+You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary. OpenVPN in particular requires a bunch of manual command line intervention to get running.
 
 h3. 6. Set up DNS
 
@@ -130,11 +130,12 @@ If you've just bought a new domain name, point it at "Linode's DNS Manager":http
 
 Create an @A@ record for @example.com@ as well as @mail.example.com@ which points to your server IP. Create an @MX@ record for @example.com@ which assigns @mail.example.com@ as the domain's mail server.
 
-Set up SPF and reverse DNS "as per the inspirational post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
+Set up SPF and reverse DNS "as per this post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
 h3. 7. Miscellaneous Configuration
 
-Sign in to the ZNC web interface and set things up to your liking.
+* Sign in to the ZNC web interface and set things up to your liking.
+* You'll probably want to sign into your ownCloud installation and check out the settings there, too.
 
 h2. How To Use Your New Personal Cloud
 
