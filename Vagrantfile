@@ -1,5 +1,8 @@
 # The following patch needs to be applied for ansible to run cleanly on vagrant up:
 # https://github.com/mitchellh/vagrant/pull/1723.diff on /opt/vagrant/embedded/gems/gems/vagrant-1.2.x
+#
+# Or just use Vagrant 1.3.x: it generates an inventory automatically
+# (https://github.com/mitchellh/vagrant/blob/master/CHANGELOG.md#130-september-5-2013)
 
 Vagrant.configure('2') do |config|
   config.vm.provider :lxc do |lxc, override|
