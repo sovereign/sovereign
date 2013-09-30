@@ -138,7 +138,7 @@ Sign in to the ZNC web interface and set things up to your liking.
 
 h2. How To Use Your New Personal Cloud
 
-We're collecting known-good client setups [on our wiki](https://github.com/al3x/sovereign/wiki/Usage).
+We're collecting known-good client setups "on our wiki":https://github.com/al3x/sovereign/wiki/Usage.
 
 h1. Contributing
 
