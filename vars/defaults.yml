@@ -1,4 +1,9 @@
 ---
+###############################################################################
+# DO NOT EDIT. Set your variables in `vars/user.yml` instead. This is a
+# reference of all the variables.
+###############################################################################
+
 # blog
 # blog_domain: TODO.com
 

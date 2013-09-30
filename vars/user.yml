@@ -1,4 +1,9 @@
 ---
+###############################################################################
+# Uncomment and set your variables here. For a complete reference look at the
+# `vars/defaults.yml` file.
+###############################################################################
+#
 # blog
 # blog_domain: TODO.com
 
