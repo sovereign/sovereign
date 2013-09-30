@@ -8,9 +8,9 @@ h2. Background/Motivations
 
 I had been a paying Google Apps customer for personal and corporate use since the service was in beta. Until several weeks ago, that is. I was about to set up another Google Apps account for a new project when I stopped to consider what I would be funding with my USD $50 per user per year:
 
-# A "seriously questionable privacy track record":https://en.wikipedia.org/wiki/Criticism_of_Google#Privacy.
-# A "dwindling commitment to open standards":https://www.eff.org/deeplinks/2013/05/google-abandons-open-standards-instant-messaging.
-# A "lack of long-term commitment to products":http://www.quora.com/Google-Products/What-are-all-the-Google-products-that-have-been-shut-down.
+# "A seriously questionable privacy track record":https://en.wikipedia.org/wiki/Criticism_of_Google#Privacy.
+# "A dwindling commitment to open standards":https://www.eff.org/deeplinks/2013/05/google-abandons-open-standards-instant-messaging.
+# "A lack of long-term commitment to products":http://www.quora.com/Google-Products/What-are-all-the-Google-products-that-have-been-shut-down.
 # Development of Google+: a cynical and "unimaginative Facebook ripoff":http://gigaom.com/2012/03/15/google-plus-the-problem-isnt-design-its-a-lack-of-demand/ that's "intruding into progressively more Google products":http://bits.blogs.nytimes.com/2012/03/06/google-defending-google-plus-shares-usage-numbers/?_r=0.
 
 To each her/his own, but personally I saw little reason to continue participating in the Google ecosystem. It had been years since I last ran my own server for email and such, but it's only gotten cheaper and easier to do so. Plus, none of the commercial alternatives I looked at provided all the services I was looking for.
@@ -106,11 +106,13 @@ This account should be set up for passwordless sudo. Use @visudo@ and add this l
 
 bc. deploy  ALL=(ALL) NOPASSWD: ALL
 
-h3. 4. Run the ansible scripts
+h3. 4. Configure your installation
+
+Modify the settings in @vars/user.yml@ to your liking. If you want to see how they're used in context, just search for the corresponding string.
+
+h3. 5. Run the Ansible Playbooks
 
 First, make sure you've "got Ansible installed":http://ansibleworks.com/docs/gettingstarted.html#getting-ansible.
-
-Now, the time-consuming part: grep through the files for the string @TODO@ and replace as necessary. You'll probably want to check out all the files in the respective @vars/@ sub-directories in each playbook directory.
 
 To run the whole dang thing:
 
@@ -122,7 +124,7 @@ bc. ansible-playbook -i ./hosts --tags=ferm site.yml
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary. OpenVPN in particular requires a bunch of manual command line stuff to get running.
 
-h3. 5. Set up DNS
+h3. 6. Set up DNS
 
 If you've just bought a new domain name, point it at "Linode's DNS Manager":https://library.linode.com/dns-manager or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you're using an existing domain that's already managed elsewhere, you can probably just modify a few records.
 
@@ -130,30 +132,13 @@ Create an @A@ record for @example.com@ as well as @mail.example.com@ which point
 
 Set up SPF and reverse DNS "as per the inspirational post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
-h3. 6. Miscellaneous Configuration
+h3. 7. Miscellaneous Configuration
 
 Sign in to the ZNC web interface and set things up to your liking.
 
+h2. How To Use Your New Personal Cloud
 
-h2. How I Use It
-
-First, I moved all my email off Google with "larch":https://github.com/rgrove/larch/. It worked like a charm. Calendars and contacts were even easier: just export and then import the standard formats with your clients of choice; no issues with Calendar.app and Contacts.app.
-
-I use this setup from my Mac like this:
-
-* I read email in "Airmail":https://itunes.apple.com/us/app/airmail/id573171375?mt=12.
-* I manage my calendar and contacts via the Apple-provided Calendar.app and Contacts.app. See "ownCloud's docs":http://doc.owncloud.com/server/5.0EE/user_manual/pim/index.html to get it set up.
-* I connect to the VPS via "Viscosity":http://www.sparklabs.com/viscosity/. It has some dumb DNS bug right now so I have to point my machine to "OpenDNS":https://use.opendns.com/ in order to resolve names. Despite that, it's better than the "alternative":https://code.google.com/p/tunnelblick/.
-* I connect to the IRC bouncer with "Textual":http://www.codeux.com/textual/.
-* I run the "ownCloud sync client":https://owncloud.com/download for Dropbox-like file sync.
-* I manage my blog and other sites with "Jekyll":http://jekyllrb.com/ locally, then push the resulting builds up to the server via "rsync":https://rsync.samba.org/ over SSH.
-
-... and from my iPhone like this:
-
-* I read email in the Apple-provided Mail app and check it quickly in "Triage":http://www.triage.cc/.
-* I manage my calendar and contacts with the built-in apps. Boring, effective. See the "ownCloud docs":http://doc.owncloud.com/server/5.0EE/user_manual/pim/index.html for setup instructions.
-* I access files stored in my ownCloud instance via "their app":https://itunes.apple.com/us/app/owncloud/id543672169?mt=8.
-* I connect to my IRC bouncer with "Palaver":https://itunes.apple.com/us/app/id538073623?mt=8.
+We're collecting known-good client setups [on our wiki](https://github.com/al3x/sovereign/wiki/Usage).
 
 h1. Contributing
 
