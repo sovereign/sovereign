@@ -1,0 +1,9 @@
+- name: What is our IP address?
+  command: dig ${mail_server_hostname} +short
+  register: dig_command
+
+- name: Download check-rbl
+  get_url: url=https://raw.github.com/lukecyca/check-rbl/f6b222b0ca/check-rbl.pl dest=/opt/check-rbl.pl
+
+- name: Install nightly check-rbl cronjob
+  cron: name="check-rbl" hour="2" minute="0" job="perl /opt/check-rbl.pl -i ${dig_command.stdout}"
