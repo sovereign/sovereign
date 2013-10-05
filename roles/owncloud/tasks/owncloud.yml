@@ -24,16 +24,19 @@
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
 - file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
-- name: Enable Apache module dependencies for ownCloud
-  command: a2enmod $item
-  with_items:
-    - rewrite
-    - headers
+- name: Enable Apache rewrite module
+  command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
+  notify: restart apache
+  
+- name: Enable Apache headers module
+  command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
   notify: restart apache
 
 - name: Configure the Apache HTTP server for ownCloud
   template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud group=www-data owner=www-data
-- command: a2ensite owncloud
+
+- name: Enable the owncloud site
+  command: a2ensite owncloud creates=/etc/apache2/sites-enabled/owncloud
   notify: restart apache
 
 - name: Install ownCloud cronjob
