@@ -47,5 +47,5 @@
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl
-- include: ferm.yml tags=ferm
+- include: ufw.yml tags=ufw
 - include: security.yml tags=security
