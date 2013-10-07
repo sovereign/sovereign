@@ -24,5 +24,11 @@
 - name: Create Tarsnap cache directory
   file: state=directory path=/usr/tarsnap-cache
 
-- name: Install nightly Tarsnap cronjob
-  cron: name="Tarsnap backup" hour="3" minute="0" job="/usr/local/bin/tarsnap --cachedir /usr/tarsnap-cache --keyfile /root/tarsnap.key -c -f backup-`date +\%Y\%m\%d` -C / home root decrypted var/www var/log var/lib/mysql > /dev/null"
+- name: Install Tarsnap configuration file
+  copy: src=tarsnaprc dest=/root/.tarsnaprc mode="644"
+
+- name: Install Tarsnap backup handler script
+  copy: src=tarsnap.sh dest=/root/tarsnap.sh mode="755"
+
+- name: Install nightly Tarsnap-generations cronjob
+  cron: name="Tarsnap backup" hour="23" minute="0" job="sh /root/tarsnap.sh >> /var/log/tarsnap.log"
