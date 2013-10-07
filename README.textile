@@ -122,7 +122,7 @@ To run just one or more piece, use tags. I try to tag all my includes for easy i
 
 bc. ansible-playbook -i ./hosts --tags=ferm site.yml
 
-You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary. OpenVPN in particular requires a bunch of manual command line intervention to get running.
+You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary.
 
 h3. 6. Set up DNS
 
