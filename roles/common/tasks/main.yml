@@ -34,6 +34,9 @@
   notify:
     - restart ntp
 
+- name: Apticron email configuration
+  template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
+
 - name: Ensure ntpd is running and enabled
   service: name=ntp state=started enabled=yes
 
