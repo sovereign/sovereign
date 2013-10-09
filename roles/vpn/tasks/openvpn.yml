@@ -3,50 +3,97 @@
 # ref: https://library.linode.com/networking/openvpn/debian-6-squeeze
 
 - name: Install OpenVPN and dependencies from apt
-  apt: pkg=$item state=installed
+  apt: pkg={{ item }} state=installed
   with_items:
     - openvpn
     - udev
     - dnsmasq
 
-- name: Copy setup scripts into place
-  command: cp -R /usr/share/doc/openvpn/examples/easy-rsa/ /etc/openvpn
-
-- name: Put easy-rsa parameter settings in place
-  template: src=etc_openvpn_easy-rsa_2.0_vars.j2 dest=/etc/openvpn/easy-rsa/2.0/vars
-
-###### manually:
-# cd /etc/openvpn/easy-rsa/2.0/
-# . /etc/openvpn/easy-rsa/2.0/vars
-# . /etc/openvpn/easy-rsa/2.0/clean-all
-# . /etc/openvpn/easy-rsa/2.0/build-ca
-# . /etc/openvpn/easy-rsa/2.0/build-key-server server
-#
-# for each client:
-# . /etc/openvpn/easy-rsa/2.0/build-key $client_name
-#####
-
-- name: Generate Diffie-Hellman parameters
-  command: . /etc/openvpn/easy-rsa/2.0/build-dh creates=/etc/openvpn/easy-rsa/2.0/keys/dh1024.pem
-
-- name: Copy certificates and key files into place
-  command: cp /etc/openvpn/easy-rsa/2.0/keys/$item /etc/openvpn creates=/etc/openvpn/$item
+- name: Generate RSA keys for the CA and Server
+  command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
+           chdir={{ openvpn_path }}
+           creates={{ item }}.key
   with_items:
-    - ca.crt
-    - ca.key
-    - dh1024.pem
-    - server.crt
-    - server.key
+    - ca
+    - server
+
+- name: Generate RSA keys for the clients
+  command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
+           chdir={{ openvpn_path }}
+           creates={{ item }}.key
+  with_items: openvpn_clients
+
+- name: Set the proper permissions on all RSA keys
+  file: path={{ openvpn_path }}
+        recurse=yes
+        state=directory
+        owner=root
+        group=root
+        mode=600
+
+- name: Generate CA certificate
+  command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -subj "{{ openssl_request_subject }}/CN=ca-certificate"
+           creates={{ openvpn_ca }}.crt
+
+- name: Generate the OpenSSL configuration that will be used for the Server certificate's req and ca commands
+  # Properly sets the attributes that are described here:
+  # openvpn.net/index.php/open-source/documentation/howto.html#mitm
+  #
+  # This is required in order for the 'ns-cert-type server' option to
+  # work, which is enabled by default in most standard client.conf
+  # files.
+  template: src=openssl-server-certificate.cnf.j2
+            dest={{ openvpn_path }}/openssl-server-certificate.cnf
+
+- name: Seed a blank database file that will be used when generating the Server's certificate
+  command: touch {{ openvpn_path }}/index.txt
+           creates={{ openvpn_path }}/index.txt
+
+- name: Seed a serial file that will be used when generating the Server's certificate
+  shell: echo 01 > {{ openvpn_path }}/serial
+         creates={{ openvpn_path }}/serial
+
+- name: Generate CSR for the Server
+  command: openssl req -batch -extensions server -new -key server.key -out server.csr -config {{ openvpn_path }}/openssl-server-certificate.cnf
+           chdir={{ openvpn_path }}
+           creates=server.csr
+
+- name: Generate certificate for the Server
+  command: openssl ca -batch -extensions server -in server.csr -out server.crt -config openssl-server-certificate.cnf
+           chdir={{ openvpn_path }}
+           creates=server.crt
+
+- name: Generate CSRs for the clients
+  command: openssl req -new -key {{ item }}.key -out {{ item }}.csr -subj "{{ openssl_request_subject }}/CN={{ item }}" 
+           chdir={{ openvpn_path }}
+           creates={{ item }}.csr
+  with_items: openvpn_clients
+
+- name: Generate certificates for the clients
+  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -in {{ item }}.csr -out {{ item }}.crt
+           chdir={{ openvpn_path }}
+           creates={{ item }}.crt
+  with_items: openvpn_clients
+
+- name: Generate HMAC firewall key
+  command: openvpn --genkey --secret {{ openvpn_hmac_firewall }}
+           creates={{ openvpn_hmac_firewall }}
+
+- name: Generate Diffie–Hellman parameters (this will take a while)
+  command: openssl dhparam -out {{ openvpn_dhparam }} {{ openvpn_key_size }}
+           creates={{ openvpn_dhparam }}
 
 - name: Copy rc.local with firewall and dnsmasq rules into place
   copy: src=etc_rc.local dest=/etc/rc.local
 
 - name: Enable IPv4 traffic forwarding
-  lineinfile: dest=/etc/sysctl.conf regexp="^net.ipv4.ip_forward" line="net.ipv4.ip_forward=1"
-- command: echo 1 > /proc/sys/net/ipv4/ip_forward
+  lineinfile: dest=/etc/sysctl.conf
+              regexp="^#?net.ipv4.ip_forward"
+              line="net.ipv4.ip_forward=1"
+- shell: echo 1 > /proc/sys/net/ipv4/ip_forward
 
-- name: Allow OpenVPN through firewall
-  command: $item
+- name: Allow OpenVPN through the firewall
+  command: "{{ item }}"
   with_items:
     - iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
     - iptables -A FORWARD -s 10.8.0.0/24 -j ACCEPT
@@ -57,7 +104,29 @@
   template: src=etc_openvpn_server.conf.j2 dest=/etc/openvpn/server.conf
   notify: restart openvpn
 
+# OpenVPN must restart first so the 10.8.0.0 interface is available
+# to dnsmasq
+- meta: flush_handlers
+
 - name: Copy dnsmasq configuration file into place
   copy: src=etc_dnsmasq.conf dest=/etc/dnsmasq.conf
   notify: restart dnsmasq
 
+- name: Retrieve the ca.crt and ta.key files that clients will need in order to connect to the OpenVPN server
+  fetch: src={{ openvpn_path }}/{{ item }}
+         dest=/tmp/sovereign-openvpn-files
+  with_items:
+    - ca.crt
+    - ta.key
+
+- name: Retrieve the certificates that clients will need in order to connect to the OpenVPN server
+  fetch: src={{ openvpn_path }}/{{ item }}.crt
+         dest=/tmp/sovereign-openvpn-files
+  with_items: openvpn_clients
+
+- name: Retrieve the keys that clients will need in order to connect to the OpenVPN server
+  fetch: src={{ openvpn_path }}/{{ item }}.key
+         dest=/tmp/sovereign-openvpn-files
+  with_items: openvpn_clients
+
+- pause: prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."
