@@ -22,10 +22,11 @@ MONTHLY=1
 MONTHLY_DAY=01
 
 # Path to tarsnap
-#TARSNAP="/home/tdb/tarsnap/tarsnap.pl"
 TARSNAP="/usr/local/bin/tarsnap"
 
 # end of config
+
+set -e
 
 # day of week: 1-7, monday = 1
 DOW=`date +%u`
@@ -52,12 +53,6 @@ fi
 
 # Do backups
 for dir in $DIRS; do
-	# nasty bodge for my large /home :-)
-	EXTRA_FLAGS=
-	if [ X"$dir" = X"/home" ]; then
-		EXTRA_FLAGS="--lowmem"
-	fi
-
 	echo "==> create $BACKUP-$dir"
 	$TARSNAP $EXTRA_FLAGS -c -f $BACKUP-$dir $dir
 done
