@@ -34,6 +34,13 @@
 - name: Copy znc init file into place
   copy: src=etc_init.d_znc dest=/etc/init.d/znc mode=0755
 
+- name: Create a combined version of the private key with public cert and intermediate + root CAs
+  shell: cat /etc/ssl/private/wildcard_private.key /etc/ssl/certs/wildcard_combined.pem >
+    /var/lib/znc/znc.pem creates=/var/lib/znc/znc.pem
+
+- name: Ensure znc user and group can read cert
+  file: path=/var/lib/znc/znc.pem group=znc owner=znc
+
 # NOTE: you should probably just generate this using the directions above and then edit via the web panel
 #- name: Copy znc configuration file into place
 #  template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
