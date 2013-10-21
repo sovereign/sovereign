@@ -12,5 +12,3 @@
 
 - name: restart ssh
   service: name=ssh state=restarted
-
-- include: ferm.yml

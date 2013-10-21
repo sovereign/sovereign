@@ -1,0 +1,31 @@
+---
+# Installs and configures ufw, which in turn uses iptables for firewall management
+
+# ufw includes sensible icmp defaults
+- name: Install ufw
+  apt: pkg=ufw state=present
+
+- name: Set firewall rules
+  command: ufw allow {{ item }}
+  register: ufw_result
+  changed_when: "ufw_result.stdout.startswith('Rule')"
+  with_items:
+    - smtp/tcp
+    - domain/tcp
+    - http/tcp
+    - https/tcp
+    - ssh/tcp
+    - ssmtp/tcp
+    - imaps/tcp
+    - 6697/tcp  # znc
+    - openvpn/udp
+    - 60000:61000/udp  # mosh udp packets
+
+- name: Check status of ufw
+  command: ufw status
+  register: ufw_status
+  changed_when: False  # never report as "changed"
+
+- name: Enable ufw
+  command: ufw --force enable
+  when: "ufw_status.stdout.startswith('Status: inactive')"
