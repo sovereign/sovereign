@@ -38,7 +38,7 @@ What do you get if you point this thing at a VPS? All kinds of good stuff!
 * An IRC bouncer via "ZNC":http://wiki.znc.in/ZNC.
 * "Monit":http://mmonit.com/monit/ to keep everything running smoothly (and alert you when it's not).
 * Web hosting (ex: for your blog) via "Apache":https://www.apache.org/.
-* Firewall management via "ferm":http://ferm.foo-projects.org/.
+* Firewall management via "Uncomplicated Firewall (ufw)":https://wiki.ubuntu.com/UncomplicatedFirewall.
 * Intrusion prevention via "fail2ban":http://www.fail2ban.org/ and rootkit detection via "rkhunter":http://rkhunter.sourceforge.net.
 * SSH configuration preventing root login and insecure password authentication
 * Nightly backups to "Tarsnap":https://www.tarsnap.com/.
@@ -120,7 +120,7 @@ bc. ansible-playbook -i ./hosts site.yml
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
-bc. ansible-playbook -i ./hosts --tags=ferm site.yml
+bc. ansible-playbook -i ./hosts --tags=ufw site.yml
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there's no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I've tried to add comments where manual intervention is necessary.
 
