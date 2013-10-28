@@ -18,6 +18,7 @@
 - name: Check for existing encfs
   shell: ls /encrypted/*
   ignore_errors: True
+  changed_when: False  # never report as "changed"
   register: encfs_check
 
 # If it is empty, we need to create the encfs

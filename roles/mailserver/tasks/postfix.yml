@@ -11,19 +11,17 @@
 
 - name: Create database user for mail server
   mysql_user: user={{ mail_mysql_username }} password={{ mail_mysql_password }} state=present priv="mailserver.*:ALL"
+  notify: import mysql postfix
 
 - name: Create database for mail server
   mysql_db: name={{ mail_mysql_database }} state=present
+  notify: import mysql postfix
 
-- name: copy over mailserver sql
+- name: Copy import.sql
   template: src=mailserver.sql.j2 dest=/etc/postfix/import.sql owner=root group=root mode=0600
-  tags: import_mysql_postfix
+  notify: import mysql postfix
 
-- name: import mysql postfix
-  mysql_db: name={{ mail_mysql_database }} state=import target=/etc/postfix/import.sql
-  tags: import_mysql_postfix
-
-- name: Copy Postfix config files into place
+- name: Copy main.cf
   template: src=etc_postfix_main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root
   notify: restart postfix
 
