@@ -9,3 +9,8 @@
 
 - name: restart solr
   service: name=tomcat6 state=restarted
+
+- name: import mysql postfix
+  mysql_db: name={{ mail_mysql_database }} state=import target=/etc/postfix/import.sql
+  notify: restart postfix
+
