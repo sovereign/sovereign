@@ -4,6 +4,9 @@
 smtpd_banner = $myhostname ESMTP $mail_name
 biff = no
  
+# Accept messages up to 50MB
+message_size_limit = 51200000
+
 # appending .domain is the MUA's job.
 append_dot_mydomain = no
  
