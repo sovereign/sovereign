@@ -3,8 +3,8 @@
 # Tarsnap backup script
 # Written by Tim Bishop, 2009.
 
-# Directories to backup
-DIRS="/home /root /decrypted /var/www /var/lib/mysql"
+# Directories to backup (relative to /)
+DIRS="home root decrypted var/www var/lib/mysql"
 
 # Number of daily backups to keep
 DAILY=7
@@ -23,6 +23,9 @@ MONTHLY_DAY=01
 
 # Path to tarsnap
 TARSNAP="/usr/local/bin/tarsnap"
+
+# Extra flags to pass to tarsnap
+EXTRA_FLAGS="-C /"
 
 # end of config
 
