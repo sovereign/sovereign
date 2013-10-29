@@ -29,3 +29,6 @@
 - name: Enable ufw
   command: ufw --force enable
   when: "ufw_status.stdout.startswith('Status: inactive')"
+  register: ufw_enable
+  # ignore error resulting from known bug on Debian 7.0
+  failed_when: ufw_enable|failed and not ansible_lsb['codename'] == 'wheezy'
