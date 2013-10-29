@@ -30,5 +30,9 @@
   command: ufw --force enable
   when: "ufw_status.stdout.startswith('Status: inactive')"
   register: ufw_enable
-  # ignore error resulting from known bug on Debian 7.0
+  # ignore error resulting from known bug on Debian 7
   failed_when: ufw_enable|failed and not ansible_lsb['codename'] == 'wheezy'
+
+- name: Enable ufw again (workaround for known bug in Debian 7)
+  command: ufw --force enable
+  when: "ufw_status.stdout.startswith('Status: inactive') and ansible_lsb['codename'] == 'wheezy'"
