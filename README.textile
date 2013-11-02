@@ -110,6 +110,15 @@ h3. 4. Configure your installation
 
 Modify the settings in @vars/user.yml@ to your liking. If you want to see how they're used in context, just search for the corresponding string.
 
+Setting @password_hash@ for your mail users is a bit tricky. You can generate one using "doveadm-pw":http://wiki2.dovecot.org/Tools/Doveadm/Pw.
+
+bc. # doveadm pw -s SHA512-CRYPT
+Enter new password: foo
+Retype new password: foo
+{SHA512-CRYPT}$6$drlIN9fx7Aj7/iLu$XvjeuQh5tlzNpNfs4NwxN7.HGRLglTKism0hxs2C1OvD02d3x8OBN9KQTueTr53nTJwVShtCYiW80SGXAjSyM0
+
+Remove @{SHA512-CRYPT}@ and insert the rest as the @password_hash@ value.
+
 h3. 5. Run the Ansible Playbooks
 
 First, make sure you've "got Ansible installed":http://ansibleworks.com/docs/gettingstarted.html#getting-ansible.
