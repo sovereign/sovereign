@@ -119,6 +119,16 @@ Retype new password: foo
 
 Remove @{SHA512-CRYPT}@ and insert the rest as the @password_hash@ value.
 
+Same for the IRC password hash...
+
+bc. # znc --makepass
+[ ?? ] Enter Password: foo
+[ ?? ] Confirm Password: foo
+[ ** ] Use this in the <User> section of your config:
+[ ** ] Pass = sha256#4bfc209c5e19874337fd89c80675ad194836efea5efd4189b7f73cd9e0a6094f#,i*Msa0B;w9yR23nm1ZB#
+
+Take the string beginning with @sha256#@ and insert it as the value for @irc_password_hash@.
+
 h3. 5. Run the Ansible Playbooks
 
 First, make sure you've "got Ansible installed":http://ansibleworks.com/docs/gettingstarted.html#getting-ansible.
