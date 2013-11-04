@@ -11,9 +11,12 @@ ConnectDelay = 5
 LoadModule = webadmin
 LoadModule = fail2ban
 LoadModule = lastseen
+LoadModule = partyline
 MaxBufferSize = 500
+Motd = Connected to ZNC
 PidFile = /var/run/znc/znc.pid
 ProtectWebSessions = true
+SSLCertFile = /var/lib/znc/znc.pem
 ServerThrottle = 30
 Skin = _default_
 StatusPrefix = *
@@ -28,17 +31,17 @@ Version = 1.0
 	SSL = true
 </Listener>
 
-<User TODO>
+<User {{ irc_nick }}>
 	Admin = true
 	Allow = *
-	AltNick = TODO_
+	AltNick = {{ irc_nick }}_
 	AppendTimestamp = false
 	AutoClearChanBuffer = true
 	Buffer = 5000
 	ChanModes = +stn
 	DenyLoadMod = false
 	DenySetBindHost = false
-	Ident = TODO
+	Ident = {{ irc_ident }}
 	JoinTries = 10
 	LoadModule = controlpanel
 	LoadModule = perform
@@ -46,10 +49,10 @@ Version = 1.0
 	LoadModule = clientnotify
 	MaxNetworks = 1
 	MultiClients = true
-	Nick = TODO
+	Nick = {{ irc_nick }}
 	PrependTimestamp = true
-	QuitMsg = TODO
-	RealName = TODO
+	QuitMsg = {{ irc_quitmsg }}
+	RealName = {{ irc_realname }}
 	TimestampFormat = [%H:%M:%S]
 
 	<Network freenode>
@@ -62,9 +65,5 @@ Version = 1.0
 		Server = chat.freenode.net 6665
 	</Network>
 
-	<Pass password>
-		Hash = TODO
-		Method = SHA256
-		Salt = TODO
-	</Pass>
+	Pass = {{ irc_password_hash }}
 </User>

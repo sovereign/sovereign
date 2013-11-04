@@ -41,11 +41,15 @@
 - name: Ensure znc user and group can read cert
   file: path=/var/lib/znc/znc.pem group=znc owner=znc
 
-# NOTE: you should probably just generate this using the directions above and then edit via the web panel
-#- name: Copy znc configuration file into place
-#  template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
+- name: Check for existing config file
+  command: cat /var/lib/znc/configs/znc.conf
+  register: znc_config
+  ignore_errors: True
+  changed_when: False  # never report as "changed"
+
+- name: Copy znc configuration file into place
+  template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
+  when: znc_config.rc != 0
 
 - name: Ensure znc is a system service
-  command: update-rc.d znc defaults
-  notify: restart znc
-
+  service: name=znc state=started enabled=true

@@ -15,6 +15,11 @@
 
 # ircbouncer
 znc_version: 1.0
+# irc_nick: TODO
+# irc_ident: TODO
+# irc_realname: TODO
+# irc_quitmsg: TODO
+# irc_password_hash: TODO
 
 # # mailserver
 # mail_server_hostname: mail.TODO.com
