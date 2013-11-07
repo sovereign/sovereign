@@ -17,10 +17,14 @@
     - ca
     - server
 
+- name: Create directories for clients
+  file: path={{ openvpn_path}}/{{ item }} state=directory
+  with_items: openvpn_clients
+
 - name: Generate RSA keys for the clients
-  command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
-           chdir={{ openvpn_path }}
-           creates={{ item }}.key
+  command: openssl genrsa -out client.key {{ openvpn_key_size }}
+           chdir={{ openvpn_path }}/{{ item }}
+           creates=client.key
   with_items: openvpn_clients
 
 - name: Set the proper permissions on all RSA keys
@@ -64,15 +68,21 @@
            creates=server.crt
 
 - name: Generate CSRs for the clients
-  command: openssl req -new -key {{ item }}.key -out {{ item }}.csr -subj "{{ openssl_request_subject }}/CN={{ item }}" 
-           chdir={{ openvpn_path }}
-           creates={{ item }}.csr
+  command: openssl req -new -key client.key -out client.csr -subj "{{ openssl_request_subject }}/CN={{ item }}" 
+           chdir={{ openvpn_path }}/{{ item }}
+           creates=client.csr
   with_items: openvpn_clients
 
 - name: Generate certificates for the clients
-  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -in {{ item }}.csr -out {{ item }}.crt
-           chdir={{ openvpn_path }}
-           creates={{ item }}.crt
+  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -in client.csr -out client.crt
+           chdir={{ openvpn_path }}/{{ item }}
+           creates=client.crt
+  with_items: openvpn_clients
+
+
+- name: Create the client configs
+  template: src=client.cnf.j2
+            dest={{ openvpn_path }}/{{ item }}/{{ openvpn_server }}.ovpn
   with_items: openvpn_clients
 
 - name: Generate HMAC firewall key
@@ -112,21 +122,17 @@
   copy: src=etc_dnsmasq.conf dest=/etc/dnsmasq.conf
   notify: restart dnsmasq
 
-- name: Retrieve the ca.crt and ta.key files that clients will need in order to connect to the OpenVPN server
-  fetch: src={{ openvpn_path }}/{{ item }}
-         dest=/tmp/sovereign-openvpn-files
-  with_items:
-    - ca.crt
-    - ta.key
+- name: Copy the ca.crt and ta.key files that clients will need in order to connect to the OpenVPN server
+  command: cp {{ openvpn_path }}/{{ item[1] }} {{ openvpn_path }}/{{ item[0] }} 
+  with_nested:
+    - openvpn_clients
+    - ["ca.crt", "ta.key"]
 
-- name: Retrieve the certificates that clients will need in order to connect to the OpenVPN server
-  fetch: src={{ openvpn_path }}/{{ item }}.crt
+- name: Retrieve the files that clients will need in order to connect to the OpenVPN server
+  fetch: src={{ openvpn_path }}/{{ item[0] }}/{{ item[1] }}
          dest=/tmp/sovereign-openvpn-files
-  with_items: openvpn_clients
-
-- name: Retrieve the keys that clients will need in order to connect to the OpenVPN server
-  fetch: src={{ openvpn_path }}/{{ item }}.key
-         dest=/tmp/sovereign-openvpn-files
-  with_items: openvpn_clients
+  with_nested:
+    - openvpn_clients
+    - ["client.crt", "client.key", "client.config", "ca.crt", "ta.key"]
 
 - pause: prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."

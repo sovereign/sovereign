@@ -78,6 +78,7 @@
 #   - laptop
 #   - phone
 #   - tablet
+# openvpn_server: acme.com
 
 # # webmail
 # webmail_domain: TODO.com
