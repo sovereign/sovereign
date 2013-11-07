@@ -1,0 +1,16 @@
+client
+dev tun
+proto udp
+remote {{ openvpn_server }} 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+
+ca ca.crt
+cert client.crt
+key client.key
+ns-cert-type server
+tls-auth ta.key 1
+comp-lzo
+verb 3
