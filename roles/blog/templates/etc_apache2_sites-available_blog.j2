@@ -1,14 +1,14 @@
 <VirtualHost *:80>
-    ServerName {{ blog_domain }}
-    ServerAlias www.{{ blog_domain }}
+    ServerName {{ domain }}
+    ServerAlias www.{{ domain }}
 
-    Redirect / https://{{ blog_domain }}/
+    Redirect / https://{{ domain }}/
 </VirtualHost>
 
 
 <VirtualHost *:443>
-    ServerName {{ blog_domain }}
-    ServerAlias www.{{ blog_domain }}
+    ServerName {{ domain }}
+    ServerAlias www.{{ domain }}
 
     SSLEngine on
     SSLProtocol ALL -SSLv2
@@ -19,7 +19,7 @@
     SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
     SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
 
-    DocumentRoot            "/var/www/{{ blog_domain }}"
+    DocumentRoot            "/var/www/{{ domain }}"
     DirectoryIndex          index.html
     Options                 -Indexes
 

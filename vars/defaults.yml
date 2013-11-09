@@ -4,10 +4,8 @@
 # reference of all the variables.
 ###############################################################################
 
-# # blog
-# blog_domain: TODO.com
-
 # # common
+# domain: TODO.com
 # main_user_name: TODO
 # admin_email: TODO@TODO.com
 # encfs_password: TODO
