@@ -2,4 +2,4 @@
   get_url: url=https://raw.github.com/lukecyca/check-rbl/f6b222b0ca/check-rbl.pl dest=/opt/check-rbl.pl
 
 - name: Install nightly check-rbl cronjob
-  cron: name="check-rbl" hour="2" minute="0" job="perl /opt/check-rbl.pl -i ${server_ip_address}"
+  cron: name="check-rbl" hour="2" minute="0" job="perl /opt/check-rbl.pl -i {{ ansible_default_ipv4.address }}"

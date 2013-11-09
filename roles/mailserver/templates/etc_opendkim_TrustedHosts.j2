@@ -1,5 +1,5 @@
 127.0.0.1
-{{ server_ip_address }}
+{{ ansible_default_ipv4.address }}
 {% for domain in mail_virtual_domains %}
 {{ domain.name }}
 {% endfor %}

@@ -9,7 +9,6 @@
 # main_user_name: (required)
 admin_email: "{{ main_user_name }}@{{ domain }}"
 # encfs_password: (required)
-# server_ip_address: (required)
 
 # ircbouncer
 znc_version: 1.0
