@@ -1,69 +1,48 @@
 ---
 ###############################################################################
-# DO NOT EDIT. Set your variables in `vars/user.yml` instead. This is a
-# reference of all the variables.
+# DO NOT EDIT. Set your variables in `vars/user.yml` instead.
+# This is a reference of all the variables.
 ###############################################################################
 
 # # common
-# domain: TODO.com
-# main_user_name: TODO
-# admin_email: TODO@TODO.com
-# encfs_password: TODO
-# server_ip_address: TODO
+# domain: (required)
+# main_user_name: (required)
+admin_email: "{{ main_user_name }}@{{ domain }}"
+# encfs_password: (required)
+# server_ip_address: (required)
 
 # ircbouncer
 znc_version: 1.0
-# irc_nick: TODO
-# irc_ident: TODO
-# irc_realname: TODO
-# irc_quitmsg: TODO
-# irc_password_hash: TODO
+# irc_nick: (required)
+# irc_ident: (required)
+# irc_realname: (required)
+# irc_quitmsg: (required)
+# irc_password_hash: (required)
 
-# # mailserver
-# mail_server_hostname: mail.TODO.com
-# mail_mysql_username: mailuser
-# mail_mysql_password: TODO
-# mail_mysql_database: mailserver
-# mail_virtual_domains:
-#   - name: TODO
-#     pk_id: 1
-#     primary_user: TODO
-#   - name: TODO
-#     pk_id: 2
-#     primary_user: TODO
-# mail_virtual_users:
-#   - address: TODO@TODO.com
-#     password_hash: TODO
-#     domain_pk_id: 1
-#   - address: TODO@TODO.com
-#     password_hash: TODO@TODO.com
-#     domain_pk_id: 2
-# mail_virtual_aliases:
-#   - source: root@TODO.com
-#     destination: TODO@TODO.com
-#     domain_pk_id: 1
-#   - source: postmaster@TODO.com
-#     destination: TODO@TODO.com
-#     domain_pk_id: 1
+# mailserver
+mail_server_hostname: "mail.{{ domain }}"
+mail_mysql_username: mailuser
+# mail_mysql_password: (required)
+mail_mysql_database: mailserver
+# mail_virtual_domains: (required)
+# mail_virtual_users: (required)
+# mail_virtual_aliases: (required)
 
-# # monitoring
-
-
-# # owncloud
-# owncloud_domain: cloud.TODO.com
-# owncloud_mysql_username: owncloud
-# owncloud_mysql_password: TODO
-# owncloud_mysql_database: owncloud
+# owncloud
+owncloud_domain: "cloud.{{ domain }}"
+owncloud_mysql_username: owncloud
+# owncloud_mysql_password: (required)
+owncloud_mysql_database: owncloud
 
 # tarsnap
 tarsnap_version: 1.0.35
 
-# # vpn
-openvpn_key_country:  "US"
-openvpn_key_province: "California"
-openvpn_key_city: "Beverly Hills"
-openvpn_key_org: "ACME CORPORATION"
-openvpn_key_ou: "Anvil Department"
+# vpn
+# openvpn_key_country: (required)
+# openvpn_key_province: (required)
+# openvpn_key_city: (required)
+# openvpn_key_org: (required)
+# openvpn_key_ou: (required)
 openssl_request_subject: "/C={{ openvpn_key_country }}/ST={{ openvpn_key_province }}/L={{ openvpn_key_city }}/O={{ openvpn_key_org }}/OU={{ openvpn_key_ou }}"
 openvpn_key_size: "2048"
 openvpn_cipher: "BF-CBC"
@@ -72,10 +51,7 @@ openvpn_path: "/etc/openvpn"
 openvpn_ca: "{{ openvpn_path }}/ca"
 openvpn_dhparam: "{{ openvpn_path }}/dh{{ openvpn_key_size }}.pem"
 openvpn_hmac_firewall: "{{ openvpn_path }}/ta.key"
-openvpn_clients:
-  - laptop
-  - phone
-  - tablet
+# openvpn_clients: (required)
 
-# # webmail
-# webmail_domain: TODO.com
+# webmail
+webmail_domain: "mail.{{ domain }}"
