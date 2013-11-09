@@ -17,7 +17,7 @@
     - libperl-dev
 
 - name: Download znc release
-  get_url: url=http://znc.in/releases/znc-${znc_version}.tar.gz dest=/root/znc-${znc_version}.tar.gz
+  get_url: url=http://znc.in/releases/archive/znc-${znc_version}.tar.gz dest=/root/znc-${znc_version}.tar.gz
 
 - name: Decompress znc source
   command: tar xzf /root/znc-${znc_version}.tar.gz chdir=/root creates=/root/znc-${znc_version}/configure
