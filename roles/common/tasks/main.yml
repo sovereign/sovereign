@@ -44,6 +44,10 @@
   command: a2dissite default removes=/etc/apache2/sites-enabled/default
   notify: restart apache
 
+- name: Enable Apache headers module
+  command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
+  notify: restart apache
+
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl

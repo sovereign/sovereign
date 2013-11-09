@@ -1,10 +1,7 @@
 <VirtualHost *:80> 
     ServerName {{ webmail_domain }}
- 
-    RewriteEngine on 
-    RewriteCond %{SERVER_PORT} !^443$ 
-    RewriteRule ^/(.*)$ https://%{SERVER_NAME}%{REQUEST_URI} [R=301,L] 
- 
+
+    Redirect permanent / https://{{ webmail_domain }}/
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -14,10 +11,11 @@
     SSLProtocol ALL -SSLv2
     SSLHonorCipherOrder On
     SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS
-
     SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
     SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
     SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
+    Header add Strict-Transport-Security "max-age=15768000; includeSubdomains"
+
     # Those aliases do not work properly with several hosts on your apache server
     # Uncomment them to use it or adapt them to your configuration
     #    Alias /roundcube/program/js/tiny_mce/ /usr/share/tinymce/www/
