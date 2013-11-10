@@ -61,6 +61,7 @@
 # tarsnap_version: 1.0.35
 
 # # vpn
+# openvpn_days_valid: "1825"
 # openvpn_key_country:  "US"
 # openvpn_key_province: "California"
 # openvpn_key_city: "Beverly Hills"

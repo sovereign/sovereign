@@ -17,7 +17,7 @@ RANDFILE = $dir/.rand
 
 x509_extensions = server
 
-default_days = 3650
+default_days = {{ openvpn_days_valid }}
 default_crl_days= 30
 default_md = sha256
 preserve = no
