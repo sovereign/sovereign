@@ -164,6 +164,8 @@ We're collecting known-good client setups "on our wiki":https://github.com/al3x/
 
 h1. Contributing
 
+You may want to set up a "local development environment":https://github.com/al3x/sovereign/wiki/Development-Environment so that you don't have to test on your real server.
+
 If you improve one of the provided playbooks or add an exciting new one, send a pull request. Everyone benefits.
 
 h2. License
