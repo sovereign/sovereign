@@ -1,3 +1,5 @@
+!https://travis-ci.org/al3x/sovereign.png?branch=master!:https://travis-ci.org/al3x/sovereign
+
 h1. Introduction
 
 Sovereign is a set of "Ansible":http://ansibleworks.com playbooks that you can use to build and maintain your own "personal cloud":http://www.urbandictionary.com/define.php?term=clown%20computing (I know I know). It's based entirely on open source software, so you're in control.

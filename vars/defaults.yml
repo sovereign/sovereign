@@ -42,6 +42,7 @@ tarsnap_version: 1.0.35
 # openvpn_key_city: (required)
 # openvpn_key_org: (required)
 # openvpn_key_ou: (required)
+openvpn_days_valid: "1825"
 openssl_request_subject: "/C={{ openvpn_key_country }}/ST={{ openvpn_key_province }}/L={{ openvpn_key_city }}/O={{ openvpn_key_org }}/OU={{ openvpn_key_ou }}"
 openvpn_key_size: "2048"
 openvpn_cipher: "BF-CBC"

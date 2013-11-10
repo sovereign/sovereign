@@ -32,7 +32,7 @@
         mode=600
 
 - name: Generate CA certificate
-  command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -subj "{{ openssl_request_subject }}/CN=ca-certificate"
+  command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=ca-certificate"
            creates={{ openvpn_ca }}.crt
 
 - name: Generate the OpenSSL configuration that will be used for the Server certificate's req and ca commands
@@ -70,7 +70,7 @@
   with_items: openvpn_clients
 
 - name: Generate certificates for the clients
-  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -in {{ item }}.csr -out {{ item }}.crt
+  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in {{ item }}.csr -out {{ item }}.crt
            chdir={{ openvpn_path }}
            creates={{ item }}.crt
   with_items: openvpn_clients
