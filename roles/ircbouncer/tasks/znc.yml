@@ -47,6 +47,9 @@
   ignore_errors: True
   changed_when: False  # never report as "changed"
 
+- name: Create znc config directory
+  file: state=directory path=/var/lib/znc/configs group=znc owner=znc
+
 - name: Copy znc configuration file into place
   template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
   when: znc_config.rc != 0
