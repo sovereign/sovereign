@@ -41,7 +41,7 @@
   service: name=ntp state=started enabled=yes
 
 - name: Disable default Apache site
-  command: a2dissite default removes=/etc/apache2/sites-enabled/default
+  command: a2dissite 000-default removes=/etc/apache2/sites-enabled/000-default
   notify: restart apache
 
 - name: Enable Apache headers module

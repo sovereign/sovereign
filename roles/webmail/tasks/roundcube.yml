@@ -7,7 +7,7 @@
 - name: Configure roundcube
   copy: src=etc_roundcube_main.inc.php dest=/etc/roundcube/main.inc.php group=www-data owner=root mode=640 force=yes
 
-- name: Enable roundcube site 
-  command: a2ensite roundcube
+- name: Enable roundcube site
+  command: a2ensite roundcube creates=/etc/apache2/sites-enabled/roundcube
   notify: restart apache
 
