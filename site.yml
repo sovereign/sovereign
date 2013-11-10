@@ -7,7 +7,7 @@
   gather_facts: True
   vars_files:
     - vars/defaults.yml
-    - vars/user.yml
+    - vars/{{ 'testing' if testing else 'user' }}.yml
 
   roles:
     - common

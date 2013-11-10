@@ -1,0 +1,52 @@
+---
+###############################################################################
+# Variables used when testing with Vagrant
+# For a complete reference look at the `vars/defaults.yml` file.
+###############################################################################
+
+# common
+domain: sovereign.local
+main_user_name: sovereign
+encfs_password: testPassword
+
+# ircbouncer
+irc_nick: sovereign
+irc_ident: sovereign
+irc_realname: Mr. Sovereign
+irc_quitmsg: Bye
+irc_password_hash: "sha256#4bfc209c5e19874337fd89c80675ad194836efea5efd4189b7f73cd9e0a6094f#,i*Msa0B;w9yR23nm1ZB#" #foo
+
+# mailserver
+mail_mysql_password: testPassword
+mail_virtual_domains:
+  - name: "{{ domain }}"
+    pk_id: 1
+    primary_user: "{{ main_user_name }}"
+mail_virtual_users:
+  - address: "{{ main_user_name }}@{{ domain }}"
+    password_hash: "$6$.f8oDqN1cDE/$Iyk8.scbwZCxw5pf9Flcvu.VYk9Jk77y/UaM0DyIcw9wouNqifXr3xV1fQPPNgBIM3BEEabAxePtC5Y/iX5vH1" #foo
+    domain_pk_id: 1
+mail_virtual_aliases:
+  - source: "root@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+  - source: "postmaster@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+  - source: "webmaster@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+
+# owncloud
+owncloud_mysql_password: testPassword
+
+# vpn
+openvpn_key_country:  "US"
+openvpn_key_province: "California"
+openvpn_key_city: "Beverly Hills"
+openvpn_key_org: "ACME CORPORATION"
+openvpn_key_ou: "Anvil Department"
+openvpn_clients:
+  - laptop
+  - phone
+  - tablet
