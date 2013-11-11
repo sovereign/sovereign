@@ -79,7 +79,7 @@
   command: openvpn --genkey --secret {{ openvpn_hmac_firewall }}
            creates={{ openvpn_hmac_firewall }}
 
-- name: Generate Diffie–Hellman parameters (this will take a while)
+- name: Generate Diffie-Hellman parameters (this will take a while)
   command: openssl dhparam -out {{ openvpn_dhparam }} {{ openvpn_key_size }}
            creates={{ openvpn_dhparam }}
 
@@ -87,10 +87,7 @@
   copy: src=etc_rc.local dest=/etc/rc.local
 
 - name: Enable IPv4 traffic forwarding
-  lineinfile: dest=/etc/sysctl.conf
-              regexp="^#?net.ipv4.ip_forward"
-              line="net.ipv4.ip_forward=1"
-- shell: echo 1 > /proc/sys/net/ipv4/ip_forward
+  sysctl: name=net.ipv4.ip_forward value=1
 
 - name: Allow OpenVPN through the firewall
   command: "{{ item }}"
@@ -129,4 +126,5 @@
          dest=/tmp/sovereign-openvpn-files
   with_items: openvpn_clients
 
-- pause: prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."
+- pause: seconds=5
+         prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."

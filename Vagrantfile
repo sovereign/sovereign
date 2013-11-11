@@ -18,7 +18,7 @@ Vagrant.configure('2') do |config|
     ansible.host_key_checking = false
 
     # ansible.tags = ['blog']
-    ansible.skip_tags = ['openvpn']
+    # ansible.skip_tags = ['openvpn']
     # ansible.verbose = 'vvvv'
 
     # Workaround: https://github.com/mitchellh/vagrant/issues/2174
