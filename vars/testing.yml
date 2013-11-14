@@ -24,7 +24,7 @@ mail_virtual_domains:
     primary_user: "{{ main_user_name }}"
 mail_virtual_users:
   - address: "{{ main_user_name }}@{{ domain }}"
-    password_hash: "$6$.f8oDqN1cDE/$Iyk8.scbwZCxw5pf9Flcvu.VYk9Jk77y/UaM0DyIcw9wouNqifXr3xV1fQPPNgBIM3BEEabAxePtC5Y/iX5vH1" #foo
+    password_hash: "$6$IYJfaF3jvmbAzlSe$1HBkbIdrOTWA31WYon7VSE2xAcFzYSZuVb8d3I0NDWzPxXBaqkHqKs4rLeNO9CVQEKv7wA15QctCyXbdRqFDy." #foo
     domain_pk_id: 1
 mail_virtual_aliases:
   - source: "root@{{ domain }}"
