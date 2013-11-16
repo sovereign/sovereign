@@ -17,6 +17,9 @@
   file: state=directory path=/decrypted/${item.name}/${item.primary_user} owner=vmail group=dovecot
   with_items:
     - ${mail_virtual_domains}
+  file: state=directory path=/decrypted/${item.name} owner=vmail group=dovecot mode=770
+  with_items:
+    - ${mail_virtual_domains}
 
 - name: Copy dovecot.conf into place
   copy: src=etc_dovecot_dovecot.conf dest=/etc/dovecot/dovecot.conf
