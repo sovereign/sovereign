@@ -13,11 +13,13 @@
 - name: Create vmail user
   user: name=vmail group=vmail state=present uid=5000 home=/decrypted
 
-- name: Ensure mail directories are in place
-  file: state=directory path=/decrypted/${item.name}/${item.primary_user} owner=vmail group=dovecot
+- name: Ensure mail domain directories are in place
+  file: state=directory path=/decrypted/${item.name} owner=vmail group=dovecot mode=770
   with_items:
     - ${mail_virtual_domains}
-  file: state=directory path=/decrypted/${item.name} owner=vmail group=dovecot mode=770
+
+- name: Ensure mail directories are in place
+  file: state=directory path=/decrypted/${item.name}/${item.primary_user} owner=vmail group=dovecot
   with_items:
     - ${mail_virtual_domains}
 
