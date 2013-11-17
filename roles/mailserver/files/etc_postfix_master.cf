@@ -8,11 +8,11 @@
 # service type  private unpriv  chroot  wakeup  maxproc command + args
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
-smtp       inet  n       -       -       -       -       smtpd
-#smtp      inet  n       -       -       -       1       postscreen
-#smtpd     pass  -       -       -       -       -       smtpd
-#dnsblog   unix  -       -       -       -       0       dnsblog
-#tlsproxy  unix  -       -       -       -       0       tlsproxy
+#smtp      inet  n       -       -       -       -       smtpd
+smtp       inet  n       -       -       -       1       postscreen
+smtpd      pass  -       -       -       -       -       smtpd
+dnsblog    unix  -       -       -       -       0       dnsblog
+tlsproxy   unix  -       -       -       -       0       tlsproxy
 #submission inet  n       -       -       -       -       smtpd
 #  -o syslog_name=postfix/submission
 #  -o smtpd_tls_security_level=encrypt
