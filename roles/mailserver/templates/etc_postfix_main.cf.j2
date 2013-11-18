@@ -63,14 +63,6 @@ smtpd_recipient_restrictions =
   reject_non_fqdn_hostname,
   reject_non_fqdn_recipient,
   reject_unknown_recipient_domain,
-  reject_rbl_client multihop.dsbl.org,
-  reject_rbl_client zen.spamhaus.org,
-  reject_rbl_client cbl.abuseat.org,
-  reject_rbl_client bl.spamcop.net,
-  reject_rbl_client dnsbl.sorbs.net,
-  reject_rbl_client all.spamrats.com=127.0.0.36,
-  reject_rbl_client all.spamrats.com=127.0.0.38,
-  reject_rbl_client dnsbl.ahbl.org,
   check_policy_service inet:127.0.0.1:10023,
   permit
 
@@ -82,8 +74,8 @@ myorigin = $mydomain
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 mydestination = localhost
-relayhost = 
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+relayhost =
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 {{ ' '.join(friendly_networks) }}
 #mailbox_command = procmail -a "$EXTENSION"
 mailbox_size_limit = 0
 recipient_delimiter = +
@@ -106,3 +98,16 @@ dspam_destination_recipient_limit = 1
 smtpd_client_restrictions =
   permit_sasl_authenticated
   check_client_access pcre:/etc/postfix/dspam_filter_access
+
+# Postscreen
+postscreen_access_list = permit_mynetworks
+postscreen_dnsbl_sites =
+  sbl-xbl.spamhaus.org*2
+  cbl.abuseat.org*2
+  bl.spamcop.net*2
+  dnsbl.sorbs.net*1
+  spam.spamrats.com*2
+  dnsbl.ahbl.org*2
+postscreen_dnsbl_threshold = 3
+postscreen_dnsbl_action = enforce
+postscreen_greet_action = enforce

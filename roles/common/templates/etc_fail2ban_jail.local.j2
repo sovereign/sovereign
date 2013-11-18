@@ -1,5 +1,5 @@
 [DEFAULT]
-ignoreip  = 127.0.0.1 {{ ansible_default_ipv4.address }}
+ignoreip  = 127.0.0.1 {{ ansible_default_ipv4.address }} {{ ' '.join(friendly_networks) }}
 bantime   = 86400
 destemail = {{ admin_email }}
 banaction = iptables-multiport
@@ -9,17 +9,17 @@ action    = %(action_mwl)s
 [ssh]
 enabled   = true
 maxretry  = 3
- 
+
 [pam-generic]
 enabled   = true
 banaction = iptables-allports
- 
+
 [ssh-ddos]
 enabled   = true
 
 [apache]
 enabled = true
- 
+
 [postfix]
 enabled  = true
 maxretry = 1
