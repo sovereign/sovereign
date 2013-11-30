@@ -82,7 +82,8 @@ recipient_delimiter = +
 inet_interfaces = all
 
 # dovecot mysql
-virtual_transport = lmtp:unix:private/dovecot-lmtp
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
 virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
 virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
 virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf

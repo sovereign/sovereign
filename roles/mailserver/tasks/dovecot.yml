@@ -6,6 +6,7 @@
     - mysql-server
     - dovecot-mysql
     - dovecot-lmtpd
+    - dovecot-managesieved
 
 - name: Create vmail group
   group: name=vmail state=present gid=5000
