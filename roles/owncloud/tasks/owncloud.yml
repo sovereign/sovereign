@@ -8,9 +8,6 @@
 - name: Create database for ownCloud
   mysql_db: name={{ owncloud_mysql_database }} state=present
 
-- name: Install ownCloud dependencies
-  apt: pkg=python-software-properties
-
 - name: Ensure repository key for ownCloud is in place
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
 
@@ -27,7 +24,7 @@
 - name: Enable Apache rewrite module
   command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
   notify: restart apache
-  
+
 - name: Enable Apache headers module
   command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
   notify: restart apache

@@ -25,6 +25,8 @@
     - apticron
     - update-notifier-common
     - debian-goodies
+    - apt-transport-https
+    - python-software-properties
 
 - name: Install ntp
   apt: pkg=ntp state=installed
