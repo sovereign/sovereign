@@ -1,5 +1,5 @@
 - name: Install dspam and related packages
-  apt: pkg=$item state=installed
+  apt: pkg={{ item }} state=installed
   with_items:
     - dspam
     - dovecot-antispam
@@ -32,5 +32,5 @@
 - name: Put sieve rules into each primary user directory
   copy: src=dot_dovecot.sieve dest=/decrypted/{{ item.name }}/{{ item.primary_user }}/.dovecot.sieve owner=vmail group=dovecot
   with_items:
-    - {{ mail_virtual_domains }}
+    - "{{ mail_virtual_domains }}"
   notify: restart dovecot

@@ -8,7 +8,7 @@
   apt: upgrade=safe
 
 - name: Install necessities and nice-to-haves
-  apt: pkg=$item state=installed
+  apt: pkg={{ item }} state=installed
   with_items:
     - sudo
     - vim

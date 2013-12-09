@@ -1,5 +1,5 @@
 - name: Install Dovecot and related packages
-  apt: pkg=$item state=installed
+  apt: pkg={{ item }} state=installed
   with_items:
     - dovecot-core
     - dovecot-imapd
@@ -17,12 +17,12 @@
 - name: Ensure mail domain directories are in place
   file: state=directory path=/decrypted/{{ item.name }} owner=vmail group=dovecot mode=770
   with_items:
-    - {{ mail_virtual_domains }}
+    - "{{ mail_virtual_domains }}"
 
 - name: Ensure mail directories are in place
   file: state=directory path=/decrypted/{{ item.name }}/{{ item.primary_user }} owner=vmail group=dovecot
   with_items:
-    - {{ mail_virtual_domains }}
+    - "{{ mail_virtual_domains }}"
 
 - name: Copy dovecot.conf into place
   copy: src=etc_dovecot_dovecot.conf dest=/etc/dovecot/dovecot.conf
