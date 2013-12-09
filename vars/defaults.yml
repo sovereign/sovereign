@@ -58,3 +58,7 @@ openvpn_server: "{{ domain }}"
 
 # webmail
 webmail_domain: "mail.{{ domain }}"
+
+# xmpp
+prosody_admin: "{{ admin_email }}"
+prosody_virtual_domain: "{{ domain }}"

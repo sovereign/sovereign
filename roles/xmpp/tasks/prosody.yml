@@ -1,0 +1,28 @@
+- name: Ensure repository key for Prosody is in place
+  apt_key: url=https://prosody.im/files/prosody-debian-packages.key state=present
+
+- name: Add Prosody repository
+  apt_repository: repo='deb http://packages.prosody.im/debian wheezy main'
+
+- name: Install Prosody from official repository
+  apt: pkg=prosody update_cache=yes
+
+- name: Create Prosody data directory
+  file: state=directory path=/decrypted/prosody owner=prosody group=prosody
+
+- name: Copy SSL private key into place for Prosody
+  shell: cp /etc/ssl/private/wildcard_private.key /etc/ssl/private/wildcard_private_prosody.key
+
+- name: Ensure prosody user and group can read private key
+  file: path=/etc/ssl/private/wildcard_private_prosody.key group=prosody owner=prosody
+
+- name: Copy SSL public certificate into place for Prosody
+  shell: cp /etc/ssl/certs/wildcard_public_cert.crt /etc/ssl/certs/wildcard_public_cert_prosody.crt
+
+- name: Ensure prosody user and group can read cert
+  file: path=/etc/ssl/certs/wildcard_public_cert_prosody.crt group=prosody owner=prosody
+
+- name: Configure Prosody
+  template: src=prosody.cfg.lua.j2 dest=/etc/prosody/prosody.cfg.lua group=root owner=root
+  notify: restart prosody
+
