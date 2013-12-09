@@ -10,7 +10,7 @@
   file: state=directory path=/decrypted/dspam group=dspam owner=dspam
 
 - name: Put dspam configuration files in place
-  copy: src=etc_dspam_{{item}} dest=/etc/dspam/{{item}} owner=dspam group=dspam
+  copy: src=etc_dspam_{{ item }} dest=/etc/dspam/{{ item }} owner=dspam group=dspam
   with_items:
     - default.prefs
     - dspam.conf
@@ -23,14 +23,14 @@
   notify: restart postfix
 
 - name: Put dspam dovecot configuration in place
-  copy: src=etc_dovecot_conf.d_{{item}} dest=/etc/dovecot/conf.d/{{item}} owner=vmail group=dovecot
+  copy: src=etc_dovecot_conf.d_{{ item }} dest=/etc/dovecot/conf.d/{{ item }} owner=vmail group=dovecot
   with_items:
     - 20-imap.conf
     - 90-plugin.conf
   notify: restart dovecot
 
 - name: Put sieve rules into each primary user directory
-  copy: src=dot_dovecot.sieve dest=/decrypted/${item.name}/${item.primary_user}/.dovecot.sieve owner=vmail group=dovecot
+  copy: src=dot_dovecot.sieve dest=/decrypted/{{ item.name }}/{{ item.primary_user }}/.dovecot.sieve owner=vmail group=dovecot
   with_items:
-    - ${mail_virtual_domains}
+    - {{ mail_virtual_domains }}
   notify: restart dovecot

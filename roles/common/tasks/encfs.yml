@@ -23,12 +23,12 @@
 
 # If it is empty, we need to create the encfs
 - name: Create encfs
-  shell: printf "p\n${encfs_password}" | encfs /encrypted /decrypted --public --stdinpass && touch /decrypted/test
+  shell: printf "p\n{{ encfs_password }}" | encfs /encrypted /decrypted --public --stdinpass && touch /decrypted/test
   when: encfs_check.rc > 0
 
 # If it isn't empty, we simply need to mount it (but only if /decrypted/test doesn't exist)
 - name: Mount encfs
-  shell: printf "${encfs_password}" | encfs /encrypted /decrypted --public --stdinpass creates="/decrypted/test"
+  shell: printf "{{ encfs_password }}" | encfs /encrypted /decrypted --public --stdinpass creates="/decrypted/test"
   when: encfs_check.rc == 0
 
 - name: Set decrypted directory permissions

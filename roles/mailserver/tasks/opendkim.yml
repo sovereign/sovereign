@@ -7,18 +7,18 @@
     - opendkim
     - opendkim-tools
 
-- name: Create OpenDKIM config directory 
+- name: Create OpenDKIM config directory
   file: state=directory path=/etc/opendkim group=opendkim owner=opendkim
 
 - name: Create OpenDKIM key directories
-  file: state=directory path=/etc/opendkim/keys/${item.name} group=opendkim owner=opendkim
+  file: state=directory path=/etc/opendkim/keys/{{ item.name }} group=opendkim owner=opendkim
   with_items:
-    - ${mail_virtual_domains}
+    - {{ mail_virtual_domains }}
 
 - name: Generate OpenDKIM keys
-  command: opendkim-genkey -r -d ${item.name} -D /etc/opendkim/keys/${item.name}/ creates=/etc/opendkim/keys/${item.name}/default.private
+  command: opendkim-genkey -r -d {{ item.name }} -D /etc/opendkim/keys/{{ item.name }}/ creates=/etc/opendkim/keys/{{ item.name }}/default.private
   with_items:
-    - ${mail_virtual_domains}
+    - {{ mail_virtual_domains }}
 
 - name: Put opendkim.conf into place
   copy: src=etc_opendkim.conf dest=/etc/opendkim.conf owner=opendkim group=opendkim
@@ -27,7 +27,7 @@
     - restart postfix
 
 - name: Put additional OpenDKIM configuration files into place
-  template: src=etc_opendkim_{{item}}.j2 dest=/etc/opendkim/{{item}} owner=opendkim group=opendkim
+  template: src=etc_opendkim_{{ item }}.j2 dest=/etc/opendkim/{{ item }} owner=opendkim group=opendkim
   with_items:
     - KeyTable
     - SigningTable

@@ -1,2 +1,2 @@
 - name: Create main user account
-  user: name=${main_user_name} state=present shell=/usr/bin/zsh groups=sudo,fuse
+  user: name={{ main_user_name }} state=present shell=/usr/bin/zsh groups=sudo,fuse

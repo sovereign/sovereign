@@ -1,18 +1,18 @@
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 # Modified as per http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/
- 
+
 smtpd_banner = $myhostname ESMTP $mail_name
 biff = no
- 
+
 # Accept messages up to 50MB
 message_size_limit = 51200000
 
 # appending .domain is the MUA's job.
 append_dot_mydomain = no
- 
+
 # Uncomment the next line to generate "delayed mail" warnings
 #delay_warning_time = 4h
- 
+
 readme_directory = no
 
 # antispam
@@ -34,13 +34,11 @@ unknown_virtual_alias_reject_code = 554
 unknown_virtual_mailbox_reject_code = 554
 unverified_recipient_reject_code = 554
 unverified_sender_reject_code = 554
- 
+
 # TLS parameters
 smtpd_tls_cert_file=/etc/ssl/certs/wildcard_combined.pem
 smtpd_tls_key_file=/etc/ssl/private/wildcard_private.key
 smtpd_use_tls=yes
-#smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-#smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_tls_auth_only = yes
 smtp_tls_security_level = may
 smtp_tls_loglevel = 2
@@ -68,7 +66,7 @@ smtpd_recipient_restrictions =
 
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.
- 
+
 myhostname = {{ mail_server_hostname }}
 myorigin = $mydomain
 alias_maps = hash:/etc/aliases

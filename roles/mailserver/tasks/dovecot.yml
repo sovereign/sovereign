@@ -15,20 +15,20 @@
   user: name=vmail group=vmail state=present uid=5000 home=/decrypted
 
 - name: Ensure mail domain directories are in place
-  file: state=directory path=/decrypted/${item.name} owner=vmail group=dovecot mode=770
+  file: state=directory path=/decrypted/{{ item.name }} owner=vmail group=dovecot mode=770
   with_items:
-    - ${mail_virtual_domains}
+    - {{ mail_virtual_domains }}
 
 - name: Ensure mail directories are in place
-  file: state=directory path=/decrypted/${item.name}/${item.primary_user} owner=vmail group=dovecot
+  file: state=directory path=/decrypted/{{ item.name }}/{{ item.primary_user }} owner=vmail group=dovecot
   with_items:
-    - ${mail_virtual_domains}
+    - {{ mail_virtual_domains }}
 
 - name: Copy dovecot.conf into place
   copy: src=etc_dovecot_dovecot.conf dest=/etc/dovecot/dovecot.conf
 
 - name: Copy additional Dovecot configuration files in place
-  copy: src=etc_dovecot_conf.d_${item} dest=/etc/dovecot/conf.d/${item}
+  copy: src=etc_dovecot_conf.d_{{ item }} dest=/etc/dovecot/conf.d/{{ item }}
   with_items:
     - 10-mail.conf
     - 10-auth.conf

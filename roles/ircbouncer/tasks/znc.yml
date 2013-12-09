@@ -17,13 +17,13 @@
     - libperl-dev
 
 - name: Download znc release
-  get_url: url=http://znc.in/releases/archive/znc-${znc_version}.tar.gz dest=/root/znc-${znc_version}.tar.gz
+  get_url: url=http://znc.in/releases/archive/znc-{{ znc_version }}.tar.gz dest=/root/znc-{{ znc_version }}.tar.gz
 
 - name: Decompress znc source
-  command: tar xzf /root/znc-${znc_version}.tar.gz chdir=/root creates=/root/znc-${znc_version}/configure
+  command: tar xzf /root/znc-{{ znc_version }}.tar.gz chdir=/root creates=/root/znc-{{ znc_version }}/configure
 
 - name: Build and install znc
-  shell: ./configure --enable-python ; make ; make install executable=/bin/bash chdir=/root/znc-${znc_version} creates=/usr/local/bin/znc
+  shell: ./configure --enable-python ; make ; make install executable=/bin/bash chdir=/root/znc-{{ znc_version }} creates=/usr/local/bin/znc
 
 - name: Create znc group
   group: name=znc state=present

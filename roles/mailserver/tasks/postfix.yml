@@ -30,7 +30,7 @@
   notify: restart postfix
 
 - name: Copy additional postfix configuration files
-  template: src=etc_postfix_${item}.j2 dest=/etc/postfix/${item} owner=root group=root
+  template: src=etc_postfix_{{ item }}.j2 dest=/etc/postfix/{{ item }} owner=root group=root
   with_items:
     - mysql-virtual-mailbox-domains.cf
     - mysql-virtual-mailbox-maps.cf
