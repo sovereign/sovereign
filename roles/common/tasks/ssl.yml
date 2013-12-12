@@ -1,5 +1,5 @@
 - name: Copy SSL private key into place
-  copy: src=wildcard_private.key dest=/etc/ssl/private/wildcard_private.key group=root owner=root
+  copy: src=wildcard_private.key dest=/etc/ssl/private/wildcard_private.key group=ssl-cert owner=root mode=640
 
 - name: Copy SSL public certificate into place
   copy: src=wildcard_public_cert.crt dest=/etc/ssl/certs/wildcard_public_cert.crt group=root owner=root

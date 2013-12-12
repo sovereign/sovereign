@@ -258,3 +258,41 @@ class MailTests(unittest.TestCase):
         m.expunge()
         m.close()
         m.logout()
+
+
+class XMPPTests(unittest.TestCase):
+    def test_xmpp_c2s(self):
+        """Prosody is listening on 5222 for clients and requiring TLS"""
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((TEST_SERVER, 5222))
+
+        # Based off http://wiki.xmpp.org/web/Programming_Jabber_Clients
+        s.send("<stream:stream xmlns:stream='http://etherx.jabber.org/streams' "
+               "xmlns='jabber:client' to='sovereign.local' version='1.0'>")
+
+        data = s.recv(1024)
+        s.close()
+
+        self.assertRegexpMatches(
+            data,
+            "<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'><required/></starttls>"
+        )
+
+    def test_xmpp_s2s(self):
+        """Prosody is listening on 5269 for servers"""
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((TEST_SERVER, 5269))
+
+        # Base off http://xmpp.org/extensions/xep-0114.html
+        s.send("<stream:stream xmlns:stream='http://etherx.jabber.org/streams' "
+               "xmlns='jabber:component:accept' to='sovereign.local'>")
+
+        data = s.recv(1024)
+        s.close()
+
+        self.assertRegexpMatches(
+            data,
+            "from='sovereign.local'"
+        )

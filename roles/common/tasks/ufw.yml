@@ -17,6 +17,8 @@
     - ssh/tcp
     - ssmtp/tcp
     - imaps/tcp
+    - 5222/tcp  # xmpp c2s
+    - 5269/tcp  # xmpp s2s
     - 6697/tcp  # znc
     - openvpn/udp
     - 60000:61000/udp  # mosh udp packets
