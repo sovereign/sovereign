@@ -53,3 +53,7 @@ openvpn_clients:
   - phone
   - tablet
 
+# xmpp
+prosody_accounts:
+  - name: "{{ main_user_name }}"
+    password: foo

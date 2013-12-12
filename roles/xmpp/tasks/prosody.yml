@@ -17,3 +17,6 @@
   template: src=prosody.cfg.lua.j2 dest=/etc/prosody/prosody.cfg.lua group=root owner=root
   notify: restart prosody
 
+- name: Create Prosody accounts
+  command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} {{ item.password }}
+  with_items: prosody_accounts

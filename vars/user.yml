@@ -60,3 +60,6 @@ openvpn_clients:
 # xmpp
 prosody_admin: "{{ admin_email }}"
 prosody_virtual_domain: "{{ domain }}"
+prosody_accounts:
+  - name: "{{ main_user_name }}"
+    password: TODO

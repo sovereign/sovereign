@@ -62,3 +62,4 @@ webmail_domain: "mail.{{ domain }}"
 # xmpp
 prosody_admin: "{{ admin_email }}"
 prosody_virtual_domain: "{{ domain }}"
+# prosody_accounts: (required)
