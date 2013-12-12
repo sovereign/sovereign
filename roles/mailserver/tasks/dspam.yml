@@ -31,6 +31,5 @@
 
 - name: Put sieve rules into each primary user directory
   copy: src=dot_dovecot.sieve dest=/decrypted/{{ item.name }}/{{ item.primary_user }}/.dovecot.sieve owner=vmail group=dovecot
-  with_items:
-    - "{{ mail_virtual_domains }}"
+  with_items: mail_virtual_domains
   notify: restart dovecot
