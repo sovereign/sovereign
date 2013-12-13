@@ -1,5 +1,5 @@
 - name: Install logwatch
   apt: pkg=logwatch state=installed
 
-- name: Configure logwatch to email {{ main_user_name }}@{{ domain }} daily
-  action: lineinfile dest=/etc/cron.daily/00logwatch regexp="^/usr/sbin/logwatch" line="/usr/sbin/logwatch --output mail --mailto {{ main_user_name }}@{{ domain }} --detail high" state=present create=yes
+- name: Configure logwatch to email {{ admin_email }} daily
+  action: lineinfile dest=/etc/cron.daily/00logwatch regexp="^/usr/sbin/logwatch" line="/usr/sbin/logwatch --output mail --mailto {{ admin_email }} --detail high" state=present create=yes
