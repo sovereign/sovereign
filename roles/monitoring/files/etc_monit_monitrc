@@ -117,10 +117,10 @@ set mailserver localhost
 ## services monitored and manage services from a web interface. See the
 ## Monit Wiki if you want to enable SSL for the web server.
 #
-# set httpd port 2812 and
-#     use address localhost  # only accept connection from localhost
-#     allow localhost        # allow localhost to connect to the server and
-#    allow admin:monit      # require user 'admin' with password 'monit'
+set httpd port 2812 and
+    use address localhost  # only accept connection from localhost
+    allow localhost        # allow localhost to connect to the server and
+    allow admin:monit      # require user 'admin' with password 'monit'
 #    allow @monit           # allow users of group 'monit' to connect (rw)
 #    allow @users readonly  # allow users of group 'users' to connect readonly
 #
