@@ -4,3 +4,4 @@
 - include: dspam.yml tags=dspam
 - include: solr.yml tags=solr
 - include: checkrbl.yml tags=checkrbl
+- include: z-push.yml tags=zpush
