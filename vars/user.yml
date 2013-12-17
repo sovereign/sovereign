@@ -43,6 +43,9 @@ mail_virtual_aliases:
     destination: "{{ admin_email }}"
     domain_pk_id: 1
 
+# z-push
+zpush_timezone: "TODO"  #Example: "America/New_York"
+
 # owncloud
 owncloud_mysql_password: TODO
 

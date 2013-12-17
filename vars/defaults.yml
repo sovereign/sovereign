@@ -29,6 +29,9 @@ mail_mysql_database: mailserver
 # mail_virtual_users: (required)
 # mail_virtual_aliases: (required)
 
+# z-push
+zpush_version: 2.1.1-1788
+
 # owncloud
 owncloud_domain: "cloud.{{ domain }}"
 owncloud_mysql_username: owncloud

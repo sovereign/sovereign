@@ -1,0 +1,38 @@
+- name: Install required packages for z-push
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - php5
+    - php5-cli
+    - php-soap
+    - php5-imap
+    
+- name: Download z-push release
+  get_url: 
+    url=http://zarafa-deutschland.de/z-push-download/final/2.1/z-push-{{ zpush_version }}.tar.gz
+    dest=/root/z-push-{{ zpush_version }}.tar.gz
+
+- name: Decompress z-push source
+  command: tar xzf z-push-{{ zpush_version }}.tar.gz chdir=/root creates=/root/z-push-{{ zpush_version }}
+
+- name: Create /usr/share/z-push
+  file: state=directory path=/usr/share/z-push
+
+- name: Copy z-push source files to /usr/share/z-push
+  shell: cp -R z-push-{{ zpush_version }}/* /usr/share/z-push/ chdir=/root
+
+- name: Remove downloaded, temporary z-push source files
+  shell: rm -rf z-push* chdir=/root
+
+- name: Ensure z-push state and log directories are in place
+  file: state=directory path={{ item }} owner=www-data group=www-data mode=755
+  with_items:
+    - /decrypted/zpush-state
+    - /var/log/z-push
+  notify: restart apache
+
+- name: Copy z-push's config.php into place
+  template: src=usr_share_z-push_config.php.j2 dest=/usr/share/z-push/config.php
+
+- name: Configure z-push apache alias and php settings
+  copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf.d/z-push.conf
+  notify: restart apache
