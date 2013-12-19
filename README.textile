@@ -30,6 +30,7 @@ What do you get if you point this thing at a VPS? All kinds of good stuff!
 * "IMAP":https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol over SSL via "Dovecot":http://dovecot.org/, complete with full text search provided by "Solr":https://lucene.apache.org/solr/.
 * "SMTP":https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol over SSL via Postfix, including a nice set of "DNSBLs":https://en.wikipedia.org/wiki/DNSBL to discard spam before it ever hits your filters.
 * Webmail via "Roundcube":http://www.roundcube.net/.
+* Mobile push notifications via "Z-Push":http://z-push.sourceforge.net/soswp/index.php?pages_id=1&t=home.
 * Jabber/"XMPP":http://xmpp.org/ instant messaging via "Prosody":http://prosody.im/.
 * Virtual domains for your email, backed by "MySQL":https://www.mysql.com/.
 * Secure on-disk storage for email and more via "EncFS":http://www.arg0.net/encfs.
@@ -158,6 +159,15 @@ h3. 7. Miscellaneous Configuration
 
 * Sign in to the ZNC web interface and set things up to your liking.
 * You'll probably want to sign into your ownCloud installation and check out the settings there, too.
+
+h3. 8. Mobile Push Notifications
+
+* If your device supports ActiveSync (Exchange) you can setup your email account as a Microsoft Exchange account to receive push notifications.
+* Please note that Z-Push does not currently support multiple addresses pushing (via ActiveSync) from the same server to a single device. If you attempt this you will get near-constant failed connections for the other ActiveSync accounts. Perhaps a future Z-Push update will add this feature.
+* Use these settings when configuring your device:
+** Server: @mail.example.com@
+** Domain: leave blank
+** Username: @youremail.example.com@
 
 h2. How To Use Your New Personal Cloud
 
