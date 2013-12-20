@@ -12,6 +12,10 @@ admin_email: "{{ main_user_name }}@{{ domain }}"
 friendly_networks:
   - ""
 
+# database
+db_admin_username: 'postgres'
+# db_admin_password: (required)
+
 # ircbouncer
 znc_version: 1.0
 # irc_nick: (required)
@@ -22,9 +26,9 @@ znc_version: 1.0
 
 # mailserver
 mail_server_hostname: "mail.{{ domain }}"
-mail_mysql_username: mailuser
-# mail_mysql_password: (required)
-mail_mysql_database: mailserver
+mail_db_username: mailuser
+# mail_db_password: (required)
+mail_db_database: mailserver
 # mail_virtual_domains: (required)
 # mail_virtual_users: (required)
 # mail_virtual_aliases: (required)
@@ -34,9 +38,9 @@ zpush_version: 2.1.1-1788
 
 # owncloud
 owncloud_domain: "cloud.{{ domain }}"
-owncloud_mysql_username: owncloud
-# owncloud_mysql_password: (required)
-owncloud_mysql_database: owncloud
+owncloud_db_username: owncloud
+# owncloud_db_password: (required)
+owncloud_db_database: owncloud
 
 # tarsnap
 tarsnap_version: 1.0.35
@@ -61,6 +65,9 @@ openvpn_server: "{{ domain }}"
 
 # webmail
 webmail_domain: "mail.{{ domain }}"
+webmail_db_username: "roundcube"
+# webmail_db_password: (required)
+webmail_db_database: "roundcube"
 
 # xmpp
 prosody_admin: "{{ admin_email }}"
@@ -69,6 +76,6 @@ prosody_virtual_domain: "{{ domain }}"
 
 # news
 selfoss_domain: "news.{{ domain }}"
-selfoss_mysql_username: selfoss
-# selfoss_mysql_password: (required)
-selfoss_mysql_database: selfoss
+selfoss_db_username: selfoss
+# selfoss_db_password: (required)
+selfoss_db_database: selfoss

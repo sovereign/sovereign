@@ -3,10 +3,10 @@
   with_items:
     - dovecot-core
     - dovecot-imapd
-    - mysql-server
-    - dovecot-mysql
     - dovecot-lmtpd
     - dovecot-managesieved
+    - postgresql-9.1
+    - dovecot-pgsql
 
 - name: Create vmail group
   group: name=vmail state=present gid=5000
