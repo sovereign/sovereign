@@ -21,10 +21,8 @@ mail_mysql_password: TODO
 mail_virtual_domains:
   - name: "{{ domain }}"
     pk_id: 1
-    primary_user: "{{ main_user_name }}"
 #  - name: TODO.com
 #    pk_id: 2
-#    primary_user: TODO
 mail_virtual_users:
   - account: "{{ main_user_name }}"
     domain: "{{ domain }}"
