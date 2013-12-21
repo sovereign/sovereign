@@ -23,9 +23,9 @@ mail_mysql_password: testPassword
 mail_virtual_domains:
   - name: "{{ domain }}"
     pk_id: 1
-    primary_user: "{{ main_user_name }}"
 mail_virtual_users:
-  - address: "{{ main_user_name }}@{{ domain }}"
+  - account: "{{ main_user_name }}"
+    domain: "{{ domain }}"
     password_hash: "$6$IYJfaF3jvmbAzlSe$1HBkbIdrOTWA31WYon7VSE2xAcFzYSZuVb8d3I0NDWzPxXBaqkHqKs4rLeNO9CVQEKv7wA15QctCyXbdRqFDy." #foo
     domain_pk_id: 1
 mail_virtual_aliases:
