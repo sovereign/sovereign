@@ -21,15 +21,15 @@ mail_mysql_password: TODO
 mail_virtual_domains:
   - name: "{{ domain }}"
     pk_id: 1
-    primary_user: "{{ main_user_name }}"
 #  - name: TODO.com
 #    pk_id: 2
-#    primary_user: TODO
 mail_virtual_users:
-  - address: "{{ main_user_name }}@{{ domain }}"
+  - account: "{{ main_user_name }}"
+    domain: "{{ domain }}"
     password_hash: TODO
     domain_pk_id: 1
-#  - address: "TODO@{{ domain }}"
+#  - account: "{{ TODO }}"
+#    domain: "{{ domain }}"
 #    password_hash: TODO
 #    domain_pk_id: 2
 mail_virtual_aliases:
