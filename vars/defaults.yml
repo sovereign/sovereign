@@ -63,3 +63,9 @@ webmail_domain: "mail.{{ domain }}"
 prosody_admin: "{{ admin_email }}"
 prosody_virtual_domain: "{{ domain }}"
 # prosody_accounts: (required)
+
+# news
+selfoss_domain: "news.{{ domain }}"
+selfoss_mysql_username: selfoss
+# selfoss_mysql_password: (required)
+selfoss_mysql_database: selfoss

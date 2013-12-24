@@ -1,0 +1,38 @@
+- name: Clone Selfoss
+  git: repo=https://github.com/SSilence/selfoss.git
+       dest=/var/www/selfoss
+
+- name: Set selfoss permissions
+  action: file owner=www-data group=www-data path=/var/www/selfoss recurse=yes state=directory
+
+- name: Create database user for selfoss
+  mysql_user: user={{ selfoss_mysql_username }} password={{ selfoss_mysql_password }} state=present priv="selfoss.*:ALL"
+
+- name: Create database for selfoss
+  mysql_db: name={{ selfoss_mysql_database }} state=present
+
+- name: Install selfoss config.ini
+  template: src=var_www_selfoss_config.ini.j2 dest=/var/www/selfoss/config.ini group=www-data owner=www-data
+
+- name: Enable Apache rewrite module
+  command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
+  notify: restart apache
+
+- name: Enable Apache headers module
+  command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
+  notify: restart apache
+
+- name: Enable Apache expires module
+  command: a2enmod expires creates=/etc/apache2/mods-enabled/expires.load
+  notify: restart apache
+
+- name: Configure the Apache HTTP server for selfoss
+  template: src=etc_apache2_sites-available_selfoss.j2 dest=/etc/apache2/sites-available/selfoss group=www-data owner=www-data
+  notify: restart apache
+
+- name: Enable the selfoss site
+  command: a2ensite selfoss creates=/etc/apache2/sites-enabled/selfoss
+  notify: restart apache
+
+- name: Install selfoss cronjob
+  cron: name="ownCloud" user="www-data" minute="*/5" job="curl -k 'https://{{ selfoss_domain }}/update'"
