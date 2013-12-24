@@ -1,5 +1,14 @@
 - name: Install logwatch
-  apt: pkg=logwatch state=installed
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - logwatch
+    - libdate-manip-perl
 
-- name: Configure logwatch to email {{ admin_email }} daily
-  action: lineinfile dest=/etc/cron.daily/00logwatch regexp="^/usr/sbin/logwatch" line="/usr/sbin/logwatch --output mail --mailto {{ admin_email }} --detail high" state=present create=yes
+- name: Configure logwatch
+  template: src=etc_logwatch_conf_logwatch.conf.j2 dest=/etc/logwatch/conf/logwatch.conf
+
+- name: Remove logwatch's dist cronjob
+  file: state=absent path=/etc/cron.daily/00logwatch
+
+- name: Configure weekly logwatch cronjob
+  cron: special_time=weekly job=/usr/sbin/logwatch name=logwatch
