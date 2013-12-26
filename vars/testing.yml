@@ -57,3 +57,10 @@ openvpn_clients:
 prosody_accounts:
   - name: "{{ main_user_name }}"
     password: foo
+
+# selfoss
+selfoss_mysql_password: testPassword
+selfoss_username: "{{ main_user_name }}"
+# this is the sha512 hash of the desired password
+selfoss_password_hash: "f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0dc6638326e282c41be5e4254d8820772c5518a2c5a8c0c7f7eda19594a7eb539453e1ed7"
+# foo
