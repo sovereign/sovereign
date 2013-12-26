@@ -69,6 +69,25 @@ class WebTests(unittest.TestCase):
             r.content
         )
 
+    def test_selfoss_http(self):
+        """selfoss is redirecting to https and displaying login page"""
+        r = requests.get('http://news.' + TEST_SERVER)
+
+        # We should be redirected to https
+        self.assertEquals(r.history[0].status_code, 301)
+        self.assertEquals(r.url, 'https://news.' + TEST_SERVER + '/')
+
+        # 200 - We should be at the login page
+        self.assertEquals(r.status_code, 200)
+        self.assertIn(
+            'selfoss',
+            r.content
+        )
+        self.assertIn(
+            'login',
+            r.content
+        )
+
     def test_znc_http(self):
         """ZNC web interface is displaying login page"""
         # FIXME: requests won't verify sovereign.local with *.sovereign.local cert
