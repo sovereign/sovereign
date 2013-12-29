@@ -54,6 +54,30 @@ class WebTests(unittest.TestCase):
             r.content
         )
 
+    def test_zpush_http_unauthorized(self):
+        r = requests.get('http://mail.' + TEST_SERVER + '/Microsoft-Server-ActiveSync')
+
+        # We should be redirected to https
+        self.assertEquals(r.history[0].status_code, 301)
+        self.assertEquals(r.url, 'https://mail.' + TEST_SERVER + '/Microsoft-Server-ActiveSync')
+
+        # Unauthorized
+        self.assertEquals(r.status_code, 401)
+
+    def test_zpush_https(self):
+        r = requests.post('https://mail.' + TEST_SERVER + '/Microsoft-Server-ActiveSync',
+                          auth=('sovereign@sovereign.local', 'foo'),
+                          params={
+                              'DeviceId': '1234',
+                              'DeviceType': 'testbot',
+                              'Cmd': 'Ping',
+                          })
+
+        self.assertEquals(r.headers['content-type'],
+                          'application/vnd.ms-sync.wbxml')
+        self.assertEquals(r.headers['ms-server-activesync'],
+                          '14.0')
+
     def test_owncloud_http(self):
         """ownCloud is redirecting to https and displaying login page"""
         r = requests.get('http://cloud.' + TEST_SERVER)
@@ -263,7 +287,7 @@ class MailTests(unittest.TestCase):
         _, data = m.fetch(res[0], '(RFC822)')
 
         self.assertIn(
-            'X-DSPAM-Result: Innocent',
+            'X-DSPAM-Result: ',
             data[0][1]
         )
 
