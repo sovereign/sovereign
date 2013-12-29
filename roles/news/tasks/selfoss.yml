@@ -35,4 +35,4 @@
   notify: restart apache
 
 - name: Install selfoss cronjob
-  cron: name="ownCloud" user="www-data" minute="*/5" job="curl -k 'https://{{ selfoss_domain }}/update'"
+  cron: name="selfoss" user="www-data" minute="*/5" job="curl -k 'https://{{ selfoss_domain }}/update' > /dev/null"
