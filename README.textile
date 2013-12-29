@@ -161,6 +161,15 @@ h3. 7. Miscellaneous Configuration
 * Sign in to the ZNC web interface and set things up to your liking.
 * You'll probably want to sign into your ownCloud installation and check out the settings there, too.
 
+h3. 8. Mobile Push Notifications
+
+* If your device supports ActiveSync (Exchange) you can setup your email account as a Microsoft Exchange account to receive push notifications.
+* Please note that Z-Push does not currently support multiple addresses pushing (via ActiveSync) from the same server to a single device. If you attempt this you will get near-constant failed connections for the other ActiveSync accounts. Perhaps a future Z-Push update will add this feature.
+* Use these settings when configuring your device:
+** Server: @mail.example.com@
+** Domain: leave blank
+** Username: @youremail.example.com@
+
 h2. How To Use Your New Personal Cloud
 
 We're collecting known-good client setups "on our wiki":https://github.com/al3x/sovereign/wiki/Usage.
