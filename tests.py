@@ -255,7 +255,7 @@ class MailTests(unittest.TestCase):
         )
 
         self.assertIn(
-            '(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))',
+            'DHE-RSA-AES256-SHA (256/256 bits)',  # Also matches ECDHE-...
             data[0][1]
         )
 
@@ -292,7 +292,7 @@ class MailTests(unittest.TestCase):
         )
 
         self.assertIn(
-            '(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))',
+            'DHE-RSA-AES256-SHA (256/256 bits)',  # Also matches ECDHE-...
             data[0][1]
         )
 
