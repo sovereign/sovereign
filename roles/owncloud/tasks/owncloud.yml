@@ -15,7 +15,7 @@
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
 
 - name: Install ownCloud from OpenSuSE repository
-  apt: pkg=owncloud
+  apt: pkg=owncloud update_cache=yes
 
 - name: Install PHP-APC
   apt: pkg=php-apc
