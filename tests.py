@@ -199,6 +199,16 @@ class MailTests(unittest.TestCase):
         s.quit()
         self.assertEmailReceived(subject)
 
+    def test_smtps_delimiter_to(self):
+        """Email sent to address with delimiter is delivered"""
+        import smtplib
+        msg, subject = new_message(TEST_ADDRESS, 'root+foo@sovereign.local')
+        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s.login(TEST_ADDRESS, TEST_PASSWORD)
+        s.sendmail(TEST_ADDRESS, ['root+foo@sovereign.local'], msg)
+        s.quit()
+        self.assertEmailReceived(subject)
+
     def test_smtps_requires_auth(self):
         """SMTPS with no authentication is rejected"""
         import smtplib
