@@ -79,6 +79,16 @@ Lastly, test your certificates using the @security@ program on Mac OS X:
 bc. security verify-cert -L -p ssl -s example.com -c roles/common/files/wildcard_public_cert.crt -c roles/common/files/wildcard_ca.pem
 ...certificate verification successful.
 
+h4. Self-signed SSL certificate
+
+Purchasing SSL certs, and wildcard certs specifically, can be a significant financial burden. It is possible to generate a self-signed SSL certificate (i.e. one that isn't signed by a Certificate Authority) that is free of charge by nature. However, since a self-signed cert has no CA chain that can confirm its authenticity, some services might behave erratically when using such a certificate.
+
+To create a self-signed SSL cert, run the following commands:
+
+bc. openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -out mycert.csr
+openssl x509 -req -days 365 -in mycert.csr -signkey roles/common/files/wildcard_private.key -out roles/common/files/wildcard_public_cert.crt
+cp roles/common/files/wildcard_public_cert.crt roles/common/files/wildcard_ca.pem
+
 h3. 2. Get a Tarsnap machine key
 
 If you haven't already, "download and install Tarsnap":https://www.tarsnap.com/download.html, or use @brew install tarsnap@ if you use "Homebrew":http://brew.sh.
