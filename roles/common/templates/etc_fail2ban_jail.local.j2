@@ -3,7 +3,7 @@ ignoreip  = 127.0.0.1 {{ ansible_default_ipv4.address }} {{ ' '.join(friendly_ne
 bantime   = 86400
 destemail = {{ admin_email }}
 banaction = iptables-multiport
-action    = %(action_mwl)s
+action    = %(action_)s
 
 # JAILS
 [ssh]
