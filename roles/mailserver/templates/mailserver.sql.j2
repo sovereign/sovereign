@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS `virtual_domains` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE UNIQUE INDEX name_idx ON virtual_domains (name);
+
 CREATE TABLE IF NOT EXISTS `virtual_users` (
 	`id` int(11) NOT NULL auto_increment,
 	`domain_id` int(11) NOT NULL,
@@ -20,6 +22,8 @@ CREATE TABLE IF NOT EXISTS `virtual_users` (
 	FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE UNIQUE INDEX email_idx ON virtual_users (email);
+
 CREATE TABLE IF NOT EXISTS `virtual_aliases` (
 	`id` int(11) NOT NULL auto_increment,
 	`domain_id` int(11) NOT NULL,
@@ -28,6 +32,8 @@ CREATE TABLE IF NOT EXISTS `virtual_aliases` (
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE INDEX source_idx ON virtual_aliases (source);
 
 {% for virtual_domain in mail_virtual_domains %}
 INSERT INTO {{ mail_mysql_database }}.`virtual_domains` (`id`, `name`)
