@@ -4,7 +4,7 @@
 # Written by Tim Bishop, 2009.
 
 # Directories to backup (relative to /)
-DIRS="home root decrypted var/www var/lib/mysql"
+DIRS="home root decrypted var/www opt/postgresql/9.1/main"
 
 # Number of daily backups to keep
 DAILY=7

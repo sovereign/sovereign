@@ -9,6 +9,10 @@ domain: TODO.com
 main_user_name: TODO
 encfs_password: TODO
 
+# database
+db_admin_username: postgres
+db_admin_password: TODO
+
 # ircbouncer
 irc_nick: TODO
 irc_ident: TODO
@@ -17,7 +21,7 @@ irc_quitmsg: TODO
 irc_password_hash: TODO
 
 # mailserver
-mail_mysql_password: TODO
+mail_db_password: TODO
 mail_virtual_domains:
   - name: "{{ domain }}"
     pk_id: 1
@@ -47,7 +51,7 @@ mail_virtual_aliases:
 zpush_timezone: "TODO"  #Example: "America/New_York"
 
 # owncloud
-owncloud_mysql_password: TODO
+owncloud_db_password: TODO
 
 # vpn
 openvpn_key_country:  "US"
@@ -60,6 +64,9 @@ openvpn_clients:
   - phone
   - tablet
 
+# webmail
+webmail_db_password: TODO
+
 # xmpp
 prosody_admin: "{{ admin_email }}"
 prosody_virtual_domain: "{{ domain }}"
@@ -68,7 +75,7 @@ prosody_accounts:
     password: TODO
 
 # selfoss
-selfoss_mysql_password: "TODO"
+selfoss_db_password: "TODO"
 selfoss_username: "{{ main_user_name }}"
 # this is the sha512 hash of the desired password
 selfoss_password_hash: "TODO"

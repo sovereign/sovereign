@@ -1,47 +1,47 @@
 -- If tables are not dropped, have to truncate before insert or use "insert or replace" (not postgres compatible)
 
-DROP TABLE IF EXISTS `virtual_users`;
-DROP TABLE IF EXISTS `virtual_aliases`;
-DROP TABLE IF EXISTS `virtual_domains`;
+DROP TABLE IF EXISTS "virtual_users";
+DROP TABLE IF EXISTS "virtual_aliases";
+DROP TABLE IF EXISTS "virtual_domains";
 
-CREATE TABLE IF NOT EXISTS `virtual_domains` (
-	`id` int(11) NOT NULL auto_increment,
-	`name` varchar(50) NOT NULL,
-	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS "virtual_domains" (
+        "id" SERIAL,
+        "name" TEXT NOT NULL,
+        PRIMARY KEY ("id")
+);
 
 CREATE UNIQUE INDEX name_idx ON virtual_domains (name);
 
-CREATE TABLE IF NOT EXISTS `virtual_users` (
-	`id` int(11) NOT NULL auto_increment,
-	`domain_id` int(11) NOT NULL,
-	`password` varchar(106) NOT NULL,
-	`email` varchar(100) NOT NULL,
-	PRIMARY KEY (`id`),
-	UNIQUE KEY `email` (`email`),
-	FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS "virtual_users" (
+        "id" SERIAL,
+        "domain_id" int NOT NULL,
+        "password" TEXT NOT NULL,
+        "email" TEXT NOT NULL UNIQUE,
+        PRIMARY KEY ("id"),
+        FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
+);
+
 
 CREATE UNIQUE INDEX email_idx ON virtual_users (email);
 
-CREATE TABLE IF NOT EXISTS `virtual_aliases` (
-	`id` int(11) NOT NULL auto_increment,
-	`domain_id` int(11) NOT NULL,
-	`source` varchar(100) NOT NULL,
-	`destination` varchar(100) NOT NULL,
-	PRIMARY KEY (`id`),
-	FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS "virtual_aliases" (
+        "id" SERIAL,
+        "domain_id" int NOT NULL,
+        "source" TEXT NOT NULL,
+        "destination" TEXT NOT NULL,
+        PRIMARY KEY ("id"),
+        FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
+);
 
 CREATE INDEX source_idx ON virtual_aliases (source);
 
 {% for virtual_domain in mail_virtual_domains %}
-INSERT INTO {{ mail_mysql_database }}.`virtual_domains` (`id`, `name`)
+INSERT INTO "virtual_domains" ("id", "name")
         VALUES ('{{ virtual_domain.pk_id }}', '{{ virtual_domain.name }}');
 {% endfor %}
 
 {% for virtual_user in mail_virtual_users %}
-INSERT INTO {{ mail_mysql_database }}.`virtual_users`  (`domain_id`, `password` , `email`)
+INSERT INTO "virtual_users"  ("domain_id", "password" , "email")
 	VALUES (
 		'{{ virtual_user.domain_pk_id }}',
 		'{{ virtual_user.password_hash }}',
@@ -51,7 +51,7 @@ INSERT INTO {{ mail_mysql_database }}.`virtual_users`  (`domain_id`, `password` 
 
 {% if mail_virtual_aliases is defined %}
 {% for virtual_alias in mail_virtual_aliases %}
-INSERT INTO {{ mail_mysql_database }}.`virtual_aliases` (`domain_id`, `source`, `destination`)
+INSERT INTO "virtual_aliases" ("domain_id", "source", "destination")
     VALUES ('{{ virtual_alias.domain_pk_id }}', '{{ virtual_alias.source }}', '{{virtual_alias.destination }}');
 {% endfor %}
 {% endif %}
