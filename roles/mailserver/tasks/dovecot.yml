@@ -3,6 +3,7 @@
   with_items:
     - dovecot-core
     - dovecot-imapd
+    - dovecot-pop3d
     - dovecot-lmtpd
     - dovecot-managesieved
     - postgresql-9.1
