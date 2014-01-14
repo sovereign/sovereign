@@ -20,7 +20,7 @@
     - 5222/tcp  # xmpp c2s
     - 5269/tcp  # xmpp s2s
     - 6697/tcp  # znc
-    - openvpn/udp
+    - "{{ openvpn_port }}/{{ openvpn_protocol }}"
     - 60000:61000/udp  # mosh udp packets
 
 - name: Check status of ufw
