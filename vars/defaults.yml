@@ -61,6 +61,8 @@ openvpn_ca: "{{ openvpn_path }}/ca"
 openvpn_dhparam: "{{ openvpn_path }}/dh{{ openvpn_key_size }}.pem"
 openvpn_hmac_firewall: "{{ openvpn_path }}/ta.key"
 openvpn_server: "{{ domain }}"
+openvpn_port: "1194"
+openvpn_protocol: "udp"
 # openvpn_clients: (required)
 
 # webmail
