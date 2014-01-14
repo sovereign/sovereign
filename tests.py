@@ -161,8 +161,8 @@ def new_message(from_email, to_email):
 
 
 class MailTests(unittest.TestCase):
-    def assertEmailReceived(self, subject):
-        """Connects with IMAP and asserts the existance of an email, then deletes it"""
+    def assertIMAPReceived(self, subject):
+        """Connects with IMAP and asserts the existence of an email, then deletes it"""
         import imaplib
 
         sleep(1)
@@ -172,7 +172,7 @@ class MailTests(unittest.TestCase):
         m.login(TEST_ADDRESS, TEST_PASSWORD)
         m.select()
 
-        # Assert the message exist
+        # Assert the message exists
         typ, data = m.search(None, '(SUBJECT \"{}\")'.format(subject))
         self.assertTrue(len(data[0].split()), 1)
 
@@ -182,12 +182,39 @@ class MailTests(unittest.TestCase):
         m.close()
         m.logout()
 
+    def assertPOP3Received(self, subject):
+        """Connects with POP3S and asserts the existence of an email, then deletes it"""
+        import poplib
+
+        sleep(1)
+
+        # Login to POP3
+        mail = poplib.POP3_SSL(TEST_SERVER, 995)
+        mail.user(TEST_ADDRESS)
+        mail.pass_(TEST_PASSWORD)
+
+        # Assert the message exists
+        num = len(mail.list()[1])
+        resp, text, octets = mail.retr(num)
+        self.assertTrue("Subject: " + subject in text)
+
+        # Delete it and log out
+        mail.dele(num)
+        mail.quit()
+
     def test_imap_requires_ssl(self):
         """IMAP without SSL is NOT available"""
         import imaplib
 
         with self.assertRaisesRegexp(socket.timeout, 'timed out'):
             imaplib.IMAP4(TEST_SERVER, 143)
+
+    def test_pop3_requires_ssl(self):
+        """POP3 without SSL is NOT available"""
+        import poplib
+
+        with self.assertRaisesRegexp(socket.timeout, 'timed out'):
+            poplib.POP3(TEST_SERVER, 110)
 
     def test_smtps(self):
         """Email sent from an MUA via SMTPS is delivered"""
@@ -197,7 +224,7 @@ class MailTests(unittest.TestCase):
         s.login(TEST_ADDRESS, TEST_PASSWORD)
         s.sendmail(TEST_ADDRESS, ['root@sovereign.local'], msg)
         s.quit()
-        self.assertEmailReceived(subject)
+        self.assertIMAPReceived(subject)
 
     def test_smtps_delimiter_to(self):
         """Email sent to address with delimiter is delivered"""
@@ -207,7 +234,7 @@ class MailTests(unittest.TestCase):
         s.login(TEST_ADDRESS, TEST_PASSWORD)
         s.sendmail(TEST_ADDRESS, ['root+foo@sovereign.local'], msg)
         s.quit()
-        self.assertEmailReceived(subject)
+        self.assertIMAPReceived(subject)
 
     def test_smtps_requires_auth(self):
         """SMTPS with no authentication is rejected"""
@@ -226,7 +253,7 @@ class MailTests(unittest.TestCase):
         s = smtplib.SMTP(TEST_SERVER, 25)
         s.sendmail('someone@example.com', [TEST_ADDRESS], msg)
         s.quit()
-        self.assertEmailReceived(subject)
+        self.assertIMAPReceived(subject)
 
     def test_smtp_tls(self):
         """Email sent from an MTA via SMTP+TLS is delivered"""
@@ -236,7 +263,7 @@ class MailTests(unittest.TestCase):
         s.starttls()
         s.sendmail('someone@example.com', [TEST_ADDRESS], msg)
         s.quit()
-        self.assertEmailReceived(subject)
+        self.assertIMAPReceived(subject)
 
     def test_smtps_headers(self):
         """Email sent from an MUA has DKIM and TLS headers"""
@@ -311,6 +338,16 @@ class MailTests(unittest.TestCase):
         m.expunge()
         m.close()
         m.logout()
+
+    def test_pop3s(self):
+        """Connects with POP3S and asserts the existance of an email, then deletes it"""
+        import smtplib
+        msg, subject = new_message(TEST_ADDRESS, 'root@sovereign.local')
+        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s.login(TEST_ADDRESS, TEST_PASSWORD)
+        s.sendmail(TEST_ADDRESS, ['root@sovereign.local'], msg)
+        s.quit()
+        self.assertPOP3Received(subject)
 
 
 class XMPPTests(unittest.TestCase):

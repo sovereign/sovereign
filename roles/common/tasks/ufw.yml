@@ -16,6 +16,7 @@
     - https/tcp
     - ssh/tcp
     - ssmtp/tcp
+    - pop3s/tcp
     - imaps/tcp
     - 5222/tcp  # xmpp c2s
     - 5269/tcp  # xmpp s2s
