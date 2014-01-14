@@ -28,6 +28,10 @@
     - apt-transport-https
     - python-software-properties
 
+- name: Install unattended upgrades (Debian/Ubuntu only)
+  apt: pkg=unattended-upgrades state=installed
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
 - name: Install ntp
   apt: pkg=ntp state=installed
 
