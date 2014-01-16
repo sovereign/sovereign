@@ -14,6 +14,12 @@ friendly_networks:
 db_admin_username: postgres
 db_admin_password: postgres
 
+ntp_servers:
+  - 0.north-america.pool.ntp.org
+  - 1.north-america.pool.ntp.org
+  - 2.north-america.pool.ntp.org
+  - 3.north-america.pool.ntp.org
+
 # ircbouncer
 irc_nick: sovereign
 irc_ident: sovereign

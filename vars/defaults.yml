@@ -12,6 +12,14 @@ admin_email: "{{ main_user_name }}@{{ domain }}"
 friendly_networks:
   - ""
 
+# ntp
+ntp_servers:
+  # use a random selection of worldwide servers by default.
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
 # database
 db_admin_username: 'postgres'
 # db_admin_password: (required)
