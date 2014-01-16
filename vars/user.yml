@@ -9,15 +9,6 @@ domain: TODO.com
 main_user_name: TODO
 encfs_password: TODO
 
-# ntp
-ntp_servers:
-  # preferably, use the ntp servers in your own country or continent
-  # See http://www.pool.ntp.org/en/use.html
-  - 0.north-america.pool.ntp.org
-  - 1.north-america.pool.ntp.org
-  - 2.north-america.pool.ntp.org
-  - 3.north-america.pool.ntp.org
-
 # database
 db_admin_username: postgres
 db_admin_password: TODO
