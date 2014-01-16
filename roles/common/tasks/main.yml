@@ -32,19 +32,8 @@
   apt: pkg=unattended-upgrades state=installed
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: Install ntp
-  apt: pkg=ntp state=installed
-
-- name: Configure ntp
-  template: src=ntp.conf.j2 dest=/etc/ntp.conf
-  notify:
-    - restart ntp
-
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
-
-- name: Ensure ntpd is running and enabled
-  service: name=ntp state=started enabled=yes
 
 - name: Disable default Apache site
   command: a2dissite 000-default removes=/etc/apache2/sites-enabled/000-default
@@ -59,3 +48,4 @@
 - include: ssl.yml tags=ssl
 - include: ufw.yml tags=ufw
 - include: security.yml tags=security
+- include: ntp.yml tags=ntp

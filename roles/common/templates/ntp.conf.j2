@@ -10,11 +10,10 @@ filegen loopstats file loopstats type day enable
 filegen peerstats file peerstats type day enable
 filegen clockstats file clockstats type day enable
 
-# Use servers from the NTP Pool Project
-server 0.north-america.pool.ntp.org
-server 1.north-america.pool.ntp.org
-server 2.north-america.pool.ntp.org
-server 3.north-america.pool.ntp.org
+# Use servers configured via Ansible
+{% for server in ntp_servers %}
+server {{ server }}
+{% endfor %}
 
 # fallback
 server tick.usno.navy.mil
