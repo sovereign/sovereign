@@ -8,6 +8,7 @@
     - postgresql-9.1
     - postfix-pgsql
     - python-psycopg2
+    - postfix-pcre
 
 - name: Set postgres password
   command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
@@ -24,6 +25,14 @@
 - name: Copy import.sql
   template: src=mailserver.sql.j2 dest=/etc/postfix/import.sql owner=root group=root mode=0600
   notify: import sql postfix
+
+- name: Create postfix maps directory
+  file: path=/etc/postfix/maps state=directory owner=root group=root
+  when: mail_header_privacy == 1
+
+- name: Copy smtp_header_checks.pcre
+  copy: src=etc_postfix_maps_smtp_header_checks.pcre dest=/etc/postfix/maps/smtp_header_checks.pcre owner=root group=root
+  when: mail_header_privacy == 1
 
 - name: Copy main.cf
   template: src=etc_postfix_main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root
