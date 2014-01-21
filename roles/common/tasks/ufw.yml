@@ -11,7 +11,7 @@
   changed_when: "ufw_result.stdout.startswith('Rule')"
   with_items:
     - smtp/tcp
-    - domain/tcp
+    - domain
     - http/tcp
     - https/tcp
     - ssh/tcp
