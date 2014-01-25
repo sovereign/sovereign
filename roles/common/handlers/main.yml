@@ -12,3 +12,6 @@
 
 - name: restart ssh
   service: name=ssh state=restarted
+
+- name: restart shorewall
+  service: name=shorewall state=restarted

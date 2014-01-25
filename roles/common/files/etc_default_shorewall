@@ -1,0 +1,44 @@
+# prevent startup with default configuration
+# set the following varible to 1 in order to allow Shorewall to start
+
+startup=1
+
+# If your Shorewall configuration requires detection of the ip address of a ppp
+# interface, you must list such interfaces in "wait_interface" to get Shorewall
+# to wait until the interface is configured. Otherwise the script will fail
+# because it won't be able to detect the IP address.
+#
+# Example:
+#    wait_interface="ppp0"
+# or
+#    wait_interface="ppp0 ppp1"
+# or, if you have defined  in /etc/shorewall/params
+#    wait_interface=
+
+#
+# Global start/restart/stop options
+#
+OPTIONS=""
+
+#
+# Start options
+#
+STARTOPTIONS=""
+
+#
+# Restart options
+#
+RESTARTOPTIONS=""
+
+#
+# Init Log -- if /dev/null, use the STARTUP_LOG defined in shorewall.conf
+#
+INITLOG=/dev/null
+
+#
+# Set this to 1 to cause '/etc/init.d/shorewall stop' to place the firewall in
+# a safe state rather than to open it
+#
+SAFESTOP=0
+
+# EOF
