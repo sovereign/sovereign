@@ -8,6 +8,7 @@
 # domain: (required)
 # main_user_name: (required)
 admin_email: "{{ main_user_name }}@{{ domain }}"
+main_user_shell: "/bin/bash"
 # encfs_password: (required)
 friendly_networks:
   - ""
