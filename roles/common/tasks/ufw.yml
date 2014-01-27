@@ -23,6 +23,7 @@
     - 6697/tcp  # znc
     - "{{ openvpn_port }}/{{ openvpn_protocol }}"
     - 60000:61000/udp  # mosh udp packets
+    - 2812/tcp
 
 - name: Check status of ufw
   command: ufw status
