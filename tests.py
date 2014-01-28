@@ -26,6 +26,15 @@ class SSHTests(unittest.TestCase):
         self.assertRegexpMatches(data, '^SSH-2.0-OpenSSH')
 
 
+class WebHostingTests(unittest.TestCase):
+    def test_www_site(self):
+        """friend web site is enabled"""
+        r = requests.get('http://www.friend.sovereign.local/')
+
+        # We deploy a simple Hello World if there is nothing already.
+        self.assertEquals(r.status_code, 200)
+
+
 class WebTests(unittest.TestCase):
     def test_blog_http(self):
         """Blog is redirecting to https"""

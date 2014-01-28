@@ -21,6 +21,12 @@ irc_realname: Mr. Sovereign
 irc_quitmsg: Bye
 irc_password_hash: "sha256#4bfc209c5e19874337fd89c80675ad194836efea5efd4189b7f73cd9e0a6094f#,i*Msa0B;w9yR23nm1ZB#" #foo
 
+# web hosting
+virtual_hosts:
+  - name: www.friend.sovereign.local
+    aliases:
+      - friend.sovereign.local
+
 # mailserver
 mail_db_password: testPassword
 mail_virtual_domains:
