@@ -26,6 +26,14 @@ virtual_hosts:
   - name: www.friend.sovereign.local
     aliases:
       - friend.sovereign.local
+    config: |
+      <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+      </Directory>
+  - name: www.example.org
+    aliases:
+      - example.org
 
 # mailserver
 mail_db_password: testPassword
