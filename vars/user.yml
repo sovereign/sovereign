@@ -48,6 +48,15 @@ mail_virtual_aliases:
     domain_pk_id: 1
 mail_header_privacy: 1
 
+# webserver
+# add virtual hosts below.
+# the main web site for your domain will be enabled regardless,
+# so this list is only for sites in addition to the one for your domain.
+virtual_hosts:
+  - name: www.example.com
+    aliases:
+      - example.com
+
 # z-push
 zpush_timezone: "TODO"  #Example: "America/New_York"
 

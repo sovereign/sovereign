@@ -11,6 +11,7 @@
   copy: src=index.html dest=/var/www/{{ item.name }}/index.html force=no
   with_items: virtual_hosts
 
-- name: Enable all websites
+- name: Enable all virtualhosts
   command: a2ensite {{ item.name }} creates=/etc/apache2/sites-enabled/{{ item.name }}
   with_items: virtual_hosts
+  notify: restart apache

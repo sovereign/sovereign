@@ -24,7 +24,7 @@ Vagrant.configure('2') do |config|
     ansible.playbook = 'site.yml'
     ansible.host_key_checking = false
 
-    # ansible.tags = ['blog']
+    # ansible.tags = ['mailserver']
     # ansible.skip_tags = ['openvpn']
     # ansible.verbose = 'vvvv'
 
