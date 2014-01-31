@@ -5,7 +5,13 @@
   copy: src=index.html dest=/var/www/{{ domain }}/index.html force=no
 
 - name: Configure the Apache HTTP server for the blog
-  template: src=etc_apache2_sites-available_blog.j2 dest=/etc/apache2/sites-available/{{ domain }}
+  template: src={{ item }} dest=/etc/apache2/sites-available/{{ domain }}
+  with_first_found:
+    - files:
+      - etc_apache2_sites-available_{{ domain }}.j2
+      - etc_apache2_sites-available_blog.j2
+      paths:
+      - ../templates
 
 - name: Enable blog site
   command: a2ensite {{ domain }} creates=/etc/apache2/sites-enabled/{{ domain }}
