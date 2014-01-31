@@ -1,2 +1,2 @@
 - include: blog.yml tags=blog
-- include: virtual_hosts.yml tags=virtual_hosts
+- include: virtual_hosts.yml tags=webserver
