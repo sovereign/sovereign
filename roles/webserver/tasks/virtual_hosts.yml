@@ -1,6 +1,6 @@
 ---
 - name: Copy virtualhost starter files
-  template: src=virtualhost.j2 dest=/etc/apache2/sites-available/{{ item.name }} force=no
+  template: src=etc_apache2_sites-available_virtualhost.j2 dest=/etc/apache2/sites-available/{{ item.name }}
   with_items: virtual_hosts
 
 - name: Create document roots
