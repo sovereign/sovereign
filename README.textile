@@ -165,6 +165,10 @@ If you've just bought a new domain name, point it at "Linode's DNS Manager":http
 
 Create an @A@ record for @example.com@ as well as @mail.example.com@ which points to your server IP. Create an @MX@ record for @example.com@ which assigns @mail.example.com@ as the domain's mail server.
 
+To ensure your emails pass DKIM checks you need to add a @txt@ record. The name field will be @default._domainkey.EXAMPLE.COM.@ The value field contains the public key used by OpenDKIM. The exact value needed can be found in the file @/etc/opendkim/keys/EXAMPLE.COM/default.txt@ it'll look something like this:
+
+bc. v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKKAQfMwKVx+oJripQI+Ag4uTwYnsXKjgBGtl7Tk6UMTUwhMqnitqbR/ZQEZjcNolTkNDtyKZY2Z6LqvM4KsrITpiMbkV1eX6GKczT8Lws5KXn+6BHCKULGdireTAUr3Id7mtjLrbi/E3248Pq0Zs39hkDxsDcve12WccjafJVwIDAQAB
+
 Set up SPF and reverse DNS "as per this post":http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/. Make sure to validate that it's all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
 h3. 7. Miscellaneous Configuration
