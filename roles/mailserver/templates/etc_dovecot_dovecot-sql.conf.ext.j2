@@ -63,7 +63,7 @@ driver = pgsql
 #   connect = host=sql.example.com dbname=virtual user=virtual password=blarg
 #   connect = /etc/dovecot/authdb.sqlite
 #
-connect = "host=127.0.0.1 dbname={{ mail_db_database }} user={{ mail_db_username }} password={{ mail_db_password }}"
+connect = "host=127.0.0.1 dbname={{ mail_db_database }} user={{ mail_db_username }} password='{{ mail_db_password }}'"
 
 # Default password scheme.
 #
