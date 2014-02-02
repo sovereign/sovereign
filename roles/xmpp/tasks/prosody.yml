@@ -18,5 +18,5 @@
   notify: restart prosody
 
 - name: Create Prosody accounts
-  command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} {{ item.password }}
+  command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
   with_items: prosody_accounts

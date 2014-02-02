@@ -3,10 +3,10 @@
 # as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
 
 - name: Create database user for ownCloud
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password={{ db_admin_password }} name={{ owncloud_db_username }} password={{ owncloud_db_password }} state=present
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" state=present
 
 - name: Create database for ownCloud
-  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password={{ db_admin_password }} name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
 
 - name: Ensure repository key for ownCloud is in place
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
