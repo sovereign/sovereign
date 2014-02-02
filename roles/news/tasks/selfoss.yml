@@ -6,10 +6,10 @@
   action: file owner=www-data group=www-data path=/var/www/selfoss recurse=yes state=directory
 
 - name: Create database user for selfoss
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password={{ db_admin_password }} name={{ selfoss_db_username }} password={{ selfoss_db_password }} state=present
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_username }} password="{{ selfoss_db_password }}" state=present
 
 - name: Create database for selfoss
-  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password={{ db_admin_password }} name={{ selfoss_db_database }} state=present owner={{ selfoss_db_username }}
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_database }} state=present owner={{ selfoss_db_username }}
 
 - name: Install selfoss config.ini
   template: src=var_www_selfoss_config.ini.j2 dest=/var/www/selfoss/config.ini group=www-data owner=www-data
