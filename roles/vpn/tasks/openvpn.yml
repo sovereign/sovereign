@@ -92,9 +92,6 @@
   command: openssl dhparam -out {{ openvpn_dhparam }} {{ openvpn_key_size }}
            creates={{ openvpn_dhparam }}
 
-- name: Copy rc.local with firewall and dnsmasq rules into place
-  template: src=etc_rc.local dest=/etc/rc.local
-
 - name: Enable IPv4 traffic forwarding
   sysctl: name=net.ipv4.ip_forward value=1
 
