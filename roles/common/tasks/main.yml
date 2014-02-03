@@ -46,6 +46,6 @@
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl
-- include: shorewall.yml tags=firewall
+- include: ferm.yml tags=firewall
 - include: security.yml tags=security
 - include: ntp.yml tags=ntp

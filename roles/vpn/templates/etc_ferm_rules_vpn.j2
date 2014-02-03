@@ -1,0 +1,16 @@
+table filter {
+    chain INPUT {
+        dport (dns) ACCEPT;
+        proto udp ( {{ openvpn_port }} ) ACCEPT;
+    }
+    chain FORWARD {
+        mod state state (ESTABLISHED RELATED) ACCEPT;
+        saddr 10.8.0.0/24 ACCEPT;
+        jump REJECT;
+    }
+}
+table nat {
+    chain POSTROUTING {
+        saddr 10.8.0.0/24 outerface {{ ansible_default_ipv4.interface }} jump MASQUERADE
+    }
+}

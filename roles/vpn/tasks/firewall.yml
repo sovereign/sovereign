@@ -1,0 +1,5 @@
+---
+- name: Create firewall rules for openvpn
+  template: src=etc_ferm_rules_openvpn.cfg.j2
+            dest=/etc/fer/rules/openvpn.cfg
+  tags: firewall
