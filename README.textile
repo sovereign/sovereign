@@ -180,6 +180,10 @@ h2. How To Use Your New Personal Cloud
 
 We're collecting known-good client setups "on our wiki":https://github.com/al3x/sovereign/wiki/Usage.
 
+h2. Troubleshooting
+
+If you run into an errors, please check the "wiki page":https://github.com/al3x/sovereign/wiki/Troubleshooting. If the problem you encountered, is not listed, please go ahead and "create an issue":https://github.com/al3x/sovereign/issues/new. If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
+
 h1. Contributing
 
 You may want to set up a "local development environment":https://github.com/al3x/sovereign/wiki/Development-Environment so that you don't have to test on your real server.
