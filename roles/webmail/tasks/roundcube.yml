@@ -17,6 +17,9 @@
 - name: Configure roundcube's managesieve plugin
   copy: src=usr_share_roundcube_plugins_managesieve_config.inc.php dest=/usr/share/roundcube/plugins/managesieve/config.inc.php group=www-data owner=root mode=640 force=yes
 
+- name: Copy global default sieve rules
+  copy: src=etc_roundcube_global.sieve dest=/etc/roundcube/global.sieve owner=root group=www-data mode=640
+
 - name: Enable roundcube site
   command: a2ensite roundcube creates=/etc/apache2/sites-enabled/roundcube
   notify: restart apache
