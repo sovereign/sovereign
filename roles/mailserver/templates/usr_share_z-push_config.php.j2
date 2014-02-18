@@ -128,7 +128,7 @@
     //   SYNC_FILTERTYPE_ALL (default, no limitation)
     //   SYNC_FILTERTYPE_1DAY, SYNC_FILTERTYPE_3DAYS, SYNC_FILTERTYPE_1WEEK, SYNC_FILTERTYPE_2WEEKS,
     //   SYNC_FILTERTYPE_1MONTH, SYNC_FILTERTYPE_3MONTHS, SYNC_FILTERTYPE_6MONTHS
-    define('SYNC_FILTERTIME_MAX', SYNC_FILTERTYPE_ALL);
+    define('SYNC_FILTERTIME_MAX', SYNC_FILTERTYPE_3MONTHS);
 
     // Interval in seconds before checking if there are changes on the server when in Ping.
     // It means the highest time span before a change is pushed to a mobile. Set it to
@@ -233,8 +233,8 @@
     //  BackendVCardDir settings
     // **********************
     define('VCARDDIR_DIR', '/home/%u/.kde/share/apps/kabc/stdvcf');
-    
-    
+
+
 /**********************************************************************************
  *  Search provider settings
  *
