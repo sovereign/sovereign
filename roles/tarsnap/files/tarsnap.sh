@@ -55,7 +55,7 @@ else
 fi
 
 # Stop postgres
-service postgresql stop
+monit stop postgres
 
 # Do backups
 for dir in $DIRS; do
@@ -64,7 +64,7 @@ for dir in $DIRS; do
 done
 
 # Start postgres
-service postgresql start
+monit start postgres
 
 # Backups done, time for cleaning up old archives
 
