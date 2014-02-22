@@ -61,4 +61,4 @@
   copy: src=tarsnap.sh dest=/root/tarsnap.sh mode="755"
 
 - name: Install nightly Tarsnap-generations cronjob
-  cron: name="Tarsnap backup" hour="23" minute="0" job="sh /root/tarsnap.sh >> /var/log/tarsnap.log"
+  cron: name="Tarsnap backup" hour="3" minute="0" job="sh /root/tarsnap.sh >> /var/log/tarsnap.log"
