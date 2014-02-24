@@ -18,7 +18,7 @@
   copy: src=usr_share_roundcube_plugins_managesieve_config.inc.php dest=/usr/share/roundcube/plugins/managesieve/config.inc.php group=www-data owner=root mode=640 force=yes
 
 - name: Configure roundcube's password plugin
-  copy: src=usr_share_roundcube_plugins_password_config.inc.php dest=/usr/share/roundcube/plugins/password/config.inc.php group=www-data owner=root mode=640 force=yes
+  template: src=usr_share_roundcube_plugins_password_config.inc.php.j2 dest=/usr/share/roundcube/plugins/password/config.inc.php group=www-data owner=root mode=640 force=yes
 
 - name: Enable roundcube site
   command: a2ensite roundcube creates=/etc/apache2/sites-enabled/roundcube
