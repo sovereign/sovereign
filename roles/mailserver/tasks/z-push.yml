@@ -8,7 +8,7 @@
     
 - name: Download z-push release
   get_url: 
-    url=http://zarafa-deutschland.de/z-push-download/final/2.1/z-push-{{ zpush_version }}.tar.gz
+    url=http://download.z-push.org/final/2.1/z-push-{{ zpush_version }}.tar.gz
     dest=/root/z-push-{{ zpush_version }}.tar.gz
 
 - name: Decompress z-push source
