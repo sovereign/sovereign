@@ -46,5 +46,5 @@
 
 - name: Ensure correct permissions on Dovecot config directory
   file: state=directory path=/etc/dovecot
-          group=dovecot owner=vmail mode=770 recurse=yes
+          group=dovecot owner=vmail mode=775 recurse=yes
   notify: restart dovecot
