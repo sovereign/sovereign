@@ -2,7 +2,7 @@
     ServerName {{ domain }}
     ServerAlias www.{{ domain }}
 
-    Redirect permanent / https://www.{{ domain }}/
+    Redirect permanent / https://{{ domain }}/
 </VirtualHost>
 
 
@@ -24,8 +24,4 @@
     Options                 -Indexes
 
     HostnameLookups         Off
-
-    RewriteEngine on
-    RewriteCond %{HTTP_HOST} !^www\. [NC]
-    RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 </VirtualHost>
