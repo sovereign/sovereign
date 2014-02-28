@@ -174,7 +174,7 @@ Set up SPF and reverse DNS "as per this post":http://sealedabstract.com/code/nsa
 h3. 7. Miscellaneous Configuration
 
 * Sign in to the ZNC web interface and set things up to your liking.
-* You'll probably want to sign into your ownCloud installation and check out the settings there, too.
+* Sign into ownCloud to set it up. You should select postgresql as the configuration backend.
 
 h2. How To Use Your New Personal Cloud
 
