@@ -29,7 +29,3 @@
     - 90-plugin.conf
   notify: restart dovecot
 
-- name: Put sieve rules into each user directory
-  copy: src=dot_dovecot.sieve dest=/decrypted/{{ item.domain }}/{{ item.account }}/.dovecot.sieve owner=vmail group=dovecot
-  with_items: mail_virtual_users
-  notify: restart dovecot

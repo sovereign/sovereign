@@ -54,11 +54,17 @@ else
 	BACKUP="$YEAR$MOY$DOM-$TIME-daily"
 fi
 
+# Stop postgres
+monit stop postgres
+
 # Do backups
 for dir in $DIRS; do
 	echo "==> create $BACKUP-$dir"
 	$TARSNAP $EXTRA_FLAGS -c -f $BACKUP-$dir $dir
 done
+
+# Start postgres
+monit start postgres
 
 # Backups done, time for cleaning up old archives
 
