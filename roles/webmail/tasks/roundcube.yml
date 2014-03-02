@@ -23,10 +23,13 @@
   shell: cp -R rcmcarddav-carddav_{{ carddav_version }}/* /usr/share/roundcube/plugins/carddav/ chdir=/root
 
 - name: Link carddav plugin into /var/lib/roundcube/plugins
-  shell: ln -s /usr/share/roundcube/plugins/carddav chdir=/var/lib/roundcube/plugins
+  file: state=link src=/usr/share/roundcube/plugins/carddav dest=/var/lib/roundcube/plugins/carddav force=yes
 
-- name: Remove downloaded, temporary carddav plugin source files
-  shell: rm -rf rcmcarddav-carddav_* carddav_* chdir=/root
+- name: Remove downloaded carddav plugin file
+  file: state=absent path=/root/carddav_{{ carddav_version }}.tar.gz
+
+- name: Remove extracted carddav plugin files
+  file: state=absent path=/root/rcmcarddav-carddav_{{ carddav_version }} recurse=true
 
 - name: Configure the Apache HTTP server for roundcube
   template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube group=www-data owner=www-data force=yes
