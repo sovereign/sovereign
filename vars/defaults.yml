@@ -85,6 +85,7 @@ webmail_domain: "mail.{{ domain }}"
 webmail_db_username: "roundcube"
 # webmail_db_password: (required)
 webmail_db_database: "roundcube"
+carddav_version: "0.9.2"
 
 # xmpp
 prosody_admin: "{{ admin_email }}"
