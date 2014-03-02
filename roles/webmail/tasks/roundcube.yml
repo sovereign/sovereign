@@ -8,6 +8,26 @@
 - name: Configure Roundcube database
   template: src=etc_dbconfig-common_roundcube.conf.j2 dest=/etc/dbconfig-common/roundcube.conf group=root owner=root force=yes
 
+- name: Download carddav plugin release
+  get_url:
+    url=https://github.com/blind-coder/rcmcarddav/archive/carddav_{{ carddav_version }}.tar.gz
+    dest=/root/carddav_{{ carddav_version }}.tar.gz
+
+- name: Decompress carddav plugin source
+  command: tar xzf carddav_{{ carddav_version }}.tar.gz chdir=/root creates=/root/rcmcarddav-carddav_{{ carddav_version }}
+
+- name: Create /usr/share/roundcube/plugins/carddav
+  file: state=directory path=/usr/share/roundcube/plugins/carddav
+
+- name: Copy carddav plugin files to /usr/share/roundcube/plugins/carddav
+  shell: cp -R rcmcarddav-carddav_{{ carddav_version }}/* /usr/share/roundcube/plugins/carddav/ chdir=/root
+
+- name: Link carddav plugin into /var/lib/roundcube/plugins
+  shell: ln -s /usr/share/roundcube/plugins/carddav chdir=/var/lib/roundcube/plugins
+
+- name: Remove downloaded, temporary carddav plugin source files
+  shell: rm -rf rcmcarddav-carddav_* carddav_* chdir=/root
+
 - name: Configure the Apache HTTP server for roundcube
   template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube group=www-data owner=www-data force=yes
 
@@ -16,6 +36,9 @@
 
 - name: Configure roundcube's managesieve plugin
   copy: src=usr_share_roundcube_plugins_managesieve_config.inc.php dest=/usr/share/roundcube/plugins/managesieve/config.inc.php group=www-data owner=root mode=640 force=yes
+
+- name: Configure roundcube's carddav plugin
+  copy: src=usr_share_roundcube_plugins_carddav_config.inc.php dest=/usr/share/roundcube/plugins/carddav/config.inc.php group=www-data owner=root mode=640 force=yes
 
 - name: Copy global default sieve rules
   copy: src=etc_roundcube_global.sieve dest=/etc/roundcube/global.sieve owner=root group=www-data mode=640
