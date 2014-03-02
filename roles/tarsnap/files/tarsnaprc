@@ -1,5 +1,4 @@
-keyfile /root/tarsnap.key
+keyfile /decrypted/tarsnap.key
 cachedir /usr/tarsnap-cache
 exclude /usr/tarsnap-cache
 humanize-numbers
-

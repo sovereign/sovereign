@@ -38,7 +38,6 @@
     dest="/root/tarsnap-autoconf-{{ tarsnap_version }}.tgz"
     sha256sum={{ tarsnap_sha.stdout_lines[0] }}
 
-
 - name: Decompress Tarsnap source
   command: tar xzf /root/tarsnap-autoconf-{{ tarsnap_version }}.tgz chdir=/root creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/COPYING
 
@@ -49,7 +48,7 @@
   command: make all install clean chdir=/root/tarsnap-autoconf-{{ tarsnap_version }} creates=/usr/local/bin/tarsnap
 
 - name: Copy Tarsnap key file into place
-  copy: src=root_tarsnap.key dest=/root/tarsnap.key owner=root group=root
+  copy: src=decrypted_tarsnap.key dest=/decrypted/tarsnap.key owner=root group=root force=no
 
 - name: Create Tarsnap cache directory
   file: state=directory path=/usr/tarsnap-cache
