@@ -21,6 +21,7 @@
 
 - name: Copy carddav plugin files to /usr/share/roundcube/plugins/carddav
   shell: cp -R rcmcarddav-carddav_{{ carddav_version }}/* /usr/share/roundcube/plugins/carddav/ chdir=/root
+  notify: import sql carddav
 
 - name: Link carddav plugin into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/carddav dest=/var/lib/roundcube/plugins/carddav force=yes
