@@ -32,7 +32,7 @@ db_admin_username: 'postgres'
 # db_admin_password: (required)
 
 # ircbouncer
-znc_version: 1.0
+znc_version: 1.2
 # irc_nick: (required)
 # irc_ident: (required)
 # irc_realname: (required)
