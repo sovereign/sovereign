@@ -23,14 +23,11 @@ Vagrant.configure('2') do |config|
   config.vm.provision :ansible do |ansible|
     ansible.playbook = 'site.yml'
     ansible.host_key_checking = false
+    ansible.extra_vars = { ansible_ssh_user: 'vagrant', testing: true }
 
     # ansible.tags = ['blog']
     # ansible.skip_tags = ['openvpn']
     # ansible.verbose = 'vvvv'
-
-    # Workaround: https://github.com/mitchellh/vagrant/issues/2174
-    extra_vars = { ansible_ssh_user: 'vagrant', testing: true}
-    ansible.raw_arguments = "--extra-vars=" + extra_vars.map { |k,v| "#{k}=#{v}" }.join(" ")
   end
 
 end
