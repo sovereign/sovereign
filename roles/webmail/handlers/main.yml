@@ -1,0 +1,6 @@
+- name: reconfigure roundcube db
+  action: shell dbconfig-generate-include /etc/dbconfig-common/roundcube.conf /etc/roundcube/debian-db.php
+  notify: import sql carddav
+
+- name: import sql carddav
+  action: shell PGPASSWORD='{{ webmail_db_password }}' psql -h localhost -d {{ webmail_db_database }} -U {{ webmail_db_username }} -f /usr/share/roundcube/plugins/carddav/dbinit/postgres.sql --set ON_ERROR_STOP=1
