@@ -17,20 +17,14 @@
 - name: Decompress carddav plugin source
   command: tar xzf carddav_{{ carddav_version }}.tar.gz chdir=/root creates=/root/rcmcarddav-carddav_{{ carddav_version }}
 
-- name: Create /usr/share/roundcube/plugins/carddav
-  file: state=directory path=/usr/share/roundcube/plugins/carddav
-
-- name: Copy carddav plugin files to /usr/share/roundcube/plugins/carddav
-  shell: cp -R rcmcarddav-carddav_{{ carddav_version }}/* /usr/share/roundcube/plugins/carddav/ chdir=/root
+- name: Move carddav plugin files to /usr/share/roundcube/plugins/carddav
+  command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav chdir=/root creates=/usr/share/roundcube/plugins/carddav
 
 - name: Link carddav plugin into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/carddav dest=/var/lib/roundcube/plugins/carddav force=yes
 
 - name: Remove downloaded carddav plugin file
   file: state=absent path=/root/carddav_{{ carddav_version }}.tar.gz
-
-- name: Remove extracted carddav plugin files
-  file: state=absent path=/root/rcmcarddav-carddav_{{ carddav_version }} recurse=true
 
 - name: Configure the Apache HTTP server for roundcube
   template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube group=www-data owner=www-data force=yes
