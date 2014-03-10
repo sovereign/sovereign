@@ -6,10 +6,10 @@
     - roundcube-pgsql
 
 - name: Configure Roundcube database
-  template: src={{ item.src }} dest={{ item.dest }} group=root owner=root force=yes
+  template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
   with_items:
-  - { src: 'etc_dbconfig-common_roundcube.conf.j2', dest: '/etc/dbconfig-common/roundcube.conf' }
-  - { src: 'etc_roundcube_debian-db.php.j2',        dest: '/etc/roundcube/debian-db.php' }
+  - { src: 'etc_dbconfig-common_roundcube.conf.j2', dest: '/etc/dbconfig-common/roundcube.conf', group: 'root',     mode: 600 }
+  - { src: 'etc_roundcube_debian-db.php.j2',        dest: '/etc/roundcube/debian-db.php',        group: 'www-data', mode: 640 }
   notify: set roundcube password
 
 - name: Download carddav plugin release
