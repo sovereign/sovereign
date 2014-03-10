@@ -1,7 +1,3 @@
-- name: reconfigure roundcube db
-  command: /usr/sbin/dbconfig-generate-include /etc/dbconfig-common/roundcube.conf /etc/roundcube/debian-db.php
-  notify: set roundcube password
-
 - name: set roundcube password
   command: sudo -u {{ db_admin_username }} psql -d {{ webmail_db_database }} -c "ALTER USER {{ webmail_db_username }} with password '{{ webmail_db_password }}';"
   notify: import sql carddav
