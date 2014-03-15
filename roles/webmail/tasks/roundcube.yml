@@ -6,8 +6,11 @@
     - roundcube-pgsql
 
 - name: Configure Roundcube database
-  template: src=etc_dbconfig-common_roundcube.conf.j2 dest=/etc/dbconfig-common/roundcube.conf group=root owner=root force=yes
-  notify: reconfigure roundcube db
+  template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
+  with_items:
+  - { src: 'etc_dbconfig-common_roundcube.conf.j2', dest: '/etc/dbconfig-common/roundcube.conf', group: 'root',     mode: 600 }
+  - { src: 'etc_roundcube_debian-db.php.j2',        dest: '/etc/roundcube/debian-db.php',        group: 'www-data', mode: 640 }
+  notify: set roundcube password
 
 - name: Download carddav plugin release
   get_url:
@@ -23,23 +26,19 @@
 - name: Link carddav plugin into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/carddav dest=/var/lib/roundcube/plugins/carddav force=yes
 
-- name: Remove downloaded carddav plugin file
-  file: state=absent path=/root/carddav_{{ carddav_version }}.tar.gz
+#- name: Remove downloaded carddav plugin file
+#  file: state=absent path=/root/carddav_{{ carddav_version }}.tar.gz
 
 - name: Configure the Apache HTTP server for roundcube
   template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube group=www-data owner=www-data force=yes
 
 - name: Configure roundcube
-  copy: src=etc_roundcube_main.inc.php dest=/etc/roundcube/main.inc.php group=www-data owner=root mode=640 force=yes
-
-- name: Configure roundcube's managesieve plugin
-  copy: src=usr_share_roundcube_plugins_managesieve_config.inc.php dest=/usr/share/roundcube/plugins/managesieve/config.inc.php group=www-data owner=root mode=640 force=yes
-
-- name: Configure roundcube's carddav plugin
-  copy: src=usr_share_roundcube_plugins_carddav_config.inc.php dest=/usr/share/roundcube/plugins/carddav/config.inc.php group=www-data owner=root mode=640 force=yes
-
-- name: Copy global default sieve rules
-  copy: src=etc_roundcube_global.sieve dest=/etc/roundcube/global.sieve owner=root group=www-data mode=640
+  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
+  with_items:
+  - { src: 'etc_roundcube_main.inc.php',                             dest: '/etc/roundcube/main.inc.php' }
+  - { src: 'usr_share_roundcube_plugins_managesieve_config.inc.php', dest: '/usr/share/roundcube/plugins/managesieve/config.inc.php' }
+  - { src: 'usr_share_roundcube_plugins_carddav_config.inc.php',     dest: '/usr/share/roundcube/plugins/carddav/config.inc.php' }
+  - { src: 'etc_roundcube_global.sieve',                             dest: '/etc/roundcube/global.sieve' }
 
 - name: Enable roundcube site
   command: a2ensite roundcube creates=/etc/apache2/sites-enabled/roundcube
