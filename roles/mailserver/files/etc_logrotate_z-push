@@ -1,0 +1,8 @@
+/var/log/z-push/*.log {
+        weekly
+        missingok
+        rotate 52
+        compress
+        notifempty
+        create 0644 www-data www-data
+}

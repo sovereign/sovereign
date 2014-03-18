@@ -36,3 +36,6 @@
 - name: Configure z-push apache alias and php settings
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf.d/z-push.conf
   notify: restart apache
+  
+- name: Configure z-push logrotate
+  copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push owner=root group=root mode=0644
