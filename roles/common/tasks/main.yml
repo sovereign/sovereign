@@ -43,6 +43,10 @@
   command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
   notify: restart apache
 
+- name: Set ServerName for Apache
+  template: src=fqdn.j2 dest=/etc/apache2/conf.d/fqdn
+  notify: restart apache
+
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl
