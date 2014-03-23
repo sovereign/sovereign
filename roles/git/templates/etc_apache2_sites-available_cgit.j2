@@ -25,11 +25,11 @@
         Allow from all
     </Directory>
 
-    Alias       /cgit.png   /var/www/htdocs/cgit/cgit.png
-    Alias       /cgit.css   /var/www/htdocs/cgit/cgit.css
+    Alias /cgit.png         /var/www/htdocs/cgit/cgit.png
+    Alias /cgit.css         /var/www/htdocs/cgit/cgit.css
+    Alias /favicon.ico      /var/www/htdocs/cgit/favicon.ico
+    Alias /robots.txt       /var/www/htdocs/cgit/robots.txt
     ScriptAlias /           /var/www/htdocs/cgit/cgit.cgi/
-    RewriteRule ^$          / [R]
-    RewriteRule ^/(.*)$     /cgit.cgi/$1 [PT]
 
     CustomLog /var/log/apache2/cgit_access.log combined
     ErrorLog /var/log/apache2/cgit_error.log
