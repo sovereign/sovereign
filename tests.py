@@ -122,6 +122,20 @@ class WebTests(unittest.TestCase):
             r.content
         )
 
+    def test_cgit_http(self):
+        """CGit web interface is displaying home page"""
+        r = requests.get('http://git.' + TEST_SERVER, verify=False)
+
+        # We should be redirected to https
+        self.assertEquals(r.history[0].status_code, 301)
+        self.assertEquals(r.url, 'https://git.' + TEST_SERVER + '/')
+
+        # 200 - We should be at the repository page
+        self.assertEquals(r.status_code, 200)
+        self.assertIn(
+            'git repository',
+            r.content
+        )
 
 class IRCTests(unittest.TestCase):
     def test_irc_auth(self):
