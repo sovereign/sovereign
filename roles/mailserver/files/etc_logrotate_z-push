@@ -1,7 +1,7 @@
 /var/log/z-push/*.log {
         weekly
         missingok
-        rotate 52
+        rotate 5
         compress
         notifempty
         create 0644 www-data www-data
