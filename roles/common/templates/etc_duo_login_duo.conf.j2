@@ -1,0 +1,13 @@
+[duo]
+; Duo integration key
+ikey = {{ duo_ikey }}
+; Duo secret key
+skey = {{ duo_skey }}
+; Duo API host
+host = {{ duo_host }}
+; Send command for Duo Push authentication
+;pushinfo = yes
+; Skip duo authentication for users in the sudo or deploy groups
+groups = !sudo,!deploy
+autopush = yes
+prompts = 1

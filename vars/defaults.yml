@@ -27,6 +27,12 @@ ntp_servers:
   # - 2.north-america.pool.ntp.org
   # - 3.north-america.pool.ntp.org
 
+# duo security
+duo_unix_version: 1.9.7
+# duo_ikey: (required)
+# duo_skey: (required)
+# duo_host: (required)
+
 # database
 db_admin_username: 'postgres'
 # db_admin_password: (required)

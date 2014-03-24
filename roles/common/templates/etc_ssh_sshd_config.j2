@@ -45,7 +45,10 @@ PermitEmptyPasswords no
 
 # Change to yes to enable challenge-response passwords (beware issues with
 # some PAM modules and threads)
-ChallengeResponseAuthentication no
+#
+# Duo Security's pam_duo.so requires this to be yes
+# see https://www.duosecurity.com/docs/duounix#pam-configuration
+ChallengeResponseAuthentication yes
 
 # Change to no to disable tunnelled clear text passwords
 PasswordAuthentication no
@@ -85,3 +88,16 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
 UsePAM yes
+
+# Disable reverse DNS lookups upon login
+#
+#
+# Duo Security's pam_duo.so recommends setting this to no
+# see https://www.duosecurity.com/docs/duounix#pam-configuration
+UseDNS no
+
+# Duo Security Recommendations
+# see https://www.duosecurity.com/docs/duounix#3.-enable-login_duo
+PermitTunnel no
+AllowTcpForwarding no
+ForceCommand /usr/sbin/login_duo

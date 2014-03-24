@@ -11,6 +11,11 @@ encfs_password: testPassword
 friendly_networks:
   - "172.16.100.0/24"
 
+# duo security
+duo_ikey: testing
+duo_skey: testing
+duo_host: testing
+
 db_admin_username: postgres
 db_admin_password: postgres
 
