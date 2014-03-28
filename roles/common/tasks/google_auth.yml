@@ -1,0 +1,25 @@
+---
+# Defines tasks applicable for Google Authenticator
+
+- name: Ensure required packages are installed
+  apt: pkg={{ item }} state=present
+  with_items:
+    - libqrencode3
+    - libpam-dev
+    #- libpam-google-authenticator    wasn't available in wheezy
+
+- name: Download Google authenticator pam module
+  get_url: url=https://google-authenticator.googlecode.com/files/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2 dest=/root/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
+
+- name: Extract Google authenticator
+  command: tar xjf libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2 chdir=/root creates=/root/libpam-google-authenticator-{{ google_auth_version }}
+
+- name: Install Google authenticator
+  command: make install chdir=/root/libpam-google-authenticator-{{ google_auth_version }} creates=/usr/local/bin/google-authenticator
+
+- name: Update sshd config to enable challenge responses
+  lineinfile: dest=/etc/ssh/sshd_config regexp=^ChallengeResponseAuthentication line="ChallengeResponseAuthentication yes" state=present
+  notify: restart ssh
+
+- name: Add Google authenticator to PAM
+  lineinfile: dest=/etc/pam.d/sshd line="auth required pam_google_authenticator.so" insertbefore=BOF state=present
