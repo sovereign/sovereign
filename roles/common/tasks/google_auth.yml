@@ -1,0 +1,49 @@
+---
+# Defines tasks applicable for Google Authenticator
+
+- name: Ensure required packages are installed
+  apt: pkg={{ item }} state=present
+  with_items:
+    - libqrencode3
+    - libpam-dev
+    #- libpam-google-authenticator    wasn't available in wheezy
+
+- name: Download Google authenticator pam module
+  get_url: url=https://google-authenticator.googlecode.com/files/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
+           dest=/root/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
+
+- name: Extract Google authenticator
+  command: tar xjf libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
+           chdir=/root creates=/root/libpam-google-authenticator-{{ google_auth_version }}
+
+- name: Install Google authenticator
+  command: make install
+           chdir=/root/libpam-google-authenticator-{{ google_auth_version }}
+           creates=/usr/local/bin/google-authenticator
+
+- name: Update sshd config to enable challenge responses
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp=^ChallengeResponseAuthentication
+              line="ChallengeResponseAuthentication yes"
+              state=present
+  notify: restart ssh
+
+- name: Add Google authenticator to PAM
+  lineinfile: dest=/etc/pam.d/sshd
+              line="auth required pam_google_authenticator.so"
+              insertbefore=BOF
+              state=present
+
+- name: Generate a timed-based, no reuse, rate-limited (3 logins per 30 seconds) with no concurrently valid codes for default user
+  command: /usr/local/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=NONE -r 3 -R 30 -W --secret=/home/{{ main_user_name }}/.google_authenticator
+           creates=/home/{{ main_user_name }}/.google_authenticator
+
+- name: Fix permissions on generated file
+  file: state=file path=/home/{{ main_user_name }}/.google_authenticator owner={{ main_user_name }} group={{ main_user_name }}
+
+- name: Retrieve generated keys from server
+  fetch: src=/home/{{ main_user_name }}/.google_authenticator
+         dest=/tmp/sovereign-google-auth-files
+
+- pause: seconds=5
+         prompt="Your Google Authentication keys are in /tmp/sovereign-google-auth-files. Press any key to continue..."
