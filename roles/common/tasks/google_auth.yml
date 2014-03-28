@@ -34,8 +34,8 @@
               insertbefore=BOF
               state=present
 
-- name: Generate QNR code for default user
-  command: /usr/local/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=ANSI -r 3 -R 30 -W --secret=/home/{{ main_user_name }}/.google_authenticator
+- name: Generate a timed-based, no reuse, rate-limited (3 logins per 30 seconds) with no concurrently valid codes for default user
+  command: /usr/local/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=NONE -r 3 -R 30 -W --secret=/home/{{ main_user_name }}/.google_authenticator
            creates=/home/{{ main_user_name }}/.google_authenticator
 
 - name: Fix permissions on generated file
