@@ -48,9 +48,9 @@
   notify: restart apache
 
 - include: encfs.yml tags=encfs
-- include: google_auth.yml tags=google_auth
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl
 - include: ufw.yml tags=ufw
 - include: security.yml tags=security
 - include: ntp.yml tags=ntp
+- include: google_auth.yml tags=google_auth
