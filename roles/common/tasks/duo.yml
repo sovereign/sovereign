@@ -1,0 +1,30 @@
+---
+# Defines tasks applicable for Duo Security (2FA Unix Logins)
+
+- name: Add the Duo Unix repository
+  apt_repository: repo='deb http://pkg.duosecurity.com/Debian wheezy main' state=present
+
+- name: Add the Duo Unix APT key
+  apt_key: url=https://www.duosecurity.com/APT-GPG-KEY-DUO state=present
+
+- name: Install Duo Unix
+  apt: pkg=duo-unix state=present update_cache=yes
+
+- name: Copy configuration files into place
+  template: src={{ item.src }} dest={{ item.dest }} mode=0600 owner={{ item.owner }} group=root
+  with_items:
+    - { src: etc_duo_login_duo.conf.j2, dest: /etc/duo/login_duo.conf, owner: sshd }
+    - { src: etc_duo_pam_duo.conf.j2, dest: /etc/duo/pam_duo.conf, owner: root }
+
+- name: Update sshd config with Duo Unix recommendations
+  lineinfile: dest=/etc/ssh/sshd_config regexp="{{ item.regexp }}" line="{{ item.line }}" state=present
+  with_items:
+    - { regexp: ^ChallengeResponseAuthentication, line: "ChallengeResponseAuthentication yes" }
+    - { regexp: ^UseDNS, line: "UseDNS no" }
+    - { regexp: ^PermitTunnel, line: "PermitTunnel no" }
+    - { regexp: ^AllowTcpForwarding, line: "AllowTcpForwarding no" }
+    - { regexp: ^ForceCommand, line: "ForceCommand /usr/sbin/login_duo" }
+  notify: restart ssh
+
+- name: Copy new PAM common-auth in place
+  copy: src=etc_pam.d_common-auth dest=/etc/pam.d/common-auth
