@@ -5,7 +5,7 @@
   apt: pkg={{ item }} state=present
   with_items:
     - libqrencode3
-    - libpam-dev
+    - libpam0g-dev
     #- libpam-google-authenticator    wasn't available in wheezy
 
 - name: Download Google authenticator pam module
