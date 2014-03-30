@@ -362,7 +362,7 @@ $rcmail_config['email_dns_check'] = false;
 // ----------------------------------
 
 // List of active plugins (in plugins/ directory)
-$rcmail_config['plugins'] = array('managesieve', 'carddav');
+$rcmail_config['plugins'] = array('managesieve', 'carddav', 'twofactor_gauthenticator');
 
 // ----------------------------------
 // USER INTERFACE
