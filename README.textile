@@ -148,7 +148,7 @@ Take the string beginning with @sha256#@ and insert it as the value for @irc_pas
 
 h3. 5. Run the Ansible Playbooks
 
-First, make sure you've "got Ansible installed":http://ansibleworks.com/docs/gettingstarted.html#getting-ansible.
+First, make sure you've "got Ansible installed":http://docs.ansible.com/intro_installation.html#getting-ansible.
 
 To run the whole dang thing:
 
