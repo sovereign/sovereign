@@ -1,0 +1,137 @@
+# Enable caching of up to 1000 output entries
+cache-size=1000
+
+
+# Specify some default clone urls using macro expansion
+clone-url=git@{{ domain }}:$CGIT_REPO_URL
+
+
+# Specify the css url
+# css=/css/cgit.css
+
+
+# Show owner on index page
+enable-index-owner=1
+
+
+# Allow http transport git clone
+enable-http-clone=0
+
+
+# Show extra links for each repository on the index page
+enable-index-links=1
+
+
+# Enable ASCII art commit history graph on the log pages
+enable-commit-graph=1
+
+
+# Show number of affected files per commit on the log pages
+enable-log-filecount=1
+
+
+# Show number of added/removed lines per commit on the log pages
+enable-log-linecount=1
+
+
+# Sort branches by date
+branch-sort=age
+
+
+# Add a cgit favicon
+# favicon=/favicon.ico
+
+
+# Use a custom logo
+# logo=/img/mylogo.png
+
+
+# Enable statistics per week, month and quarter
+max-stats=quarter
+
+
+# Set the title and heading of the repository index page
+root-title={{ domain }} git repository
+
+
+# Set a subheading for the repository index page
+# root-desc=tracking the foobar development
+
+
+# Include some more info about example.com on the index page
+# root-readme=/var/www/htdocs/about.html
+
+
+# Allow download of tar.gz, tar.bz2 and zip-files
+snapshots=tar.gz tar.bz2 zip
+
+
+##
+## List of common mimetypes
+##
+
+mimetype.gif=image/gif
+mimetype.html=text/html
+mimetype.jpg=image/jpeg
+mimetype.jpeg=image/jpeg
+mimetype.pdf=application/pdf
+mimetype.png=image/png
+mimetype.svg=image/svg+xml
+
+
+# Highlight source code with python pygments-based highlighter
+source-filter=/usr/local/lib/cgit/filters/syntax-highlighting.py
+
+# Format markdown, restructuredtext, manpages, text files, and html files
+# through the right converters
+about-filter=/usr/local/lib/cgit/filters/about-formatting.sh
+
+##
+## Search for these files in the root of the default branch of repositories
+## for coming up with the about page:
+##
+readme=:README.md
+readme=:readme.md
+readme=:README.mkd
+readme=:readme.mkd
+readme=:README.rst
+readme=:readme.rst
+readme=:README.html
+readme=:readme.html
+readme=:README.htm
+readme=:readme.htm
+readme=:README.txt
+readme=:readme.txt
+readme=:README
+readme=:readme
+readme=:INSTALL.md
+readme=:install.md
+readme=:INSTALL.mkd
+readme=:install.mkd
+readme=:INSTALL.rst
+readme=:install.rst
+readme=:INSTALL.html
+readme=:install.html
+readme=:INSTALL.htm
+readme=:install.htm
+readme=:INSTALL.txt
+readme=:install.txt
+readme=:INSTALL
+readme=:install
+
+
+# Allow cgit to use git config to set	any repo specific settings
+enable-git-config=1
+
+
+# Removes .git suffix for the url and name
+remove-suffix=1
+
+
+# A list of subdirectories inside of scan-path
+# that should loaded as git repositories
+project-list=/home/git/projects.list
+
+
+# A path which will be scanned for repositories
+scan-path=/home/git/repositories

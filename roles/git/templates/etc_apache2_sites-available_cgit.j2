@@ -1,0 +1,36 @@
+<VirtualHost *:80>
+    ServerName {{ cgit_domain }}
+
+    Redirect permanent / https://{{ cgit_domain }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ cgit_domain }}
+
+    SSLEngine on
+    SSLProtocol ALL -SSLv2
+    SSLHonorCipherOrder On
+    SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS
+    SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
+    SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
+    SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
+    Header add Strict-Transport-Security "max-age=15768000; includeSubdomains"
+
+    DocumentRoot /var/www/htdocs/cgit/
+
+    <Directory "/var/www/htdocs/cgit/">
+        AllowOverride None
+        Options +ExecCGI
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    Alias /cgit.png         /var/www/htdocs/cgit/cgit.png
+    Alias /cgit.css         /var/www/htdocs/cgit/cgit.css
+    Alias /favicon.ico      /var/www/htdocs/cgit/favicon.ico
+    Alias /robots.txt       /var/www/htdocs/cgit/robots.txt
+    ScriptAlias /           /var/www/htdocs/cgit/cgit.cgi/
+
+    CustomLog /var/log/apache2/cgit_access.log combined
+    ErrorLog /var/log/apache2/cgit_error.log
+</VirtualHost>

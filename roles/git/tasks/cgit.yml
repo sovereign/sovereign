@@ -1,0 +1,47 @@
+
+- name: Install cgit dependencies
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - groff
+    - python-pip
+
+- name: Install cgit pip dependencies
+  pip: name={{ item }}
+  with_items:
+    - pygments
+    - docutils
+
+- name: Download cgit release
+  get_url: url=http://git.zx2c4.com/cgit/snapshot/cgit-{{ cgit_version }}.tar.xz
+           dest=/root/cgit-{{ cgit_version }}.tar.xz
+
+- name: Decompress cgit source
+  command: tar xvfJ /root/cgit-{{ cgit_version }}.tar.xz
+           chdir=/root
+           creates=/root/cgit-{{ cgit_version }}/configure
+
+- name: Build and install cgit
+  shell: make get-git ; make ; make install
+         executable=/bin/bash
+         chdir=/root/cgit-{{ cgit_version }}
+         creates=/var/www/htdocs/cgit/cgit.cgi
+
+- name: Copy cgitrc
+  template: src=etc_cgitrc.j2 dest=/etc/cgitrc
+            group=www-data
+            owner=www-data
+
+- name: Configure the Apache HTTP server for cgit
+  template: src=etc_apache2_sites-available_cgit.j2
+            dest=/etc/apache2/sites-available/cgit
+            group=www-data
+            owner=www-data
+  notify: restart apache
+
+- name: Enable Apache rewrite module
+  command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
+  notify: restart apache
+
+- name:  Enable cgit site
+  command: a2ensite cgit creates=/etc/apache2/sites-enabled/cgit
+  notify: restart apache

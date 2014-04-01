@@ -1,0 +1,176 @@
+# configuration variables for gitolite
+
+# This file is in perl syntax.  But you do NOT need to know perl to edit it --
+# just mind the commas, use single quotes unless you know what you're doing,
+# and make sure the brackets and braces stay matched up!
+
+# (Tip: perl allows a comma after the last item in a list also!)
+
+# HELP for commands can be had by running the command with "-h".
+
+# HELP for all the other FEATURES can be found in the documentation (look for
+# "list of non-core programs shipped with gitolite" in the master index) or
+# directly in the corresponding source file.
+
+%RC = (
+
+    # ------------------------------------------------------------------
+
+    # default umask gives you perms of '0700'; see the rc file docs for
+    # how/why you might change this
+    UMASK                           =>  0027,
+
+    # look for "git-config" in the documentation
+    GIT_CONFIG_KEYS                 =>  'gitweb\.(owner|description|category)',
+
+    # comment out if you don't need all the extra detail in the logfile
+    LOG_EXTRA                       =>  1,
+
+    # roles.  add more roles (like MANAGER, TESTER, ...) here.
+    #   WARNING: if you make changes to this hash, you MUST run 'gitolite
+    #   compile' afterward, and possibly also 'gitolite trigger POST_COMPILE'
+    ROLES => {
+        READERS                     =>  1,
+        WRITERS                     =>  1,
+    },
+
+    # ------------------------------------------------------------------
+
+    # rc variables used by various features
+
+    # the 'info' command prints this as additional info, if it is set
+        # SITE_INFO                 =>  'Please see http://blahblah/gitolite for more help',
+
+    # the 'desc' command uses this
+        # WRITER_CAN_UPDATE_DESC    =>  1,
+
+    # the CpuTime feature uses these
+        # display user, system, and elapsed times to user after each git operation
+        # DISPLAY_CPU_TIME          =>  1,
+        # display a warning if total CPU times (u, s, cu, cs) crosses this limit
+        # CPU_TIME_WARN_LIMIT       =>  0.1,
+
+    # the Mirroring feature needs this
+        # HOSTNAME                  =>  "foo",
+
+    # if you enabled 'Shell', you need this
+        # SHELL_USERS_LIST          =>  "$ENV{HOME}/.gitolite.shell-users",
+
+    # ------------------------------------------------------------------
+
+    # suggested locations for site-local gitolite code (see cust.html)
+
+        # this one is managed directly on the server
+        # LOCAL_CODE                =>  "$ENV{HOME}/local",
+
+        # or you can use this, which lets you put everything in a subdirectory
+        # called "local" in your gitolite-admin repo.  For a SECURITY WARNING
+        # on this, see http://gitolite.com/gitolite/cust.html#pushcode
+        # LOCAL_CODE                =>  "$rc{GL_ADMIN_BASE}/local",
+
+    # ------------------------------------------------------------------
+
+    # List of commands and features to enable
+
+    ENABLE => [
+
+        # COMMANDS
+
+            # These are the commands enabled by default
+            'help',
+            'desc',
+            'info',
+            'perms',
+            'writable',
+
+            # Uncomment or add new commands here.
+            # 'create',
+            # 'fork',
+            # 'mirror',
+            # 'sskm',
+            # 'D',
+
+        # These FEATURES are enabled by default.
+
+            # essential (unless you're using smart-http mode)
+            'ssh-authkeys',
+
+            # creates git-config enties from gitolite.conf file entries like 'config foo.bar = baz'
+            'git-config',
+
+            # creates git-daemon-export-ok files; if you don't use git-daemon, comment this out
+            'daemon',
+
+            # creates projects.list file; if you don't use gitweb, comment this out
+            'gitweb',
+
+        # These FEATURES are disabled by default; uncomment to enable.  If you
+        # need to add new ones, ask on the mailing list :-)
+
+        # user-visible behaviour
+
+            # prevent wild repos auto-create on fetch/clone
+            # 'no-create-on-read',
+            # no auto-create at all (don't forget to enable the 'create' command!)
+            # 'no-auto-create',
+
+            # access a repo by another (possibly legacy) name
+            # 'Alias',
+
+            # give some users direct shell access
+            # 'Shell',
+
+            # set default roles from lines like 'option default.roles-1 = ...', etc.
+            # 'set-default-roles',
+
+        # system admin stuff
+
+            # enable mirroring (don't forget to set the HOSTNAME too!)
+            # 'Mirroring',
+
+            # allow people to submit pub files with more than one key in them
+            # 'ssh-authkeys-split',
+
+            # selective read control hack
+            # 'partial-copy',
+
+            # manage local, gitolite-controlled, copies of read-only upstream repos
+            # 'upstream',
+
+            # updates 'description' file instead of 'gitweb.description' config item
+            # 'cgit',
+
+            # allow repo-specific hooks to be added
+            # 'repo-specific-hooks',
+
+        # performance, logging, monitoring...
+
+            # be nice
+            # 'renice 10',
+
+            # log CPU times (user, system, cumulative user, cumulative system)
+            # 'CpuTime',
+
+        # syntactic_sugar for gitolite.conf and included files
+
+            # allow backslash-escaped continuation lines in gitolite.conf
+            # 'continuation-lines',
+
+            # create implicit user groups from directory names in keydir/
+            # 'keysubdirs-as-groups',
+
+            # allow simple line-oriented macros
+            # 'macros',
+
+    ],
+
+);
+
+# ------------------------------------------------------------------------------
+# per perl rules, this should be the last line in such a file:
+1;
+
+# Local variables:
+# mode: perl
+# End:
+# vim: set syn=perl:
