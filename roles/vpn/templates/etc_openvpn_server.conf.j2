@@ -31,6 +31,9 @@
 # open up this port on your firewall.
 port {{ openvpn_port }}
 
+# Uncomment the following line if you wish to enable PAM support for 2FA
+;plugin /usr/lib/openvpn/openvpn-auth-pam.so openvpn
+
 # TCP or UDP server?
 ;proto tcp
 proto {{ openvpn_protocol }}

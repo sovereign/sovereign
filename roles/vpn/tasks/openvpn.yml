@@ -118,6 +118,10 @@
   copy: src=etc_dnsmasq.conf dest=/etc/dnsmasq.conf
   notify: restart dnsmasq
 
+- name: Copy OpenVPN PAM configuration file into place
+  copy: src=etc_pam.d_openvpn dest=/etc/pam.d/openvpn
+  notify: restart openvpn
+
 - name: Copy the ca.crt and ta.key files that clients will need in order to connect to the OpenVPN server
   command: cp {{ openvpn_path }}/{{ item[1] }} {{ openvpn_path }}/{{ item[0] }}
   with_nested:
