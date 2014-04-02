@@ -8,15 +8,27 @@ resolv-retry infinite
 nobind
 persist-key
 persist-tun
-
-ca ca.crt
-cert client.crt
-key client.key
 ns-cert-type server
-tls-auth ta.key 1
+comp-lzo
+key-direction 1
+verb 3
+route {{ ansible_default_ipv4.address }} 255.255.255.255 net_gateway
 
 # If you'd like to enable 2FA support, uncomment the following line
 ;auth-user-pass
 
-comp-lzo
-verb 3
+<ca>
+{{ openvpn_ca_contents.stdout }}
+</ca>
+
+<cert>
+{{ item[1].stdout }}
+</cert>
+
+<key>
+{{ item[2].stdout }}
+</key>
+
+<tls-auth>
+{{ openvpn_hmac_firewall_contents.stdout }}
+</tls-auth>
