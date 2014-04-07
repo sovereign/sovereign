@@ -39,7 +39,7 @@
     /var/lib/znc/znc.pem creates=/var/lib/znc/znc.pem
 
 - name: Ensure znc user and group can read cert
-  file: path=/var/lib/znc/znc.pem group=znc owner=znc
+  file: path=/var/lib/znc/znc.pem group=znc owner=znc mode=640
 
 - name: Check for existing config file
   command: cat /var/lib/znc/configs/znc.conf
