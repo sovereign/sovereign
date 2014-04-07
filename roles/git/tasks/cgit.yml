@@ -38,6 +38,10 @@
             owner=www-data
   notify: restart apache
 
+- name: Enable Apache cgi module
+  command: a2enmod cgi creates=/etc/apache2/mods-enabled/cgi.load
+  notify: restart apache
+
 - name: Enable Apache rewrite module
   command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
   notify: restart apache
