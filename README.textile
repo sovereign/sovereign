@@ -98,7 +98,7 @@ If you haven't already, "download and install Tarsnap":https://www.tarsnap.com/d
 
 Create a new machine key for your server:
 
-bc. tarsnap-keygen --keyfile roles/tarsnap/files/root_tarsnap.key --user me@example.com --machine example.com
+bc. tarsnap-keygen --keyfile roles/tarsnap/files/decrypted_tarsnap.key --user me@example.com --machine example.com
 
 h3. 3. Prep the server
 
