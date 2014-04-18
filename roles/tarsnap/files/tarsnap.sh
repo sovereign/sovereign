@@ -25,7 +25,7 @@ MONTHLY_DAY=01
 TARSNAP="/usr/local/bin/tarsnap"
 
 # Extra flags to pass to tarsnap
-EXTRA_FLAGS="-C /"
+EXTRA_FLAGS="-L -C /"
 
 # end of config
 
