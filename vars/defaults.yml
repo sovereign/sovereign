@@ -108,8 +108,8 @@ gitolite_version: 3.5.3.1
 
 # wallabag
 wallabag_version: 1.6.1b
-# wallabag_salt: (required)
 wallabag_domain: "read.{{ domain }}"
+# wallabag_salt: (required)
 wallabag_db_username: wallabag
 # wallabag_db_password: (required)
 wallabag_db_database: wallabag

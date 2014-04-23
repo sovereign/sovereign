@@ -27,6 +27,7 @@
                  name={{ wallabag_db_database }}
                  state=present
                  owner={{ wallabag_db_username }}
+  notify: import wallabag sql
 
 - name: Build Composer
   shell: curl -sS https://getcomposer.org/installer | php
@@ -45,11 +46,17 @@
         recurse=yes
         state=directory
 
+- name: Create the configuration file
+  template: src=var_www_wallabag_inc_poche_config.inc.php.j2
+            dest=/var/www/wallabag/inc/poche/config.inc.php
+            owner=www-data
+            group=www-data
+
 - name: Configure the Apache HTTP server for wallabag
   template: src=etc_apache2_sites-available_wallabag.j2
             dest=/etc/apache2/sites-available/wallabag
-            group=www-data
             owner=www-data
+            group=www-data
   notify: restart apache
 
 - name: Enable the wallabag site
