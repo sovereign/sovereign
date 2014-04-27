@@ -4,6 +4,7 @@
   with_items:
     - groff
     - python-pip
+    - libssl-dev
 
 - name: Install cgit pip dependencies
   pip: name={{ item }}
