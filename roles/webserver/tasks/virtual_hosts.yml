@@ -1,0 +1,17 @@
+---
+- name: Copy virtualhost starter files
+  template: src=etc_apache2_sites-available_virtualhost.j2 dest=/etc/apache2/sites-available/{{ item.name }}
+  with_items: virtual_hosts
+
+- name: Create document roots
+  file: path=/var/www/{{ item.name }} state=directory
+  with_items: virtual_hosts
+
+- name: Placeholder index.html for all new virtualhosts
+  copy: src=index.html dest=/var/www/{{ item.name }}/index.html force=no
+  with_items: virtual_hosts
+
+- name: Enable all virtualhosts
+  command: a2ensite {{ item.name }} creates=/etc/apache2/sites-enabled/{{ item.name }}
+  with_items: virtual_hosts
+  notify: restart apache

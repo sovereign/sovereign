@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+#
+<VirtualHost *:80>
+  ServerName {{ item.name }}
+{% if item.aliases is defined %}
+  ServerAlias {% for alias in item.aliases %}{{ alias }} {% endfor %}
+
+{% endif %}
+  DocumentRoot /var/www/{{ item.name }}
+  ErrorLog /var/log/apache2/{{ item.name }}.error.log
+  CustomLog /var/log/apache2/{{ item.name }}.access.log common
+{% if item.config is defined %}{{ item.config|indent(2, true) }}{% endif %}
+
+</VirtualHost>
