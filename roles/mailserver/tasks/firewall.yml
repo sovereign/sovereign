@@ -1,0 +1,10 @@
+- name: Create firewall rule for postfix
+  copy: src=etc_ferm_rules_mail.cfg dest=/etc/ferm/rules/mail.cfg
+  notify: reload firewall
+  tags: postfix
+
+- name: Create firewall rule for dovecot
+  copy: src=etc_ferm_rules_imap.cfg dest=/etc/ferm/rules/imap.cfg
+  notify: reload firewall
+  tags: dovecot
+
