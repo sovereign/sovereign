@@ -49,3 +49,9 @@
     - pgsql-virtual-mailbox-maps.cf
     - pgsql-virtual-alias-maps.cf
   notify: restart postfix
+
+- name: Set firewall rules for postfix
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - smtp
+    - ssmtp

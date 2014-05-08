@@ -151,7 +151,7 @@ For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/gi
 
 h3. 5. Run the Ansible Playbooks
 
-First, make sure you've "got Ansible installed":http://docs.ansible.com/intro_installation.html#getting-ansible.
+First, make sure you've "got Ansible 1.6+ installed":http://docs.ansible.com/intro_installation.html#getting-ansible.
 
 To run the whole dang thing:
 
