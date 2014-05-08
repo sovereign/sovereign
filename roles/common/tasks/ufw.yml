@@ -5,6 +5,9 @@
 - name: Install ufw
   apt: pkg=ufw state=present
 
+- name: Deny everything and enable UFW
+  ufw: state=enabled policy=deny
+
 - name: Set firewall rule for DNS
   ufw: rule=allow port=domain
 
@@ -18,11 +21,6 @@
     - http
     - https
 
-- name: Check status of ufw
-  command: ufw status
-  register: ufw_status
-  changed_when: False  # never report as "changed"
-
 - name: Check config of ufw
   command: cat /etc/ufw/ufw.conf
   register: ufw_config
@@ -31,7 +29,3 @@
 - name: Disable logging (workaround for known bug in Debian 7)
   ufw: logging=off
   when: "ansible_lsb['codename'] == 'wheezy' and 'LOGLEVEL=off' not in ufw_config.stdout"
-
-- name: Enable ufw
-  ufw: state=enabled
-  when: "ufw_status.stdout.startswith('Status: inactive') or 'ENABLED=yes' not in ufw_config.stdout"
