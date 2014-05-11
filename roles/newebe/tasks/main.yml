@@ -26,16 +26,29 @@
   user: name=newebe shell=/bin/bash groups=newebe
 
 - name: Create Newebe Config folder
-  file: path=/usr/local/etc/newebe/ owner=newebe group=newebe state=directory
+  file: path=/usr/local/etc/newebe/ 
+        owner=newebe 
+        group=newebe 
+        state=directory
 
 - name: Create Newebe folder
-  file: path=/usr/local/var/newebe/ owner=newebe group=newebe state=directory
+  file: path=/usr/local/var/newebe/ 
+        owner=newebe 
+        group=newebe 
+        state=directory
 
 - name: Create Newebe log folder
-  file: path=/usr/local/var/log/newebe/ owner=newebe group=newebe state=directory
+  file: path=/usr/local/var/log/newebe/ 
+        owner=newebe 
+        group=newebe 
+        state=directory
 
 - name: Set Newebe config file
-  copy: src=config.yaml dest=/usr/local/etc/newebe/config.yaml owner=newebe group=newebe
+  copy: src=config.yaml 
+  template: src=usr_local_etc_newebe_config.j2
+            dest=/usr/local/etc/newebe/config.yaml 
+            owner=newebe 
+            group=newebe
 
 - name: Set Supervisor config file
   copy: src=newebe.conf dest=/etc/supervisor/conf.d/newebe.conf
