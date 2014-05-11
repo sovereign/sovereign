@@ -47,7 +47,6 @@
   template: src=fqdn.j2 dest=/etc/apache2/conf.d/fqdn
   notify: restart apache
 
-- include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl
 - include: ufw.yml tags=ufw

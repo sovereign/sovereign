@@ -44,7 +44,6 @@
         state=directory
 
 - name: Set Newebe config file
-  copy: src=config.yaml 
   template: src=usr_local_etc_newebe_config.j2
             dest=/usr/local/etc/newebe/config.yaml 
             owner=newebe 
