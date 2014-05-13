@@ -54,5 +54,8 @@
   template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
   when: znc_config.rc != 0
 
+- name: Set firewall rule for znc
+  ufw: rule=allow port=6697 proto=tcp
+
 - name: Ensure znc is a system service
   service: name=znc state=started enabled=true

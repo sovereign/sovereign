@@ -48,3 +48,9 @@
   file: state=directory path=/etc/dovecot
           group=dovecot owner=vmail mode=770 recurse=yes
   notify: restart dovecot
+
+- name: Set firewall rules for dovecot
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - pop3s
+    - imaps

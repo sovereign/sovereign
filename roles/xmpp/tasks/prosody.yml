@@ -20,3 +20,9 @@
 - name: Create Prosody accounts
   command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
   with_items: prosody_accounts
+
+- name: Set firewall rules for Prosody
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - 5222  # xmpp c2s
+    - 5269  # xmpp s2s

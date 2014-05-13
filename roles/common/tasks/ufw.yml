@@ -5,29 +5,21 @@
 - name: Install ufw
   apt: pkg=ufw state=present
 
-- name: Set firewall rules
-  command: ufw allow {{ item }}
-  register: ufw_result
-  changed_when: "ufw_result.stdout.startswith('Rule')"
-  with_items:
-    - smtp/tcp
-    - domain
-    - http/tcp
-    - https/tcp
-    - ssh/tcp
-    - ssmtp/tcp
-    - pop3s/tcp
-    - imaps/tcp
-    - 5222/tcp  # xmpp c2s
-    - 5269/tcp  # xmpp s2s
-    - 6697/tcp  # znc
-    - "{{ openvpn_port }}/{{ openvpn_protocol }}"
-    - 60000:61000/udp  # mosh udp packets
+- name: Deny everything and enable UFW
+  ufw: state=enabled policy=deny
 
-- name: Check status of ufw
-  command: ufw status
-  register: ufw_status
-  changed_when: False  # never report as "changed"
+- name: Set firewall rule for DNS
+  ufw: rule=allow port=domain
+
+- name: Set firewall rule for mosh
+  ufw: rule=allow port=60000:61000 proto=udp
+
+- name: Set firewall rules for web traffic and SSH
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - ssh
+    - http
+    - https
 
 - name: Check config of ufw
   command: cat /etc/ufw/ufw.conf
@@ -35,9 +27,5 @@
   changed_when: False  # never report as "changed"
 
 - name: Disable logging (workaround for known bug in Debian 7)
-  command: ufw logging off
+  ufw: logging=off
   when: "ansible_lsb['codename'] == 'wheezy' and 'LOGLEVEL=off' not in ufw_config.stdout"
-
-- name: Enable ufw
-  command: ufw --force enable
-  when: "ufw_status.stdout.startswith('Status: inactive') or 'ENABLED=yes' not in ufw_config.stdout"
