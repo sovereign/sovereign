@@ -1,0 +1,27 @@
+<VirtualHost *:80>
+    ServerName {{ newebe_domain }}
+
+    Redirect permanent / https://{{ newebe_domain }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+
+    ServerName {{ newebe_domain }}
+    SSLEngine On
+
+    SSLProtocol ALL -SSLv2
+    SSLHonorCipherOrder On
+    SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS
+    SSLCertificateFile /etc/ssl/certs/wildcard_public_cert.crt
+    SSLCertificateKeyFile /etc/ssl/private/wildcard_private.key
+    SSLCACertificateFile /etc/ssl/certs/wildcard_ca.pem
+    Header add Strict-Transport-Security "max-age=15768000; includeSubdomains"
+
+    ErrorLog /var/log/apache2/newebe.info-error_log
+    CustomLog /var/log/apache2/newebe.info-access_log common
+
+
+    ProxyPass / http://127.0.0.1:8282/
+    ProxyPassReverse / http://127.0.0.1:8282/
+
+</VirtualHost>
