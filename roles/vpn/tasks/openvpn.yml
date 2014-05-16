@@ -131,6 +131,9 @@
     - iptables -A FORWARD -j REJECT
     - iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
 
+- name: Allow OpenVPN through ufw
+  ufw: rule=allow port={{ openvpn_port }} proto={{ openvpn_protocol }}
+
 - name: Copy OpenVPN configuration file into place
   template: src=etc_openvpn_server.conf.j2 dest=/etc/openvpn/server.conf
   notify: restart openvpn

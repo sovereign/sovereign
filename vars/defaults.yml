@@ -106,6 +106,9 @@ cgit_version: 0.10.1
 cgit_domain: "git.{{ domain }}"
 gitolite_version: 3.5.3.1
 
+# newebe
+newebe_domain: "newebe.{{ domain }}"
+
 # wallabag
 wallabag_version: 1.6.1b
 wallabag_domain: "read.{{ domain }}"

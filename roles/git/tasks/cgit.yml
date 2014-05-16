@@ -4,6 +4,7 @@
   with_items:
     - groff
     - python-pip
+    - libssl-dev
 
 - name: Install cgit pip dependencies
   pip: name={{ item }}
@@ -36,6 +37,10 @@
             dest=/etc/apache2/sites-available/cgit
             group=www-data
             owner=www-data
+  notify: restart apache
+
+- name: Enable Apache cgi module
+  command: a2enmod cgi creates=/etc/apache2/mods-enabled/cgi.load
   notify: restart apache
 
 - name: Enable Apache rewrite module
