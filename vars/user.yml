@@ -80,3 +80,7 @@ selfoss_db_password: "TODO"
 selfoss_username: "{{ main_user_name }}"
 # this is the sha512 hash of the desired password
 selfoss_password_hash: "TODO"
+
+# wallabag
+wallabag_salt: TODO
+wallabag_db_password: TODO

@@ -1,0 +1,6 @@
+- name: import wallabag sql
+  shell: PGPASSWORD='{{ wallabag_db_password }}' psql -h localhost -d {{ wallabag_db_database }} -U {{ wallabag_db_username }} -f /var/www/wallabag/install/postgres.sql --set ON_ERROR_STOP=1
+  notify: remove install folder
+
+- name: remove install folder
+  file: path=/var/www/wallabag/install state=absent
