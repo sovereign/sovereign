@@ -54,12 +54,12 @@
 
 - name: Configure the Apache HTTP server for wallabag
   template: src=etc_apache2_sites-available_wallabag.j2
-            dest=/etc/apache2/sites-available/wallabag
-            owner=www-data
-            group=www-data
+            dest=/etc/apache2/sites-available/wallabag.conf
+            owner=root
+            group=root
   notify: restart apache
 
 - name: Enable the wallabag site
-  command: a2ensite wallabag
-           creates=/etc/apache2/sites-enabled/wallabag
+  command: a2ensite wallabag.conf
+           creates=/etc/apache2/sites-enabled/wallabag.conf
   notify: restart apache

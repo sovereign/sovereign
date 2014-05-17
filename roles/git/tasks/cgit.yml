@@ -34,9 +34,9 @@
 
 - name: Configure the Apache HTTP server for cgit
   template: src=etc_apache2_sites-available_cgit.j2
-            dest=/etc/apache2/sites-available/cgit
-            group=www-data
-            owner=www-data
+            dest=/etc/apache2/sites-available/cgit.conf
+            group=root
+            owner=root
   notify: restart apache
 
 - name: Enable Apache cgi module
@@ -48,5 +48,5 @@
   notify: restart apache
 
 - name:  Enable cgit site
-  command: a2ensite cgit creates=/etc/apache2/sites-enabled/cgit
+  command: a2ensite cgit.conf creates=/etc/apache2/sites-enabled/cgit.conf
   notify: restart apache

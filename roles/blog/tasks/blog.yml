@@ -2,10 +2,10 @@
   file: state=directory path=/var/www/{{ domain }} group=www-data owner=www-data
 
 - name: Configure the Apache HTTP server for the blog
-  template: src=etc_apache2_sites-available_blog.j2 dest=/etc/apache2/sites-available/{{ domain }} group=www-data owner=www-data
+  template: src=etc_apache2_sites-available_blog.j2 dest=/etc/apache2/sites-available/{{ domain }}.conf group=root owner=root
   notify: restart apache
 
 - name: Enable blog site
-  command: a2ensite {{ domain }} creates=/etc/apache2/sites-enabled/{{ domain }}
+  command: a2ensite {{ domain }}.conf creates=/etc/apache2/sites-enabled/{{ domain }}.conf
   notify: restart apache
 

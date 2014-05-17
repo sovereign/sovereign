@@ -37,11 +37,11 @@
   notify: restart apache
 
 - name: Configure the Apache HTTP server for ownCloud
-  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud group=www-data owner=www-data
+  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root owner=root
   notify: restart apache
 
 - name: Enable the owncloud site
-  command: a2ensite owncloud creates=/etc/apache2/sites-enabled/owncloud
+  command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
   notify: restart apache
 
 - name: Install ownCloud cronjob

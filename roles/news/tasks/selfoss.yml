@@ -27,11 +27,11 @@
   notify: restart apache
 
 - name: Configure the Apache HTTP server for selfoss
-  template: src=etc_apache2_sites-available_selfoss.j2 dest=/etc/apache2/sites-available/selfoss group=www-data owner=www-data
+  template: src=etc_apache2_sites-available_selfoss.j2 dest=/etc/apache2/sites-available/selfoss.conf group=root owner=root
   notify: restart apache
 
 - name: Enable the selfoss site
-  command: a2ensite selfoss creates=/etc/apache2/sites-enabled/selfoss
+  command: a2ensite selfoss.conf creates=/etc/apache2/sites-enabled/selfoss.conf
   notify: restart apache
 
 - name: Install selfoss cronjob
