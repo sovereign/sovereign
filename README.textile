@@ -151,7 +151,7 @@ Take the string beginning with @sha256#@ and insert it as the value for @irc_pas
 
 For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub@ or similar.
 
-Finally, replace the TODOs in the file @hosts@.
+Finally, replace the TODOs in the file @hosts@. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address.
 
 h3. 5. Run the Ansible Playbooks
 
