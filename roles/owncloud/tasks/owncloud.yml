@@ -10,15 +10,23 @@
 
 - name: Ensure repository key for ownCloud is in place
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
+  when: ansible_distribution == 'Debian'
 
 - name: Add ownCloud OpenSuSE repository
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
+  when: ansible_distribution == 'Debian'
 
-- name: Install ownCloud from OpenSuSE repository
+- name: Install ownCloud (possibly from OpenSuSE repository)
   apt: pkg=owncloud update_cache=yes
 
-- name: Install PHP-APC
-  apt: pkg=php-apc
+- name: Install PHP dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php-apc
+    - libapache2-mod-php5
+
+- name: Owncloud www directory
+  file: state=directory path=/var/www/owncloud
 
 - name: Store ownCloud data securely
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
