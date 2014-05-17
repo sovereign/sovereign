@@ -45,6 +45,6 @@
   - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
 
 - name: Enable roundcube site
-  command: a2ensite roundcube creates=/etc/apache2/sites-enabled/roundcube
+  command: a2ensite roundcube.conf creates=/etc/apache2/sites-enabled/roundcube.conf
   notify: restart apache
 
