@@ -33,7 +33,7 @@
     - twofactor_gauthenticator
 
 - name: Configure the Apache HTTP server for roundcube
-  template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube group=www-data owner=www-data force=yes
+  template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes
 
 - name: Configure roundcube
   copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
