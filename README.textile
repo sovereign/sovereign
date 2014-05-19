@@ -180,7 +180,7 @@ Create an @A@ records which point to your server IP for:
  * @cloud.example.com@ (for owncloud)
  * @git.example.com@ (for cgit)
 
-Create an @MX@ record for @example.com@ which assigns @mail.example.com@ as the domain's mail server.
+Create a @MX@ record for @example.com@ which assigns @mail.example.com@ as the domain's mail server.
 
 To ensure your emails pass DKIM checks you need to add a @txt@ record. The name field will be @default._domainkey.EXAMPLE.COM.@ The value field contains the public key used by OpenDKIM. The exact value needed can be found in the file @/etc/opendkim/keys/EXAMPLE.COM/default.txt@ it'll look something like this:
 
