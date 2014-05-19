@@ -45,12 +45,10 @@
   notify: restart apache
 
 - name: Rename existing Apache owncloud virtualhost
-  command: mv /etc/apache2/sites-available/owncloud /etc/apache2/sites-available/owncloud.conf
-  removes: /etc/apache2/sites-available/owncloud
+  command: mv /etc/apache2/sites-available/owncloud /etc/apache2/sites-available/owncloud.conf removes=/etc/apache2/sites-available/owncloud
 
 - name: Remove old sites-enabled/owncloud symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/owncloud
-  removes: /etc/apache2/sites-enabled/owncloud
+  command: rm /etc/apache2/sites-enabled/owncloud removes=/etc/apache2/sites-enabled/owncloud
 
 - name: Configure the Apache HTTP server for ownCloud
   template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root owner=root
