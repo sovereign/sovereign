@@ -52,12 +52,19 @@
             owner=www-data
             group=www-data
 
+- name: Rename existing Apache wallabag virtualhost
+  command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf
+  removes: /etc/apache2/sites-available/wallabag
+
+- name: Remove old sites-enabled/wallabag symlink (new one will be created by a2ensite)
+  command: rm /etc/apache2/sites-enabled/wallabag
+  removes: /etc/apache2/sites-enabled/wallabag
+
 - name: Configure the Apache HTTP server for wallabag
   template: src=etc_apache2_sites-available_wallabag.j2
             dest=/etc/apache2/sites-available/wallabag.conf
             owner=root
             group=root
-  notify: restart apache
 
 - name: Enable the wallabag site
   command: a2ensite wallabag.conf

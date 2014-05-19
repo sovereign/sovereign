@@ -26,9 +26,16 @@
   command: a2enmod expires creates=/etc/apache2/mods-enabled/expires.load
   notify: restart apache
 
+- name: Rename existing Apache blog virtualhost
+  command: mv /etc/apache2/sites-available/selfoss /etc/apache2/sites-available/selfoss.conf
+  removes: /etc/apache2/sites-available/selfoss
+
+- name: Remove old sites-enabled/selfoss symlink (new one will be created by a2ensite)
+  command: rm /etc/apache2/sites-enabled/selfoss
+  removes: /etc/apache2/sites-enabled/selfoss
+
 - name: Configure the Apache HTTP server for selfoss
   template: src=etc_apache2_sites-available_selfoss.j2 dest=/etc/apache2/sites-available/selfoss.conf group=root owner=root
-  notify: restart apache
 
 - name: Enable the selfoss site
   command: a2ensite selfoss.conf creates=/etc/apache2/sites-enabled/selfoss.conf

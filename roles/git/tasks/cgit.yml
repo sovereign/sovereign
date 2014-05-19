@@ -32,12 +32,19 @@
             group=www-data
             owner=www-data
 
+- name: Rename existing Apache cgit virtualhost
+  command: mv /etc/apache2/sites-available/cgit /etc/apache2/sites-available/cgit.conf
+  removes: /etc/apache2/sites-available/cgit
+
+- name: Remove old sites-enabled/cgit symlink (new one will be created by a2ensite)
+  command: rm /etc/apache2/sites-enabled/cgit
+  removes: /etc/apache2/sites-enabled/cgit
+
 - name: Configure the Apache HTTP server for cgit
   template: src=etc_apache2_sites-available_cgit.j2
             dest=/etc/apache2/sites-available/cgit.conf
             group=root
             owner=root
-  notify: restart apache
 
 - name: Enable Apache cgi module
   command: a2enmod cgi creates=/etc/apache2/mods-enabled/cgi.load
