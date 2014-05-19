@@ -172,7 +172,15 @@ h3. 6. Set up DNS
 
 If you've just bought a new domain name, point it at "Linode's DNS Manager":https://library.linode.com/dns-manager or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you're using an existing domain that's already managed elsewhere, you can probably just modify a few records.
 
-Create an @A@ record for @example.com@ as well as @mail.example.com@ which points to your server IP. Create an @MX@ record for @example.com@ which assigns @mail.example.com@ as the domain's mail server.
+Create an @A@ records which point to your server IP for:
+ * @example.com@ 
+ * @mail.example.com@
+ * @read.example.com@ (for wallabe)
+ * @news.example.com@ (for selfoss)
+ * @cloud.example.com@ (for owncloud)
+ * @git.example.com@ (for cgit)
+
+Create an @MX@ record for @example.com@ which assigns @mail.example.com@ as the domain's mail server.
 
 To ensure your emails pass DKIM checks you need to add a @txt@ record. The name field will be @default._domainkey.EXAMPLE.COM.@ The value field contains the public key used by OpenDKIM. The exact value needed can be found in the file @/etc/opendkim/keys/EXAMPLE.COM/default.txt@ it'll look something like this:
 
