@@ -32,8 +32,14 @@
     - carddav
     - twofactor_gauthenticator
 
+- name: Rename existing Apache roundcube virtualhost
+  command: mv /etc/apache2/sites-available/roundcube /etc/apache2/sites-available/roundcube.conf removes=/etc/apache2/sites-available/roundcube
+
+- name: Remove old sites-enabled/roundcube symlink (new one will be created by a2ensite)
+  command: rm /etc/apache2/sites-enabled/roundcube removes=/etc/apache2/sites-enabled/roundcube
+
 - name: Configure the Apache HTTP server for roundcube
-  template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube group=www-data owner=www-data force=yes
+  template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes
 
 - name: Configure roundcube
   copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
@@ -45,6 +51,6 @@
   - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
 
 - name: Enable roundcube site
-  command: a2ensite roundcube creates=/etc/apache2/sites-enabled/roundcube
+  command: a2ensite roundcube.conf creates=/etc/apache2/sites-enabled/roundcube.conf
   notify: restart apache
 

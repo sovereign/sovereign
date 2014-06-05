@@ -1,8 +1,9 @@
 - name: Ensure repository key for Prosody is in place
   apt_key: url=https://prosody.im/files/prosody-debian-packages.key state=present
 
-- name: Add Prosody repository
-  apt_repository: repo='deb http://packages.prosody.im/debian wheezy main'
+# Prosody supplies repo for sid, squeeze, wheezy, jessie, trusty, saucy, raring, quantal, precise and lucid
+- name: Add Prosody Debian/Ubuntu repository
+  apt_repository: repo="deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
 
 - name: Install Prosody from official repository
   apt: pkg=prosody update_cache=yes

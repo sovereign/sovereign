@@ -10,15 +10,23 @@
 
 - name: Ensure repository key for ownCloud is in place
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
+  when: ansible_distribution == 'Debian'
 
 - name: Add ownCloud OpenSuSE repository
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
+  when: ansible_distribution == 'Debian'
 
-- name: Install ownCloud from OpenSuSE repository
+- name: Install ownCloud (possibly from OpenSuSE repository)
   apt: pkg=owncloud update_cache=yes
 
-- name: Install PHP-APC
-  apt: pkg=php-apc
+- name: Install PHP dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php-apc
+    - libapache2-mod-php5
+
+- name: Owncloud www directory
+  file: state=directory path=/var/www/owncloud
 
 - name: Store ownCloud data securely
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
@@ -36,12 +44,17 @@
   command: a2enmod expires creates=/etc/apache2/mods-enabled/expires.load
   notify: restart apache
 
+- name: Rename existing Apache owncloud virtualhost
+  command: mv /etc/apache2/sites-available/owncloud /etc/apache2/sites-available/owncloud.conf removes=/etc/apache2/sites-available/owncloud
+
+- name: Remove old sites-enabled/owncloud symlink (new one will be created by a2ensite)
+  command: rm /etc/apache2/sites-enabled/owncloud removes=/etc/apache2/sites-enabled/owncloud
+
 - name: Configure the Apache HTTP server for ownCloud
-  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud group=www-data owner=www-data
-  notify: restart apache
+  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root owner=root
 
 - name: Enable the owncloud site
-  command: a2ensite owncloud creates=/etc/apache2/sites-enabled/owncloud
+  command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
   notify: restart apache
 
 - name: Install ownCloud cronjob

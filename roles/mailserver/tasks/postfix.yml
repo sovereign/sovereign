@@ -1,4 +1,4 @@
-- name: Install Postfix and related packages
+- name: Install Postfix 9.1 and related packages
   apt: pkg={{ item }} state=installed
   with_items:
     - postfix
@@ -9,6 +9,20 @@
     - postfix-pgsql
     - python-psycopg2
     - postfix-pcre
+  when: ansible_distribution_release != 'trusty'
+
+- name: Install Postfix 9.3 and related packages for Ubuntu Trusty
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - postfix
+    - libsasl2-modules
+    - sasl2-bin
+    - postgrey
+    - postgresql-9.3
+    - postfix-pgsql
+    - python-psycopg2
+    - postfix-pcre
+  when: ansible_distribution_release == 'trusty'
 
 - name: Set postgres password
   command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"

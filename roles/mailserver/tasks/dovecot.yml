@@ -8,6 +8,19 @@
     - dovecot-managesieved
     - postgresql-9.1
     - dovecot-pgsql
+  when: ansible_distribution_release != 'trusty'
+
+- name: Install Dovecot and related packages for Ubuntu trusty
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-pop3d
+    - dovecot-lmtpd
+    - dovecot-managesieved
+    - postgresql-9.3
+    - dovecot-pgsql
+  when: ansible_distribution_release == 'trusty'
 
 - name: Create vmail group
   group: name=vmail state=present gid=5000
