@@ -1,0 +1,29 @@
+- name: Create gitolite group
+  group: name=git state=present
+
+- name: Create gitolite user
+  user: name=git state=present home=/home/git system=yes group=git
+
+- name: Add www-data to the git group
+  user: name=www-data groups=git append=yes
+
+- name: Install gitolite3 package
+  apt: pkg=gitolite3 state=installed
+
+- name: Copy .gitolite.rc file
+  copy: src=home_git_.gitolite.rc
+        dest=/home/git/.gitolite.rc
+        group=git
+        owner=git
+        mode=0644
+
+- name: Copy SSH public key to server
+  copy: src=gitolite.pub
+        dest=/home/git/{{ main_user_name }}.pub
+        group=git
+        owner=git
+        mode=0644
+
+- name: Setup gitolite
+  command: su - git -c 'gitolite setup -pk {{ main_user_name }}.pub'
+           chdir=/home/git
