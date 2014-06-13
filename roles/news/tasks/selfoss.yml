@@ -41,3 +41,6 @@
 
 - name: Install selfoss cronjob
   cron: name="selfoss" user="www-data" minute="*/5" job="curl --silent --show-error -k 'https://{{ selfoss_domain }}/update' > /dev/null"
+
+- name: Configure selfoss logrotate
+  copy: src=etc_logrotate_selfoss dest=/etc/logrotate.d/selfoss owner=root group=root mode=0644
