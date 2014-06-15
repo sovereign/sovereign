@@ -1,0 +1,32 @@
+BaseDir     "/opt/collectd"
+
+LoadPlugin syslog
+LoadPlugin cpu
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin disk
+LoadPlugin df
+
+{% if (collectd_librato_email|length and collectd_librato_api_token|length) %}
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+
+<Plugin python>
+  ModulePath "/opt/collectd-librato-{{ collectd_librato_version }}/lib"
+  Import "collectd-librato"
+
+  <Module "collectd-librato">
+    Email    "{{ collectd_librato_email }}"
+    APIToken "{{ collectd_librato_api_token }}"
+    TypesDB  "/opt/collectd/share/collectd/types.db"
+  </Module>
+</Plugin>
+{% else %}
+LoadPlugin rrdtool
+
+<Plugin rrdtool>
+  DataDir "/opt/collectd/var/lib/collectd/rrd"
+</Plugin>
+{% endif %}

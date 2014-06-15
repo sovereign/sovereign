@@ -1,2 +1,5 @@
 - name: restart monit
   service: name=monit state=restarted
+
+- name: restart collectd
+  service: name=collectd state=restarted
