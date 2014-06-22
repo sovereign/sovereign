@@ -1,0 +1,46 @@
+- name: Install collectd dependencies
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - libcurl4-openssl-dev
+    - librrd2-dev
+    - python-dev
+
+- name: Download collectd
+  get_url: url=http://collectd.org/files/collectd-{{collectd_version}}.tar.gz
+           dest=/root/collectd-{{collectd_version}}.tar.gz
+
+- name: Extract collectd
+  command: tar xzf collectd-{{collectd_version}}.tar.gz
+           chdir=/root creates=/root/collectd-{{collectd_version}}
+
+- name: Build and install collectd
+  shell: ./configure ; make all ; make install
+         executable=/bin/bash
+         chdir=/root/collectd-{{collectd_version}}
+         creates=/opt/collectd/sbin/collectdmon
+
+- name: Copy collectd init file into place
+  copy: src=etc_init.d_collectd dest=/etc/init.d/collectd mode=0755
+
+- name: Download collectd-librato plugin
+  get_url: url=https://github.com/librato/collectd-librato/archive/v{{collectd_librato_version}}.tar.gz
+           dest=/root/collectd-librato-{{collectd_librato_version}}.tar.gz
+  when: collectd_librato_email|length > 0
+
+- name: Extract collectd-librato plugin
+  command: tar xzf collectd-librato-{{collectd_librato_version}}.tar.gz
+           chdir=/root creates=/root/collectd-librato-{{collectd_librato_version}}
+  when: collectd_librato_email|length > 0
+
+- name: Install collectd-librato plugin
+  command: make install
+           chdir=/root/collectd-librato-{{collectd_librato_version}}
+           creates=/opt/collectd-librato-{{collectd_librato_version}}
+  when: collectd_librato_email|length > 0
+
+- name: Copy collectd configuration file into place
+  template: src=opt_etc_collectd.conf.j2 dest=/opt/collectd/etc/collectd.conf
+  notify: restart collectd
+
+- name: Ensure collectd is a system service
+  service: name=collectd state=started enabled=true

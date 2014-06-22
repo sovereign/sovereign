@@ -27,6 +27,12 @@ ntp_servers:
   # - 2.north-america.pool.ntp.org
   # - 3.north-america.pool.ntp.org
 
+# collectd
+collectd_version: 5.4.1
+collectd_librato_version: 0.0.10
+collectd_librato_email: "" # (optional)
+collectd_librato_api_token: "" # (optional)
+
 # google authenticator
 google_auth_version: 1.0
 
