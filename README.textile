@@ -174,7 +174,7 @@ h3. 6. Set up DNS
 If you've just bought a new domain name, point it at "Linode's DNS Manager":https://library.linode.com/dns-manager or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you're using an existing domain that's already managed elsewhere, you can probably just modify a few records.
 
 Create an @A@ records which point to your server IP for:
- * @example.com@ 
+ * @example.com@
  * @mail.example.com@
  * @read.example.com@ (for wallabe)
  * @news.example.com@ (for selfoss)
@@ -201,6 +201,10 @@ We're collecting known-good client setups "on our wiki":https://github.com/al3x/
 h2. Troubleshooting
 
 If you run into an errors, please check the "wiki page":https://github.com/al3x/sovereign/wiki/Troubleshooting. If the problem you encountered, is not listed, please go ahead and "create an issue":https://github.com/al3x/sovereign/issues/new. If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
+
+h1. IRC
+
+#sovereign on "Freenode":http://freenode.net
 
 h1. Contributing
 
