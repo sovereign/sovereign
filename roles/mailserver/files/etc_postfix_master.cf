@@ -126,6 +126,6 @@ mailman   unix  -       n       n       -       -       pipe
   ${nexthop} ${user}
 # spam protection
 dspam     unix  -       n       n       -       10      pipe
-  flags=Ru user=dspam argv=/usr/bin/dspam --deliver=innocent,spam --user ${user}@${nexthop} -i -f $sender -- $recipient
+  flags=Ru user=dspam argv=/usr/bin/dspam --deliver=innocent,spam --user ${user}@${domain} -i -f $sender -- $recipient
 dovecot   unix  -       n       n       -       -       pipe
   flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/dovecot-lda -f ${sender} -d ${user}@${nexthop}
