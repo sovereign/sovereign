@@ -191,7 +191,7 @@ Set up SPF and reverse DNS "as per this post":http://sealedabstract.com/code/nsa
 
 h3. 7. Miscellaneous Configuration
 
-* Sign in to the ZNC web interface and set things up to your liking.
+* Sign in to the ZNC web interface and set things up to your liking. It isn't exposed through the firewall, so you must first set up an SSH tunnel @ssh deploy@example.com -L 6643:localhost:6643@ and then proceed to http://localhost:6643 in your web browser.
 * Sign into ownCloud to set it up. You should select postgresql as the configuration backend.
 
 h2. How To Use Your New Personal Cloud

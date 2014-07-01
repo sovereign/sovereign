@@ -24,11 +24,20 @@ Version = 1.0
 
 <Listener listener0>
 	AllowIRC = true
-	AllowWeb = true
+	AllowWeb = false
 	IPv4 = true
-	IPv6 = false
+	IPv6 = true
 	Port = 6697
 	SSL = true
+</Listener>
+
+<Listener listener1>
+	AllowIRC = false
+	AllowWeb = true
+	IPv4 = true
+	IPv6 = true
+	Port = 6643
+	SSL = false
 </Listener>
 
 <User {{ irc_nick }}>
