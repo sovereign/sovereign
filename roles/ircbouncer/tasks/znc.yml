@@ -24,6 +24,7 @@
 
 - name: Build and install znc
   shell: ./configure --enable-python ; make ; make install executable=/bin/bash chdir=/root/znc-{{ znc_version }} creates=/usr/local/bin/znc
+  notify: restart znc
 
 - name: Create znc group
   group: name=znc state=present
@@ -37,9 +38,11 @@
 - name: Create a combined version of the private key with public cert and intermediate + root CAs
   shell: cat /etc/ssl/private/wildcard_private.key /etc/ssl/certs/wildcard_combined.pem >
     /var/lib/znc/znc.pem creates=/var/lib/znc/znc.pem
+  notify: restart znc
 
 - name: Ensure znc user and group can read cert
   file: path=/var/lib/znc/znc.pem group=znc owner=znc mode=640
+  notify: restart znc
 
 - name: Check for existing config file
   command: cat /var/lib/znc/configs/znc.conf
@@ -53,6 +56,7 @@
 - name: Copy znc configuration file into place
   template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
   when: znc_config.rc != 0
+  notify: restart znc
 
 - name: Set firewall rule for znc
   ufw: rule=allow port=6697 proto=tcp
