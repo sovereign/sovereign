@@ -4,7 +4,7 @@
 # Written by Tim Bishop, 2009.
 
 # Directories to backup (relative to /)
-DIRS="home root decrypted var/www var/lib/postgresql/9.1/main"
+DIRS="home root decrypted var/www"
 
 # Number of daily backups to keep
 DAILY=7
@@ -54,17 +54,17 @@ else
 	BACKUP="$YEAR$MOY$DOM-$TIME-daily"
 fi
 
-# Stop postgres
-monit stop postgres
+# Below command complains to stderr if postgres user cannot write to CWD
+cd /home/
+
+# Dump PostgreSQL to file
+sudo -u postgres pg_dumpall -c > /decrypted/postgresql-backup.sql
 
 # Do backups
 for dir in $DIRS; do
 	echo "==> create $BACKUP-$dir"
 	$TARSNAP $EXTRA_FLAGS -c -f $BACKUP-$dir $dir
 done
-
-# Start postgres
-monit start postgres
 
 # Backups done, time for cleaning up old archives
 
