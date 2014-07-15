@@ -58,7 +58,7 @@ fi
 cd /home/
 
 # Dump PostgreSQL to file
-sudo -u postgres pg_dumpall -c > /decrypted/postgresql-backup.sql
+sudo -u postgres pg_dumpall -c | gzip > /decrypted/postgresql-backup.sql.gz
 
 # Do backups
 for dir in $DIRS; do
