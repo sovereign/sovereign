@@ -3,8 +3,13 @@
 # https://github.com/mitchellh/vagrant/blob/master/CHANGELOG.md#130-september-5-2013
 
 Vagrant.configure('2') do |config|
-  # Source: https://vagrantcloud.com/box-cutter/debian75
+  # Debian 7 is the officially supported Linux distribution
   config.vm.box = 'box-cutter/debian75'
+
+  # Comment the entry above and uncomment one of these two entries
+  # below if you want to develop/test against Ubuntu 12.04/14.04.
+  # config.vm.box = 'box-cutter/ubuntu1204'
+  # config.vm.box = 'box-cutter/ubuntu1404'
 
   config.vm.provider :virtualbox do |v|
     v.memory = 512
