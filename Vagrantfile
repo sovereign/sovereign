@@ -1,3 +1,4 @@
+# -*- mode: ruby -*-
 # If you're having issues, upgrade to Vagrant 1.3.x. It generates an inventory automatically:
 # https://github.com/mitchellh/vagrant/blob/master/CHANGELOG.md#130-september-5-2013
 
