@@ -6,12 +6,12 @@ Vagrant.configure('2') do |config|
   # Source: https://vagrantcloud.com/box-cutter/debian75
   config.vm.box = 'box-cutter/debian75'
 
-  config.vm.provider :virtualbox do |vbox, override|
-    vbox.customize ["modifyvm", :id, "--memory", 512]
+  config.vm.provider :virtualbox do |v|
+    v.memory = 512
   end
 
-  config.vm.provider :vmware_fusion do |vbox, override|
-    vbox.customize ["modifyvm", :id, "--memory", 512]
+  config.vm.provider :vmware_fusion do |v|
+    v.vmx["memsize"] = "512"
   end
 
   config.vm.hostname = 'sovereign.local'
