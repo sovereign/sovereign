@@ -3,16 +3,14 @@
 # https://github.com/mitchellh/vagrant/blob/master/CHANGELOG.md#130-september-5-2013
 
 Vagrant.configure('2') do |config|
+  # Source: https://vagrantcloud.com/box-cutter/debian75
+  config.vm.box = 'box-cutter/debian75'
 
   config.vm.provider :virtualbox do |vbox, override|
-    override.vm.box = 'wheezy64'
-    override.vm.box_url = 'https://sovereign.lukecyca.com/vagrant/wheezy64.box'
     vbox.customize ["modifyvm", :id, "--memory", 512]
   end
 
   config.vm.provider :vmware_fusion do |vbox, override|
-    # source: https://vagrantcloud.com/box-cutter/debian75
-    override.vm.box = 'box-cutter/debian75'
     vbox.customize ["modifyvm", :id, "--memory", 512]
   end
 
