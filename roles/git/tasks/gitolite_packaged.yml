@@ -18,7 +18,7 @@
         mode=0644
 
 - name: Copy SSH public key to server
-  copy: src=gitolite.pub
+  copy: src=~/.ssh/id_rsa.pub
         dest=/home/git/{{ main_user_name }}.pub
         group=git
         owner=git
