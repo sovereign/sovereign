@@ -150,7 +150,7 @@ bc. # znc --makepass
 
 Take the string beginning with @sha256#@ and insert it as the value for @irc_password_hash@.
 
-For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub@ or similar.
+For git hosting, your ssh public key will be copied onto the server from ~/.ssh/id_rsa.pub – make sure you have it in place before running the role.
 
 Finally, replace the TODOs in the file @hosts@. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address.
 In that case you also need to add your custom port to the task @Set firewall rules for web traffic and SSH@ in the file @roles/common/tasks/ufw.yml@.
