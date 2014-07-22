@@ -36,6 +36,16 @@
 - name: Configure z-push apache alias and php settings
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf.d/z-push.conf
   notify: restart apache
-  
+  when: ansible_distribution_release != 'trusty'
+
+- name: Create z-push apache alias and php configuration file for Ubuntu Trusty
+  copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf-available/z-push.conf
+  when: ansible_distribution_release == 'trusty'
+
+- name: Enable z-push Apache alias and PHP configuration file for Ubuntu Trusty
+  command: a2enconf z-push creates=/etc/apache2/conf-enabled/z-push.conf
+  notify: restart apache
+  when: ansible_distribution_release == 'trusty'
+
 - name: Configure z-push logrotate
   copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push owner=root group=root mode=0644

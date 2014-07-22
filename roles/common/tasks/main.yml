@@ -46,6 +46,16 @@
 - name: Set ServerName for Apache
   template: src=fqdn.j2 dest=/etc/apache2/conf.d/fqdn
   notify: restart apache
+  when: ansible_distribution_release != 'trusty'
+
+- name: Create ServerName configuration file for Apache for Ubuntu Trusty
+  template: src=fqdn.j2 dest=/etc/apache2/conf-available/fqdn.conf
+  when: ansible_distribution_release == 'trusty'
+
+- name: Set ServerName for Apache for Ubuntu Trusty
+  command: a2enconf fqdn creates=/etc/apache2/conf-enabled/fqdn.conf
+  notify: restart apache
+  when: ansible_distribution_release == 'trusty'
 
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
