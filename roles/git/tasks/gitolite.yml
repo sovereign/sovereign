@@ -7,10 +7,20 @@
 - name: Add www-data to the git group
   user: name=www-data groups=git append=yes
 
+
+- name: Copy the github public key to known hosts
+  lineinfile:
+        dest=~/.ssh/known_hosts
+        regexp=^github.com
+        line="github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+        state=present
+        create=yes
+
+
 - name: Download gitolite release
-  git: repo=git://github.com/sitaramc/gitolite
-       dest=/home/git/gitolite
-       version=v{{ gitolite_version }}
+  git:  repo=git://github.com/sitaramc/gitolite
+        dest=/home/git/gitolite
+        version=v{{ gitolite_version }}
 
 - name: Give git user file permissions
   file: path=/home/git/gitolite
