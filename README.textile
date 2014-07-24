@@ -140,6 +140,10 @@ Retype new password: foo
 
 Remove @{SHA512-CRYPT}@ and insert the rest as the @password_hash@ value.
 
+Alternatively, if you don't already have @doveadm@ installed, Python 3.3 or higher will generate the appropriate string for you on Unix-based platforms (assuming your password is @password@):
+
+bc. python3 -c 'import crypt; print(crypt.crypt("password", salt=crypt.METHOD_SHA512))'
+
 Same for the IRC password hash...
 
 bc. # znc --makepass
@@ -149,6 +153,10 @@ bc. # znc --makepass
 [ ** ] Pass = sha256#4bfc209c5e19874337fd89c80675ad194836efea5efd4189b7f73cd9e0a6094f#,i*Msa0B;w9yR23nm1ZB#
 
 Take the string beginning with @sha256#@ and insert it as the value for @irc_password_hash@.
+
+Alternatively, if you don't already have @znc@ installed, Python 3.3 or higher will generate the appropriate string for you on Unix-based platforms (assuming your password is @password@):
+
+bc. python3 -c 'import crypt; print("sha256#{}#{}".format(*crypt.crypt("password", salt=crypt.METHOD_SHA256).split("$")[2:]))'
 
 For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub@ or similar.
 
