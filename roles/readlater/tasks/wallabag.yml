@@ -1,7 +1,15 @@
+- name: Determine whether wallabag is configured
+  stat: path=/var/www/wallabag/inc/poche/config.inc.php
+  register: wallabag_config
+
 - name: Clone wallabag
   git: repo=https://github.com/wallabag/wallabag.git
        dest=/var/www/wallabag
        version={{ wallabag_version }}
+
+- name: Remove wallabag 'install' directory if its configuration file is there
+  file: name=/var/www/wallabag/install state=absent
+  when: wallabag_config.stat.exists == True
 
 - name: Install wallabag dependencies
   apt: pkg={{ item }} state=present
