@@ -112,16 +112,6 @@ class WebTests(unittest.TestCase):
             r.content
         )
 
-    def test_znc_http(self):
-        """ZNC web interface is displaying login page"""
-        # FIXME: requests won't verify sovereign.local with *.sovereign.local cert
-        r = requests.get('https://' + TEST_SERVER + ':6697', verify=False)
-        self.assertEquals(r.status_code, 200)
-        self.assertIn(
-            "Welcome to ZNC's web interface!",
-            r.content
-        )
-
     def test_cgit_http(self):
         """CGit web interface is displaying home page"""
         r = requests.get('http://git.' + TEST_SERVER, verify=False)
@@ -147,7 +137,7 @@ class IRCTests(unittest.TestCase):
 
         # Check the encryption parameters
         cipher, version, bits = ssl_sock.cipher()
-        self.assertEquals(cipher, 'AES256-SHA')
+        self.assertEquals(cipher, 'AES256-GCM-SHA384')
         self.assertEquals(version, 'TLSv1/SSLv3')
         self.assertEquals(bits, 256)
 
@@ -306,7 +296,7 @@ class MailTests(unittest.TestCase):
         )
 
         self.assertIn(
-            'DHE-RSA-AES256-SHA (256/256 bits)',  # Also matches ECDHE-...
+            'ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)',
             data[0][1]
         )
 
@@ -343,7 +333,7 @@ class MailTests(unittest.TestCase):
         )
 
         self.assertIn(
-            'DHE-RSA-AES256-SHA (256/256 bits)',  # Also matches ECDHE-...
+            'ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)',
             data[0][1]
         )
 
