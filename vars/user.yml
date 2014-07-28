@@ -19,6 +19,7 @@ irc_ident: TODO
 irc_realname: TODO
 irc_quitmsg: TODO
 irc_password_hash: TODO
+irc_password_salt: TODO
 
 # mailserver
 mail_db_password: TODO

@@ -147,16 +147,23 @@ bc. python3 -c 'import crypt; print(crypt.crypt("password", salt=crypt.METHOD_SH
 Same for the IRC password hash...
 
 bc. # znc --makepass
+[ ** ] Type your new password.
 [ ?? ] Enter Password: foo
 [ ?? ] Confirm Password: foo
-[ ** ] Use this in the <User> section of your config:
-[ ** ] Pass = sha256#4bfc209c5e19874337fd89c80675ad194836efea5efd4189b7f73cd9e0a6094f#,i*Msa0B;w9yR23nm1ZB#
+[ ** ] Kill ZNC process, if it's running.
+[ ** ] Then replace password in the <User> section of your config with this:
+<Pass password>
+        Method = sha256
+        Hash = 310c5f99825e80d5b1d663a0a993b8701255f16b2f6056f335ba6e3e720e57ed
+        Salt = YdlPM5yjBmc/;JO6cfL5
+</Pass>
+[ ** ] After that start ZNC again, and you should be able to login with the new password.
 
-Take the string beginning with @sha256#@ and insert it as the value for @irc_password_hash@.
+Take the strings after @Hash =@ and @Salt =@ and insert them as the value for @irc_password_hash@ and @irc_password_salt@ respectively.
 
 Alternatively, if you don't already have @znc@ installed, Python 3.3 or higher will generate the appropriate string for you on Unix-based platforms (assuming your password is @password@):
 
-bc. python3 -c 'import crypt; print("sha256#{}#{}".format(*crypt.crypt("password", salt=crypt.METHOD_SHA256).split("$")[2:]))'
+bc. python3 -c 'import crypt; print("irc_password_salt: \"{}\"\nirc_password_hash: \"{}\"".format(*crypt.crypt("password", salt=crypt.METHOD_SHA256).split("$")[2:]))'
 
 For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub@ or similar.
 

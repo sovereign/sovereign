@@ -64,7 +64,14 @@ Version = 1.0
 	RealName = {{ irc_realname }}
 	TimestampFormat = [%H:%M:%S]
 
+	<Pass password>
+	        Method = sha256
+	        Hash = {{ irc_password_hash }}
+	        Salt = {{ irc_password_salt }}
+	</Pass>
+
 	<Network freenode>
+		BindHost = 0.0.0.0
 		FloodBurst = 4
 		FloodRate = 1.00
 		IRCConnectEnabled = true
@@ -73,6 +80,4 @@ Version = 1.0
 		LoadModule = savebuff
 		Server = chat.freenode.net +6697
 	</Network>
-
-	Pass = {{ irc_password_hash }}
 </User>
