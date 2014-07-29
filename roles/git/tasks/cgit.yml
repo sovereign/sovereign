@@ -3,14 +3,14 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - groff
-    - python-pip
     - libssl-dev
+    - python-pip
 
 - name: Install cgit pip dependencies
   pip: name={{ item }}
   with_items:
-    - pygments
     - docutils
+    - pygments
 
 - name: Download cgit release
   get_url: url=http://git.zx2c4.com/cgit/snapshot/cgit-{{ cgit_version }}.tar.xz

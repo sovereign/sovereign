@@ -1,27 +1,27 @@
 - name: Install Postfix 9.1 and related packages
   apt: pkg={{ item }} state=installed
   with_items:
-    - postfix
     - libsasl2-modules
-    - sasl2-bin
-    - postgrey
-    - postgresql-9.1
-    - postfix-pgsql
-    - python-psycopg2
+    - postfix
     - postfix-pcre
+    - postfix-pgsql
+    - postgresql-9.1
+    - postgrey
+    - python-psycopg2
+    - sasl2-bin
   when: ansible_distribution_release != 'trusty'
 
 - name: Install Postfix 9.3 and related packages for Ubuntu Trusty
   apt: pkg={{ item }} state=installed
   with_items:
-    - postfix
     - libsasl2-modules
-    - sasl2-bin
-    - postgrey
-    - postgresql-9.3
-    - postfix-pgsql
-    - python-psycopg2
+    - postfix
     - postfix-pcre
+    - postfix-pgsql
+    - postgresql-9.3
+    - postgrey
+    - python-psycopg2
+    - sasl2-bin
   when: ansible_distribution_release == 'trusty'
 
 - name: Set postgres password
@@ -59,9 +59,9 @@
 - name: Copy additional postfix configuration files
   template: src=etc_postfix_{{ item }}.j2 dest=/etc/postfix/{{ item }} owner=root group=root
   with_items:
+    - pgsql-virtual-alias-maps.cf
     - pgsql-virtual-mailbox-domains.cf
     - pgsql-virtual-mailbox-maps.cf
-    - pgsql-virtual-alias-maps.cf
   notify: restart postfix
 
 - name: Set firewall rules for postfix

@@ -1,13 +1,13 @@
 - name: Install required packages for z-push
   apt: pkg={{ item }} state=installed
   with_items:
+    - php-soap
     - php5
     - php5-cli
-    - php-soap
     - php5-imap
-    
+
 - name: Download z-push release
-  get_url: 
+  get_url:
     url=http://download.z-push.org/final/2.1/z-push-{{ zpush_version }}.tar.gz
     dest=/root/z-push-{{ zpush_version }}.tar.gz
 

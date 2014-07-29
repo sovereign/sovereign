@@ -3,18 +3,18 @@
 - name: Install znc dependencies
   apt: pkg={{ item }} state=installed
   with_items:
-    - build-essential
-    - libssl-dev
-    - openssl
-    - swig
     - automake
-    - libtool
-    - libsasl2-dev
+    - build-essential
     - checkinstall
     - g++
+    - libperl-dev
+    - libsasl2-dev
+    - libssl-dev
+    - libtool
+    - openssl
     - pkg-config
     - python3-dev
-    - libperl-dev
+    - swig
 
 - name: Download znc release
   get_url: url=http://znc.in/releases/archive/znc-{{ znc_version }}.tar.gz dest=/root/znc-{{ znc_version }}.tar.gz

@@ -8,9 +8,9 @@
   when: tarnsap_installed|failed
   apt: pkg={{ item }} state=installed
   with_items:
+    - e2fslibs-dev
     - libssl-dev
     - zlib1g-dev
-    - e2fslibs-dev
 
 - name: Download the current tarsnap code signing key
   when: tarnsap_installed|failed

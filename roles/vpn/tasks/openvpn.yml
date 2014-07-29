@@ -5,9 +5,9 @@
 - name: Install OpenVPN and dependencies from apt
   apt: pkg={{ item }} state=installed
   with_items:
+    - dnsmasq
     - openvpn
     - udev
-    - dnsmasq
 
 - name: Generate RSA keys for the CA and Server
   command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}

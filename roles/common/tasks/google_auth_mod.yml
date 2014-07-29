@@ -5,9 +5,9 @@
 - name: Ensure required packages are installed
   apt: pkg={{ item }} state=present
   with_items:
-    - libqrencode3
-    - libpam0g-dev
     - libpam-google-authenticator
+    - libpam0g-dev
+    - libqrencode3
 
 - name: Update sshd config to enable challenge responses
   lineinfile: dest=/etc/ssh/sshd_config

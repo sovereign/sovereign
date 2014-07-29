@@ -22,8 +22,8 @@
 - name: Install PHP dependencies
   apt: pkg={{ item }} state=present
   with_items:
-    - php-apc
     - libapache2-mod-php5
+    - php-apc
 
 - name: Owncloud www directory
   file: state=directory path=/var/www/owncloud

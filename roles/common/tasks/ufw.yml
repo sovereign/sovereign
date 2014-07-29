@@ -17,9 +17,9 @@
 - name: Set firewall rules for web traffic and SSH
   ufw: rule=allow port={{ item }} proto=tcp
   with_items:
-    - ssh
     - http
     - https
+    - ssh
 
 - name: Check config of ufw
   command: cat /etc/ufw/ufw.conf
