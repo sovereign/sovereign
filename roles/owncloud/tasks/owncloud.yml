@@ -16,6 +16,14 @@
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
   when: ansible_distribution == 'Debian'
 
+- name: Ensure repository key for ownCloud is in place
+  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key state=present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add ownCloud OpenSuSE repository
+  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/ /'
+  when: ansible_distribution == 'Ubuntu'
+
 - name: Install ownCloud (possibly from OpenSuSE repository)
   apt: pkg=owncloud update_cache=yes
 
