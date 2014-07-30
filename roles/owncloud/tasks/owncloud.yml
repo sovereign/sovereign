@@ -8,21 +8,29 @@
 - name: Create database for ownCloud
   postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
 
-- name: Ensure repository key for ownCloud is in place
+- name: Ensure repository key for ownCloud is in place for Debian 7
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
-  when: ansible_distribution == 'Debian'
+  when: ansible_distribution_release == 'wheezy'
 
-- name: Add ownCloud OpenSuSE repository
+- name: Add ownCloud OpenSuSE repository for Debian 7
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
-  when: ansible_distribution == 'Debian'
+  when: ansible_distribution_release == 'wheezy'
 
-- name: Ensure repository key for ownCloud is in place
+- name: Ensure repository key for ownCloud is in place for Ubuntu 14.04
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key state=present
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_distribution_release == 'trusty'
 
-- name: Add ownCloud OpenSuSE repository
+- name: Add ownCloud OpenSuSE repository for Ubuntu 14.04
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/ /'
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_distribution_release == 'trusty'
+
+- name: Ensure repository key for ownCloud is in place for Ubuntu 12.04
+  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/Release.key state=present
+  when: ansible_distribution_release == 'precise'
+
+- name: Add ownCloud OpenSuSE repository for Ubuntu 12.04
+  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/ /'
+  when: ansible_distribution_release == 'precise'
 
 - name: Install ownCloud (possibly from OpenSuSE repository)
   apt: pkg=owncloud update_cache=yes
