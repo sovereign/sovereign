@@ -2,8 +2,8 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - encfs
-    - libfuse-dev
     - fuse
+    - libfuse-dev
 
 - name: Create encrypted directory
   file: state=directory path=/encrypted

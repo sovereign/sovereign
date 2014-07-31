@@ -15,11 +15,11 @@
   apt: pkg={{ item }} state=present
   with_items:
     - php5
-    - php5-mcrypt
-    - php5-tidy
     - php5-curl
+    - php5-mcrypt
     - php5-pgsql
-    
+    - php5-tidy
+
 - name: Create database user for wallabag
   postgresql_user: login_host=localhost
                    login_user={{ db_admin_username }}

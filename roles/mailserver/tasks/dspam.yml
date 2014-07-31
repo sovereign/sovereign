@@ -1,10 +1,10 @@
 - name: Install dspam and related packages
   apt: pkg={{ item }} state=installed
   with_items:
-    - dspam
     - dovecot-antispam
-    - postfix-pcre
     - dovecot-sieve
+    - dspam
+    - postfix-pcre
 
 - name: Create dspam directory
   file: state=directory path=/decrypted/dspam group=dspam owner=dspam
@@ -28,4 +28,3 @@
     - 20-imap.conf
     - 90-plugin.conf
   notify: restart dovecot
-

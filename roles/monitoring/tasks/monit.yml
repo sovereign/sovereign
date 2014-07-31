@@ -8,8 +8,8 @@
   copy: src=etc_monit_conf.d_{{ item }} dest=/etc/monit/conf.d/{{ item }}
   with_items:
     - apache2
-    - pgsql
     - dovecot
+    - pgsql
     - postfix
     - sshd
     - tomcat

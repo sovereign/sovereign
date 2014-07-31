@@ -4,9 +4,9 @@
 - name: Ensure required packages are installed
   apt: pkg={{ item }} state=present
   with_items:
-    - libqrencode3
-    - libpam0g-dev
     #- libpam-google-authenticator    wasn't available in wheezy
+    - libpam0g-dev
+    - libqrencode3
 
 - name: Download Google authenticator pam module
   get_url: url=https://google-authenticator.googlecode.com/files/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2

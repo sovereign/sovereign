@@ -10,23 +10,23 @@
 - name: Install necessities and nice-to-haves
   apt: pkg={{ item }} state=installed
   with_items:
-    - sudo
-    - vim
+    - apache2
+    - apt-transport-https
+    - apticron
+    - build-essential
+    - debian-goodies
+    - git
     - htop
     - iftop
     - iotop
     - mosh
-    - zsh
-    - git
+    - python-software-properties
     - ruby1.9.3
     - screen
-    - apache2
-    - build-essential
-    - apticron
+    - sudo
     - update-notifier-common
-    - debian-goodies
-    - apt-transport-https
-    - python-software-properties
+    - vim
+    - zsh
 
 - name: Install unattended upgrades (Debian/Ubuntu only)
   apt: pkg=unattended-upgrades state=installed
