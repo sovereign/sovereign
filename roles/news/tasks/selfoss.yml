@@ -1,6 +1,7 @@
 - name: Clone Selfoss
   git: repo=https://github.com/SSilence/selfoss.git
        dest=/var/www/selfoss
+       accept_hostkey=yes
 
 - name: Set selfoss permissions
   action: file owner=www-data group=www-data path=/var/www/selfoss recurse=yes state=directory

@@ -24,7 +24,9 @@
   command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav chdir=/root creates=/usr/share/roundcube/plugins/carddav
 
 - name: Download Google Authenticator roundcube plugin
-  git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
+  git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
+       dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
+       accept_hostkey=yes
 
 - name: Link plugins into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/{{ item }} dest=/var/lib/roundcube/plugins/{{ item }} force=yes

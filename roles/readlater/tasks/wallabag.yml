@@ -6,6 +6,7 @@
   git: repo=https://github.com/wallabag/wallabag.git
        dest=/var/www/wallabag
        version={{ wallabag_version }}
+       accept_hostkey=yes
 
 - name: Remove wallabag 'install' directory if its configuration file is there
   file: name=/var/www/wallabag/install state=absent
