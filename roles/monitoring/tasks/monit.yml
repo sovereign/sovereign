@@ -3,6 +3,7 @@
 
 - name: Copy monit master config file into place
   copy: src=etc_monit_monitrc dest=/etc/monit/monitrc
+  notify: restart monit
 
 - name: Copy monit service config files into place
   copy: src=etc_monit_conf.d_{{ item }} dest=/etc/monit/conf.d/{{ item }}
@@ -13,5 +14,4 @@
     - postfix
     - sshd
     - tomcat
-    - znc
   notify: restart monit

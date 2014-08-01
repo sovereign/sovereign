@@ -63,3 +63,7 @@
 
 - name: Ensure znc is a system service
   service: name=znc state=started enabled=true
+
+- name: Copy monit service config files into place
+  copy: src=etc_monit_conf.d_znc dest=/etc/monit/conf.d/znc
+  notify: restart monit
