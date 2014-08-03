@@ -26,7 +26,7 @@
   group: name=vmail state=present gid=5000
 
 - name: Create vmail user
-  user: name=vmail group=vmail state=present uid=5000 home=/decrypted
+  user: name=vmail group=vmail state=present uid=5000 home=/decrypted shell=/usr/sbin/nologin
 
 - name: Ensure mail domain directories are in place
   file: state=directory path=/decrypted/{{ item.name }} owner=vmail group=dovecot mode=770

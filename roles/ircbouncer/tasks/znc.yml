@@ -30,7 +30,7 @@
   group: name=znc state=present
 
 - name: Create znc user
-  user: name=znc state=present home=/var/lib/znc system=yes group=znc
+  user: name=znc state=present home=/var/lib/znc system=yes group=znc shell=/usr/sbin/nologin
 
 - name: Copy znc init file into place
   copy: src=etc_init.d_znc dest=/etc/init.d/znc mode=0755
