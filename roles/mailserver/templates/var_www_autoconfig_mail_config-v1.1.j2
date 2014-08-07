@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clientConfig version="1.1">
+    <emailProvider id="{{ domain }}">
+        <domain>{{ domain }}</domain>
+        <displayName>{{ domain }}</displayName>
+        <displayShortName>{{ domain }}</displayShortName>
+        <incomingServer type="imap">
+            <hostname>{{ mail_server_hostname }}</hostname>
+            <port>993</port>
+            <socketType>SSL</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </incomingServer>
+        <incomingServer type="pop3">
+            <hostname>{{ mail_server_hostname }}</hostname>
+            <port>995</port>
+            <socketType>SSL</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </incomingServer>
+        <outgoingServer type="smtp">
+            <hostname>{{ mail_server_hostname }}</hostname>
+            <port>587</port>
+            <socketType>SSL</socketType>
+            <authentication>password-cleartext</authentication>
+            <username>%EMAILADDRESS%</username>
+        </outgoingServer>
+    </emailProvider>
+</clientConfig>

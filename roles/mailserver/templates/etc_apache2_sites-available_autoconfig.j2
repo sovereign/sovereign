@@ -1,0 +1,34 @@
+# NOTE: We don't permanently redirect clients to the HTTPS address because some clients, like
+# Thunderbird, dont't follow redirections to the HTTPS URL.
+#
+# Additionally, documentation doesn't say whether the XML file should be served over either HTTP,
+# HTTPS or both, even though only the former is mentioned. Still, we allow clients to choose
+# between HTTP and HTTPS transports.
+
+<VirtualHost *:80>
+
+    ServerName {{ mail_server_autoconfig_hostname }}
+
+    DocumentRoot            "/var/www/autoconfig"
+    Options                 -Indexes
+
+    HostnameLookups         Off
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ mail_server_autoconfig_hostname }}
+
+    SSLEngine on
+    SSLProtocol ALL -SSLv2
+    SSLHonorCipherOrder On
+    SSLCipherSuite ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS
+    SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
+    SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
+    SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
+    Header add Strict-Transport-Security "max-age=15768000; includeSubdomains"
+
+    DocumentRoot            "/var/www/autoconfig"
+    Options                 -Indexes
+
+    HostnameLookups         Off
+</VirtualHost>
