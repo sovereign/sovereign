@@ -39,6 +39,18 @@ class WebTests(unittest.TestCase):
         # 403 - Since there is no documents in the blog directory
         self.assertEquals(r.status_code, 403)
 
+    def test_mail_autoconfig_http_and_https(self):
+        """Email autoconfiguration XML file is accessible over both HTTP and HTTPS"""
+
+        # Test getting the file over HTTP and HTTPS
+        for proto in ['http', 'https']:
+            r = requests.get(proto + '://autoconfig.' + TEST_SERVER + '/mail/config-v1.1.xml')
+
+            # 200 - We should see the XML file
+            self.assertEquals(r.status_code, 200)
+            self.assertIn('application/xml', r.headers['Content-Type'])
+            self.assertIn('clientConfig version="1.1"', r.content)
+
     def test_webmail_http(self):
         """Webmail is redirecting to https and displaying login page"""
         r = requests.get('http://mail.' + TEST_SERVER)

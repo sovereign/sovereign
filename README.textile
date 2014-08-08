@@ -32,6 +32,7 @@ What do you get if you point this thing at a VPS? All kinds of good stuff!
 * "SMTP":https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol over SSL via Postfix, including a nice set of "DNSBLs":https://en.wikipedia.org/wiki/DNSBL to discard spam before it ever hits your filters.
 * Webmail via "Roundcube":http://www.roundcube.net/.
 * Mobile push notifications via "Z-Push":http://z-push.sourceforge.net/soswp/index.php?pages_id=1&t=home.
+* Email client "automatic configuration":https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration.
 * Jabber/"XMPP":http://xmpp.org/ instant messaging via "Prosody":http://prosody.im/.
 * An RSS Reader via "Selfoss":http://selfoss.aditu.de/.
 * Virtual domains for your email, backed by "PostgreSQL":http://www.postgresql.org/.
@@ -191,6 +192,7 @@ If you've just bought a new domain name, point it at "Linode's DNS Manager":http
 Create an @A@ records which point to your server IP for:
  * @example.com@
  * @mail.example.com@
+ * @autoconfig.example.com@ (for email client automatic configuration)
  * @read.example.com@ (for wallabe)
  * @news.example.com@ (for selfoss)
  * @cloud.example.com@ (for owncloud)

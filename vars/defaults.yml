@@ -51,6 +51,7 @@ znc_version: 1.4
 
 # mailserver
 mail_server_hostname: "mail.{{ domain }}"
+mail_server_autoconfig_hostname: "autoconfig.{{ domain }}"
 mail_db_username: mailuser
 # mail_db_password: (required)
 mail_db_database: mailserver
