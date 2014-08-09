@@ -13,6 +13,7 @@
     - python-pip
     - python-pycurl
     - python-setuptools
+    - python-lxml
     - supervisor
 
 - name: Install Newebe
