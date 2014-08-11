@@ -13,6 +13,9 @@
   copy: src=etc_fail2ban_filter.d_dovecot-pop3imap.conf dest=/etc/fail2ban/filter.d/dovecot-pop3imap.conf
   notify: restart fail2ban
 
+- name: Ensure fail2ban is started
+  service: name=fail2ban state=started
+
 - name: Update sshd config to disallow root logins
   lineinfile: dest=/etc/ssh/sshd_config regexp=^PermitRootLogin line="PermitRootLogin no" state=present
   notify: restart ssh
