@@ -141,9 +141,13 @@ Retype new password: foo
 
 Remove @{SHA512-CRYPT}@ and insert the rest as the @password_hash@ value.
 
-Alternatively, if you don't already have @doveadm@ installed, Python 3.3 or higher will generate the appropriate string for you on Unix-based platforms (assuming your password is @password@):
+Alternatively, if you don't already have @doveadm@ installed, Python 3.3 or higher on Linux will generate the appropriate string for you (assuming your password is @password@):
 
 bc. python3 -c 'import crypt; print(crypt.crypt("password", salt=crypt.METHOD_SHA512))'
+
+On OS X and other platforms the "passlib":https://pythonhosted.org/passlib/ package may be used to generate the required string:
+
+bc. python -c 'import passlib.hash; print(passlib.hash.sha512_crypt.encrypt("password", rounds=5000))'
 
 Same for the IRC password hash...
 
@@ -162,9 +166,13 @@ bc. # znc --makepass
 
 Take the strings after @Hash =@ and @Salt =@ and insert them as the value for @irc_password_hash@ and @irc_password_salt@ respectively.
 
-Alternatively, if you don't already have @znc@ installed, Python 3.3 or higher will generate the appropriate string for you on Unix-based platforms (assuming your password is @password@):
+Alternatively, if you don't already have @znc@ installed, Python 3.3 or higher on Linux will generate the appropriate string for you (assuming your password is @password@):
 
-bc. python3 -c 'import crypt; print("irc_password_salt: \"{}\"\nirc_password_hash: \"{}\"".format(*crypt.crypt("password", salt=crypt.METHOD_SHA256).split("$")[2:]))'
+bc. python3 -c 'import crypt; print("irc_password_salt: {}\nirc_password_hash: {}".format(*crypt.crypt("password", salt=crypt.METHOD_SHA256).split("$")[2:]))'
+
+On OS X and other platforms the passlib:https://pythonhosted.org/passlib/ package may be used to generate the required string:
+
+bc. python -c 'import passlib.hash; print("irc_password_salt: {}\nirc_password_hash: {}".format(*passlib.hash.sha256_crypt.encrypt("password", rounds=5000).split("$")[2:]))'
 
 For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub@ or similar.
 
