@@ -20,6 +20,7 @@ irc_realname: TODO
 irc_quitmsg: TODO
 irc_password_hash: TODO
 irc_password_salt: TODO
+irc_timezone: TODO      #Example: "America/New_York"
 
 # mailserver
 mail_db_password: TODO
