@@ -1,8 +1,6 @@
 check process tomcat with pidfile "/var/run/tomcat6.pid"
   group mail
   start program = "/etc/init.d/tomcat6 start"
-  as uid tomcat6 gid tomcat6
   stop program = "/etc/init.d/tomcat6 stop"
-  as uid tomcat6 gid tomcat6
   if failed port 8080 then alert
   if failed port 8080 for 5 cycles then restart
