@@ -174,7 +174,7 @@ On OS X and other platforms the passlib:https://pythonhosted.org/passlib/ packag
 
 bc. python -c 'import passlib.hash; print("irc_password_salt: {}\nirc_password_hash: {}".format(*passlib.hash.sha256_crypt.encrypt("password", rounds=5000).split("$")[2:]))'
 
-For git hosting, copy your public key into place. @cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub@ or similar.
+For git hosting, your ssh public key will be copied onto the server from ~/.ssh/id_rsa.pub – make sure you have it in place before running the role.
 
 Finally, replace the TODOs in the file @hosts@. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address.
 In that case you also need to add your custom port to the task @Set firewall rules for web traffic and SSH@ in the file @roles/common/tasks/ufw.yml@.
