@@ -21,6 +21,7 @@ irc_realname: Mr. Sovereign
 irc_quitmsg: Bye
 irc_password_hash: "310c5f99825e80d5b1d663a0a993b8701255f16b2f6056f335ba6e3e720e57ed" #foo
 irc_password_salt: "YdlPM5yjBmc/;JO6cfL5"
+irc_timezone: "America/New_York" #Example: "America/New_York"
 
 # mailserver
 mail_db_password: testPassword
