@@ -81,10 +81,9 @@ Purchase a wildcard cert from a certificate authority, such as "Positive SSL":ht
 
 Download your certificate authority's combined cert to @roles/common/files/wildcard_ca.pem@. You can also download the intermediate and root certificates separately and concatenate them together in that order.
 
-Lastly, test your certificates using the @security@ program on Mac OS X:
+Lastly, test your certificate:
 
-bc. security verify-cert -L -p ssl -s example.com -c roles/common/files/wildcard_public_cert.crt -c roles/common/files/wildcard_ca.pem
-...certificate verification successful.
+bc. openssl verify -verbose -CAfile roles/common/files/wildcard_ca.pem roles/common/files/wildcard_public_cert.crt
 
 h4. Self-signed SSL certificate
 
