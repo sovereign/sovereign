@@ -1,5 +1,11 @@
+- name: Add backports for Roundcube
+  lineinfile: dest=/etc/apt/sources.list line="deb http://http.debian.net/debian wheezy-backports main"
+
+- name: Update apt cache for backports
+  apt: update_cache=yes
+
 - name: Install Roundcube
-  apt: pkg={{ item }} state=latest
+  apt: pkg={{ item }} state=latest default_release=wheezy-backports
   with_items:
     - roundcube
     - roundcube-pgsql
