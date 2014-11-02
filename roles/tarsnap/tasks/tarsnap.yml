@@ -64,7 +64,7 @@
   command: make all install clean chdir=/root/tarsnap-autoconf-{{ tarsnap_version }} creates=/usr/local/bin/tarsnap
 
 - name: Copy Tarsnap key file into place
-  copy: src=decrypted_tarsnap.key dest=/decrypted/tarsnap.key owner=root group=root force=no
+  copy: src=decrypted_tarsnap.key dest=/decrypted/tarsnap.key owner=root group=root mode="600" force=no
 
 - name: Create Tarsnap cache directory
   file: state=directory path=/usr/tarsnap-cache
