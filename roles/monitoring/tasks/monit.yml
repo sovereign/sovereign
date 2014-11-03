@@ -1,3 +1,10 @@
+- name: Add monitoring vhost to apache
+  copy: src=etc_apache2_sites-available_00-status.conf dest=/etc/apache2/sites-available/00-status.conf
+
+- name: Enable the status vhost
+  command: a2ensite 00-status.conf creates=/etc/apache2/sites-enabled/00-status.conf
+  notify: restart apache
+
 - name: Install monit
   apt: pkg=monit state=installed
 
