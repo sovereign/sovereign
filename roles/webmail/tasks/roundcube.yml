@@ -9,13 +9,15 @@
   with_items:
   - roundcube
   - roundcube-pgsql
+  - roundcube-plugins
   when: ansible_distribution_release == 'wheezy'
 
- - name: Install Roundcube on Ubuntu 14.04 LST
+ - name: Install Roundcube on Ubuntu 14.04 LTS
    apt: pkg={{ item }} state=latest
    with_items:
    - roundcube
    - roundcube-pgsql
+   - roundcube-plugins
    when: ansible_distribution_release == 'trusty'
 
 - name: Configure Roundcube database
