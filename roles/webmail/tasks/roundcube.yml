@@ -4,12 +4,19 @@
 - name: Update apt cache for backports
   apt: update_cache=yes
 
-- name: Install Roundcube
+- name: Install Roundcube from wheezy-backports
   apt: pkg={{ item }} state=latest default_release=wheezy-backports
   with_items:
-    - roundcube
-    - roundcube-pgsql
-    - roundcube-plugins
+  - roundcube
+  - roundcube-pgsql
+  when: ansible_distribution_release == 'wheezy'
+
+ - name: Install Roundcube on Ubuntu 14.04 LST
+   apt: pkg={{ item }} state=latest
+   with_items:
+   - roundcube
+   - roundcube-pgsql
+   when: ansible_distribution_release == 'trusty'
 
 - name: Configure Roundcube database
   template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
