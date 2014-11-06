@@ -1,6 +1,7 @@
-- name: Add backports for Roundcube
+- name: Add backports for Roundcube on Debian
   lineinfile: dest=/etc/apt/sources.list line="deb http://http.debian.net/debian wheezy-backports main"
-
+  when: ansible_distribution_release == 'wheezy'
+  
 - name: Update apt cache for backports
   apt: update_cache=yes
 
