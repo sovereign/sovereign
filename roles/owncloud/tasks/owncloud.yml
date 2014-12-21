@@ -1,6 +1,16 @@
 ---
 # Installs the ownCloud personal cloud software
 # as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
+- name: Install dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - libapache2-mod-php5
+    - php-apc
+    - python-psycopg2
+    - postgresql-9.3
+
+- name: Set postgres password
+  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
 
 - name: Create database user for ownCloud
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" state=present
@@ -34,12 +44,6 @@
 
 - name: Install ownCloud (possibly from OpenSuSE repository)
   apt: pkg=owncloud update_cache=yes
-
-- name: Install PHP dependencies
-  apt: pkg={{ item }} state=present
-  with_items:
-    - libapache2-mod-php5
-    - php-apc
 
 - name: Owncloud www directory
   file: state=directory path=/var/www/owncloud
