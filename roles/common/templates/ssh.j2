@@ -1,0 +1,10 @@
+    Ciphers {{ ciphers }}
+    #KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+    KexAlgorithms {{ kex_algorithms }}
+    SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+    GSSAPIDelegateCredentials no
+    MACs {{ macs }}
+    PasswordAuthentication no
+
