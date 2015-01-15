@@ -17,9 +17,9 @@
   service: name=fail2ban state=started
 
 - name: Update sshd config for PFS and more secure defaults
-  template: src=sshd.j2 dest=/etc/ssh/sshd_config
+  template: src=etc_ssh_sshd_config.j2 dest=/etc/ssh/sshd_config
   notify: restart ssh
   
 - name: Update ssh config for more secure defaults
-  template: src=ssh.j2 dest=/etc/ssh/ssh_config
+  template: src=etc_ssh_ssh_config.j2 dest=/etc/ssh/ssh_config
 
