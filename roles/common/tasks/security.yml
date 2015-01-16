@@ -9,11 +9,6 @@
   template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
   notify: restart fail2ban
 
-- name: Copy fail2ban configuration into place for Ubuntu Trusty
-  template: src=etc_trusty_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
-  when: ansible_sistributon_release == 'trusty'
-  notify: restart fail2ban
-
 - name: Copy fail2ban dovecot configuration into place
   copy: src=etc_fail2ban_filter.d_dovecot-pop3imap.conf dest=/etc/fail2ban/filter.d/dovecot-pop3imap.conf
   notify: restart fail2ban
