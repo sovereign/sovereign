@@ -1,1 +1,7 @@
-- include: znc.yml tags=znc
+# build znc from source on Debian (wheezy ships with znc 0.206)
+- include: znc.yml tags=znc 
+  when: ansible_distribution_release != 'trusty'
+
+# use znc from package on Ubuntu 14.04 'trusty' (ships with znc 1.2.x)
+- include: znc_pkg.yml tags=znc
+  when: ansible_distribution_release == 'trusty'

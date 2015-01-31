@@ -12,7 +12,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="ZNC daemon"
 NAME=znc
-DAEMON=/usr/local/bin/$NAME
+DAEMON=$(find /usr/local/bin /usr/bin -name $NAME -print -quit)
 DATADIR=/var/lib/znc
 DAEMON_ARGS="--datadir=$DATADIR"
 PIDDIR=/var/run/znc
