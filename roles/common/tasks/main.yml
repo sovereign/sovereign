@@ -57,6 +57,12 @@
   notify: restart apache
   when: ansible_distribution_release == 'trusty'
 
+- name: Create decrypted directory (even if encfs isn't used)
+  file: state=directory path=/decrypted
+
+- name: Set decrypted directory permissions
+  file: state=directory path=/decrypted group=mail mode=775
+
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: ssl.yml tags=ssl

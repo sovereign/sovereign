@@ -8,9 +8,6 @@
 - name: Create encrypted directory
   file: state=directory path=/encrypted
 
-- name: Create decrypted directory
-  file: state=directory path=/decrypted
-
 - name: Add mail user to fuse group
   user: name=mail append=yes groups=fuse
 
