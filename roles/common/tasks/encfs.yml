@@ -14,6 +14,9 @@
 - name: Add mail user to fuse group
   user: name=mail append=yes groups=fuse
 
+- name: Add main user to fuse group
+  user: name={{ main_user_name }} append=yes groups=fuse
+
 # Check if the /encrypted directory is empty
 - name: Check for existing encfs
   shell: ls /encrypted/*
