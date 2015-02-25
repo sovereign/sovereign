@@ -226,9 +226,15 @@ h2. Troubleshooting
 
 If you run into an errors, please check the "wiki page":https://github.com/al3x/sovereign/wiki/Troubleshooting. If the problem you encountered, is not listed, please go ahead and "create an issue":https://github.com/al3x/sovereign/issues/new. If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
 
+h3. Reboots
+
+You will need to manually enter the password for any encrypted volumes on reboot. This is not Sovereign-specific, but rather a function of how EncFS works. This will necessitate SSHing into your machine after reboot, or accessing it via a console interface if one is available to you.
+
+It is possible that some daemons may need to be restarted after you enter your password for the encrypted volume(s). Some services may stall out while looking for resources that will only be available once the `/decrypted` volume is available and visible to daemon user accounts.
+
 h1. IRC
 
-#sovereign on "Freenode":http://freenode.net
+Ask questions and provide feedback in #sovereign on "Freenode":http://freenode.net.
 
 h1. Contributing
 
