@@ -129,9 +129,7 @@ Authorize your ssh key if you want passwordless ssh login (optional):
     chmod 400 /home/deploy/.ssh/authorized_keys
     chown deploy:deploy /home/deploy -R
 
-This account should be set up for passwordless sudo. Use `visudo` and add this line:
-
-    deploy  ALL=(ALL) NOPASSWD: ALL
+Your new account will be automatically set up for passwordless `sudo`.
 
 ### 4. Configure your installation
 
