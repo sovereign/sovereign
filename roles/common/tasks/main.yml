@@ -1,5 +1,8 @@
 ---
 # Defines tasks applicable across all machines in the infrastructure.
+- name: Set up closest mirror autoselect (ubuntu-only)
+  template: src=apt_sources.list.j2 dest=/etc/apt/sources.list
+  when: ansible_distribution == 'Ubuntu'
 
 - name: Update apt cache
   apt: update_cache=yes
@@ -56,6 +59,12 @@
   command: a2enconf fqdn creates=/etc/apache2/conf-enabled/fqdn.conf
   notify: restart apache
   when: ansible_distribution_release == 'trusty'
+
+- name: Create decrypted directory (even if encfs isn't used)
+  file: state=directory path=/decrypted
+
+- name: Set decrypted directory permissions
+  file: state=directory path=/decrypted group=mail mode=775
 
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users

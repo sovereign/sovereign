@@ -8,11 +8,11 @@
 - name: Create encrypted directory
   file: state=directory path=/encrypted
 
-- name: Create decrypted directory
-  file: state=directory path=/decrypted
-
 - name: Add mail user to fuse group
   user: name=mail append=yes groups=fuse
+
+- name: Add main user to fuse group
+  user: name={{ main_user_name }} append=yes groups=fuse
 
 # Check if the /encrypted directory is empty
 - name: Check for existing encfs
