@@ -19,7 +19,7 @@
     - dovecot-managesieved
     - dovecot-pgsql
     - dovecot-pop3d
-    - postgresql-9.3
+    - postgresql-9.1
   when: ansible_distribution_release == 'trusty'
 
 - name: Create vmail group

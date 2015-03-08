@@ -7,7 +7,7 @@
     - libapache2-mod-php5
     - php-apc
     - python-psycopg2
-    - postgresql-9.3
+    - postgresql-9.1
 
 - name: Set postgres password
   command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
