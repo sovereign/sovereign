@@ -1,13 +1,21 @@
 ---
 # Installs the ownCloud personal cloud software
 # as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
-- name: Install dependencies
+
+- name: Install Postgres 9.1 on distributions other than Ubuntu Trusty
+  apt: pkg=postgresql-9.1 state=present
+  when: ansible_distribution_release != 'trusty'
+
+- name: Install Postgres 9.3 on Ubuntu Trusty
+  apt: pkg=postgresql-9.3 state=present
+  when: ansible_distribution_release == 'trusty'
+
+- name: Install ownCloud dependencies
   apt: pkg={{ item }} state=present
   with_items:
     - libapache2-mod-php5
     - php-apc
     - python-psycopg2
-    - postgresql-9.1
 
 - name: Set postgres password
   command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"

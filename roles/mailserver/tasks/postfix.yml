@@ -1,4 +1,4 @@
-- name: Install Postfix 9.1 and related packages
+- name: Install Postfix 9.1 and related packages for distributions other than Ubuntu Trusty
   apt: pkg={{ item }} state=installed
   with_items:
     - libsasl2-modules
@@ -11,14 +11,14 @@
     - sasl2-bin
   when: ansible_distribution_release != 'trusty'
 
-- name: Install Postfix 9.1 and related packages for Ubuntu Trusty
+- name: Install Postfix 9.3 and related packages for Ubuntu Trusty
   apt: pkg={{ item }} state=installed
   with_items:
     - libsasl2-modules
     - postfix
     - postfix-pcre
     - postfix-pgsql
-    - postgresql-9.1
+    - postgresql-9.3
     - postgrey
     - python-psycopg2
     - sasl2-bin
