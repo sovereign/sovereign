@@ -28,6 +28,8 @@
     - screen
     - sudo
     - update-notifier-common
+    - unattended-upgrades
+    - molly-guard
     - vim
     - zsh
 
