@@ -8,6 +8,7 @@
     - dnsmasq
     - openvpn
     - udev
+    - iptables-persistent
 
 - name: Generate RSA keys for the CA and Server
   command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
@@ -22,9 +23,9 @@
   with_items: openvpn_clients
 
 - name: Generate RSA keys for the clients
-  command: openssl genrsa -out client.key {{ openvpn_key_size }}
+  command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
            chdir={{ openvpn_path }}/{{ item }}
-           creates=client.key
+           creates={{ item }}.key
   with_items: openvpn_clients
 
 - name: Set the proper permissions on all RSA keys
@@ -68,15 +69,15 @@
            creates=server.crt
 
 - name: Generate CSRs for the clients
-  command: openssl req -new -key client.key -out client.csr -subj "{{ openssl_request_subject }}/CN={{ item }}"
+  command: openssl req -new -key {{ item }}.key -out {{  item }}.csr -subj "{{ openssl_request_subject }}/CN={{ item }}"
            chdir={{ openvpn_path }}/{{ item }}
-           creates=client.csr
+           creates={{ item }}.csr
   with_items: openvpn_clients
 
 - name: Generate certificates for the clients
-  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in client.csr -out client.crt
+  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in {{ item }}.csr -out {{ item }}.crt
            chdir={{ openvpn_path }}/{{ item }}
-           creates=client.crt
+           creates={{ item }}.crt
   with_items: openvpn_clients
 
 - name: Generate HMAC firewall key
@@ -89,13 +90,13 @@
   register: openvpn_ca_contents
 
 - name: Register client certificate contents
-  command: cat client.crt
+  command: cat {{ item }}.crt
            chdir={{ openvpn_path }}/{{ item }}
   with_items: openvpn_clients
   register: openvpn_client_certificates
 
 - name: Register client key contents
-  command: cat client.key
+  command: cat {{ item }}.key
            chdir={{ openvpn_path }}/{{ item }}
   with_items: openvpn_clients
   register: openvpn_client_keys
@@ -117,11 +118,22 @@
   command: openssl dhparam -out {{ openvpn_dhparam }} {{ openvpn_key_size }}
            creates={{ openvpn_dhparam }}
 
-- name: Copy rc.local with firewall and dnsmasq rules into place
-  template: src=etc_rc.local dest=/etc/rc.local
+- name: Update rc.local with dnsmasq rules into place
+  lineinfile: dest=/etc/rc.local regexp="/etc/init.d/dnsmasq restart" 
+              line="/etc/init.d/dnsmasq restart" insertbefore="exit 0" 
+              backup=yes state=present
 
 - name: Enable IPv4 traffic forwarding
-  sysctl: name=net.ipv4.ip_forward value=1
+  sysctl: name=net.ipv4.ip_forward value=1 sysctl_set=yes state=present reload=yes
+
+# We need this to enable the "ip_forward" without reboot
+- name: Enable IPv4 traffic forwarding - (/proc/sys/net/ipv4/ip_forward)
+  command: echo 1 > /proc/sys/net/ipv4/ip_forward
+
+- name:  Openvpn | Show the iptables rules
+  shell: iptables -n -t nat -L
+  register: iptables_nat_rules
+  always_run: yes
 
 - name: Allow OpenVPN through the firewall
   command: "{{ item }}"
@@ -130,6 +142,12 @@
     - iptables -A FORWARD -s 10.8.0.0/24 -j ACCEPT
     - iptables -A FORWARD -j REJECT
     - iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+  when: iptables_nat_rules.stdout.find("MASQUERADE") == -1
+  register: iptables_nat_rule_added
+
+- name: Openvpn | Save NAT iptables rules
+  command: service iptables-persistent save
+  when: iptables_nat_rule_added.changed
 
 - name: Allow OpenVPN through ufw
   ufw: rule=allow port={{ openvpn_port }} proto={{ openvpn_protocol }}
@@ -150,18 +168,12 @@
   copy: src=etc_pam.d_openvpn dest=/etc/pam.d/openvpn
   notify: restart openvpn
 
-- name: Copy the ca.crt and ta.key files that clients will need in order to connect to the OpenVPN server
-  command: cp {{ openvpn_path }}/{{ item[1] }} {{ openvpn_path }}/{{ item[0] }}
-  with_nested:
-    - openvpn_clients
-    - ["ca.crt", "ta.key"]
-
 - name: Retrieve the files that clients will need in order to connect to the OpenVPN server
-  fetch: src={{ openvpn_path }}/{{ item[0] }}/{{ item[1] }}
-         dest=/tmp/sovereign-openvpn-files
+  fetch: src={{ openvpn_path }}/{{ item[0] }}/{{ item[1] }} flat=yes
+         dest=clients/{{ item[0] }}.ovpn
   with_nested:
     - openvpn_clients
-    - ["client.crt", "client.key", "ca.crt", "ta.key", "{{ openvpn_server }}.ovpn"]
+    - ["{{ openvpn_server }}.ovpn"]
 
 - pause: seconds=5
-         prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."
+         prompt="You are ready to set up your OpenVPN clients. The files that you need are in the same directory from where you run the playbook. Press any key to continue..."
