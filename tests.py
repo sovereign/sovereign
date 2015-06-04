@@ -10,10 +10,8 @@ TEST_ADDRESS = 'sovereign@sovereign.local'
 TEST_PASSWORD = 'foo'
 CA_BUNDLE = 'roles/common/files/wildcard_ca.pem'
 
-
 socket.setdefaulttimeout(5)
 os.environ['REQUESTS_CA_BUNDLE'] = CA_BUNDLE
-
 
 class SSHTests(unittest.TestCase):
     def test_ssh_banner(self):
