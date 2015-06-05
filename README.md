@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sovereign/sovereign.svg?branch=master)](https://travis-ci.org/sovereign/sovereign)
+[![Build Status](https://travis-ci.org/sovereign/sovereign.svg?branch=jessie)](https://travis-ci.org/sovereign/sovereign)
 
 Introduction
 ============
