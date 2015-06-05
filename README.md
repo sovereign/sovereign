@@ -1,34 +1,20 @@
-[![Build Status](https://travis-ci.org/al3x/sovereign.svg?branch=master)](https://travis-ci.org/al3x/sovereign)
+[![Build Status](https://travis-ci.org/sovereign/sovereign.svg?branch=master)](https://travis-ci.org/sovereign/sovereign)
 
 Introduction
 ============
 
-Sovereign is a set of [Ansible](http://ansibleworks.com) playbooks that you can use to build and maintain your own [personal cloud](http://www.urbandictionary.com/define.php?term=clown%20computing) (I know I know). It’s based entirely on open source software, so you’re in control.
+Sovereign is a set of [Ansible](http://ansibleworks.com) playbooks that you can use to build and maintain your own [personal cloud](http://www.urbandictionary.com/define.php?term=clown%20computing) based entirely on open source software, so you’re in control.
 
-If you’ve never used Ansible before, you a) are in for a treat and b) might find these playbooks useful to learn from, since they show off a fair bit of what the tool can do.
+If you’ve never used Ansible before, you might find these playbooks useful to learn from, since they show off a fair bit of what the tool can do.
 
-Background and Motivations
---------------------------
+The original author's [background and motivations](https://github.com/sovereign/sovereign/wiki/Background-and-Motivations) might be of interest. tl;dr: frustrations with Google Apps and concerns about privacy and long-term support.
 
-I had been a paying Google Apps customer for personal and corporate use since the service was in beta. Until several weeks ago, that is. I was about to set up another Google Apps account for a new project when I stopped to consider what I would be funding with my USD \$50 per user per year:
-
-1.  [A seriously questionable privacy track record](https://en.wikipedia.org/wiki/Criticism_of_Google#Privacy).
-2.  [A dwindling commitment to open standards](https://www.eff.org/deeplinks/2013/05/google-abandons-open-standards-instant-messaging).
-3.  [A lack of long-term commitment to products](http://www.quora.com/Google-Products/What-are-all-the-Google-products-that-have-been-shut-down).
-4.  Development of Google+: a cynical and [unimaginative Facebook ripoff](http://gigaom.com/2012/03/15/google-plus-the-problem-isnt-design-its-a-lack-of-demand/) that’s [intruding into progressively more Google products](http://bits.blogs.nytimes.com/2012/03/06/google-defending-google-plus-shares-usage-numbers/?_r=0).
-
-To each her/his own, but personally I saw little reason to continue participating in the Google ecosystem. It had been years since I last ran my own server for email and such, but it’s only gotten cheaper and easier to do so. Plus, none of the commercial alternatives I looked at provided all the services I was looking for.
-
-Rather than writing up a long and hard-to-follow set of instructions, I decided to share my server setup in a format that you can more or less just clone, configure, and run. Ansible seemed like the most appropriate way to do that: it’s simple, straightforward, and easy to pick up.
-
-I’ve been using this setup for about a month now and it’s been great. It’s also replaced some non-Google services I used, saving me money and making me feel like I’ve got a little more privacy.
-
-A big chunk of the initial version was inspired by [this post by Drew Crawford](http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/). Unlike Drew, my goal is not “NSA-proofing” email, just providing a reasonable alternative to Google Apps that isn’t wildly insecure. If you need serious privacy and security (ex: for dissident activities), Sovereign might be useful as a starting point but will require additional work. Be careful out there.
+Sovereign offers useful cloud services while being reasonably secure and low-maintenance. Use it to set up your server, SSH in every couple weeks, but mostly forget about it.
 
 Services Provided
 -----------------
 
-What do you get if you point this thing at a VPS? All kinds of good stuff!
+What do you get if you point Sovereign at a server? All kinds of good stuff!
 
 -   [IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol) over SSL via [Dovecot](http://dovecot.org/), complete with full text search provided by [Solr](https://lucene.apache.org/solr/).
 -   [POP3](https://en.wikipedia.org/wiki/Post_Office_Protocol) over SSL, also via Dovecot
@@ -58,8 +44,6 @@ What do you get if you point this thing at a VPS? All kinds of good stuff!
 -   [Newebe](http://newebe.org), a social network.
 -   Read-it-later via [Wallabag](https://www.wallabag.org/)
 -   A bunch of nice-to-have tools like [mosh](http://mosh.mit.edu) and [htop](http://htop.sourceforge.net) that make life with a server a little easier.
-
-No setup is perfect, but the general idea is to provide a bunch of useful services while being reasonably secure and low-maintenance. Set it up, SSH in every couple weeks, but mostly forget about it.
 
 Don’t want one or more of the above services? Comment out the relevant role in `site.yml`. Or get more granular and comment out the associated `include:` directive in one of the playbooks.
 
@@ -233,12 +217,12 @@ Finally, sign into ownCloud to set it up. You should select PostgreSQL as the co
 How To Use Your New Personal Cloud
 ----------------------------------
 
-We’re collecting known-good client setups [on our wiki](https://github.com/al3x/sovereign/wiki/Usage).
+We’re collecting known-good client setups [on our wiki](https://github.com/sovereign/sovereign/wiki/Usage).
 
 Troubleshooting
 ---------------
 
-If you run into an errors, please check the [wiki page](https://github.com/al3x/sovereign/wiki/Troubleshooting). If the problem you encountered, is not listed, please go ahead and [create an issue](https://github.com/al3x/sovereign/issues/new). If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
+If you run into an errors, please check the [wiki page](https://github.com/sovereign/sovereign/wiki/Troubleshooting). If the problem you encountered, is not listed, please go ahead and [create an issue](https://github.com/sovereign/sovereign/issues/new). If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
 
 ### Reboots
 
@@ -252,15 +236,3 @@ IRC
 ===
 
 Ask questions and provide feedback in `#sovereign` on [Freenode](http://freenode.net).
-
-Contributing
-============
-
-You may want to set up a [local development environment](https://github.com/al3x/sovereign/wiki/Development-Environment) so that you don’t have to test on your real server.
-
-If you improve one of the provided playbooks or add an exciting new one, send a pull request. Everyone benefits.
-
-License
--------
-
-Original content is [GPLv3](http://gplv3.fsf.org), same as Ansible. All files and templates based on third-party software should be considered under their respective licenses.
