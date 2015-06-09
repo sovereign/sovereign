@@ -2,7 +2,18 @@
   apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main'
   when: ansible_distribution_release == 'wheezy'
 
-- name: Install Dovecot and related packages
+- name: Install Dovecot and related packages on Debian 7
+  apt: pkg={{ item }} update_cache=yes state=installed default_release=wheezy-backports
+  with_items:
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-lmtpd
+    - dovecot-managesieved
+    - dovecot-pgsql
+    - dovecot-pop3d
+  when: ansible_distribution_release == 'wheezy'
+
+- name: Install Dovecot and related packages on distributions other than Debian 7
   apt: pkg={{ item }} update_cache=yes state=installed
   with_items:
     - dovecot-core
@@ -11,6 +22,7 @@
     - dovecot-managesieved
     - dovecot-pgsql
     - dovecot-pop3d
+  when: ansible_distribution_release != 'wheezy'
 
 - name: Install Dovecot Postgres dependency for distributions other than Ubuntu Trusty
   apt: pkg={{ item }} state=installed
