@@ -1,8 +1,16 @@
-- name: Install Solr and related packages
+- name: Install Solr and related packages on wheezy from backports
+  apt: pkg={{ item }} state=installed default_release=wheezy-backports
+  with_items:
+    - dovecot-solr
+    - solr-tomcat
+  when: ansible_distribution_release == 'wheezy'
+
+- name: Install Solr and related packages on distributions other than wheezy
   apt: pkg={{ item }} state=installed
   with_items:
     - dovecot-solr
     - solr-tomcat
+  when: ansible_distribution_release != 'wheezy'
 
 - name: Work around Debian bug and copy Solr schema file into place
   copy: src=solr-schema.xml dest=/etc/solr/conf/schema.xml group=root owner=root

@@ -1,10 +1,20 @@
-- name: Install dspam and related packages
+- name: Install dspam and related packages on wheezy
+  apt: pkg={{ item }} state=installed default_release=wheezy-backports
+  with_items:
+    - dovecot-antispam
+    - dovecot-sieve
+    - dspam
+    - postfix-pcre
+  when: ansible_distribution_release == 'wheezy'
+
+- name: Install dspam and related packages on distributions other than wheezy
   apt: pkg={{ item }} state=installed
   with_items:
     - dovecot-antispam
     - dovecot-sieve
     - dspam
     - postfix-pcre
+  when: ansible_distribution_release != 'wheezy'
 
 - name: Create dspam directory
   file: state=directory path=/decrypted/dspam group=dspam owner=dspam
