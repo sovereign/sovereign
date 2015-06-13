@@ -48,17 +48,27 @@
            chdir=/var/www/wallabag
            creates=/var/www/wallabag/vendor/autoload.php
 
-- name: Set wallabag permissions
-  file: owner=www-data
+- name: Set wallabag ownership
+  file: owner=root
         group=www-data
         path=/var/www/wallabag
         recurse=yes
         state=directory
 
+# the httpd only needs write access to the wallabag assets, cache and db directories
+- name: Set wallabag assets, cache and db permissions
+  file: path=/var/www/wallabag/{{ item }}
+        mode=0775
+        state=directory
+  with_items:
+    - assets
+    - cache
+    - db
+
 - name: Create the configuration file
   template: src=var_www_wallabag_inc_poche_config.inc.php.j2
             dest=/var/www/wallabag/inc/poche/config.inc.php
-            owner=www-data
+            owner=root
             group=www-data
 
 - name: Rename existing Apache wallabag virtualhost

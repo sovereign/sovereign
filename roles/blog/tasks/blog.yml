@@ -1,5 +1,5 @@
 - name: Create directory for blog HTML
-  file: state=directory path=/var/www/{{ domain }} group=www-data owner=www-data
+  file: state=directory path=/var/www/{{ domain }} group=www-data owner={{ main_user_name }}
 
 - name: Rename existing Apache blog virtualhost
   command: mv /etc/apache2/sites-available/{{ domain }} /etc/apache2/sites-available/{{ domain }}.conf removes=/etc/apache2/sites-available/{{ domain }}
