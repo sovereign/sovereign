@@ -43,10 +43,6 @@
   action: command dpkg-reconfigure -f noninteractive tzdata
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: Install unattended upgrades (Debian/Ubuntu only)
-  apt: pkg=unattended-upgrades state=installed
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
 
