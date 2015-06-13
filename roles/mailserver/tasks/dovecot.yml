@@ -24,17 +24,17 @@
     - dovecot-pop3d
   when: ansible_distribution_release != 'wheezy'
 
-- name: Install Dovecot Postgres dependency for distributions other than Ubuntu Trusty
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - postgresql-9.1
-  when: ansible_distribution_release != 'trusty'
+- name: Install Postgres 9.1 for Dovecot on older distributions
+  apt: pkg=postgresql-9.1 state=present
+  when: ansible_distribution_release != 'trusty' and ansible_distribution_release != 'jessie'
 
-- name: Install Dovecot Postgres dependency for Ubuntu trusty
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - postgresql-9.3
+- name: Install Postgres 9.3 for Dovecot on Ubuntu Trusty
+  apt: pkg=postgresql-9.3 state=present
   when: ansible_distribution_release == 'trusty'
+
+- name: Install Postgres 9.4 for Dovecot on Debian Jessie
+  apt: pkg=postgresql-9.4 state=present
+  when: ansible_distribution_release == 'jessie'
 
 - name: Create vmail group
   group: name=vmail state=present gid=5000
