@@ -1,9 +1,22 @@
-- name: Install collectd dependencies
+- name: Add wheezy-backports to be compatible with Dovecot packages on Debian 7
+  apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main'
+  when: ansible_distribution_release == 'wheezy'
+
+- name: Install collectd dependencies on wheezy from backports
+  apt: pkg={{ item }} state=installed default_release=wheezy-backports
+  with_items:
+    - libcurl4-openssl-dev
+    - librrd2-dev
+    - python-dev
+  when: ansible_distribution_release == 'wheezy'
+
+- name: Install collectd dependencies on distributions other than wheezy
   apt: pkg={{ item }} state=installed
   with_items:
     - libcurl4-openssl-dev
     - librrd2-dev
     - python-dev
+  when: ansible_distribution_release != 'wheezy'
 
 - name: Download collectd
   get_url: url=http://collectd.org/files/collectd-{{collectd_version}}.tar.gz

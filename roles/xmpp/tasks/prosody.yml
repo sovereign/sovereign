@@ -8,6 +8,10 @@
 - name: Install Prosody from official repository
   apt: pkg=prosody update_cache=yes
 
+- name: Install lua-sec 0.5+
+  apt: pkg=lua-sec update_cache=yes
+  when: ansible_distribution_release == 'trusty' or ansible_distribution_release == 'jessie'
+
 - name: Add prosody user to ssl-cert group
   user: name=prosody groups=ssl-cert append=yes
 

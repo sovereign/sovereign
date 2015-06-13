@@ -8,7 +8,7 @@
 
 # only data/cache, data/favicons, data/logs, data/thumbnails, data/sqlite public/ should be writeable by httpd
 - name: Set selfoss permission
-  action: file path=/var/www/selfoss/{{ item }} permission=775
+  action: file path=/var/www/selfoss/{{ item }} mode=0775
   with_items:
     - data/cache
     - data/favicons
