@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
   #
 
   config.vm.define "debian", primary: true do |debian|
-    debian.vm.box = "box-cutter/debian76"
+    debian.vm.box = "box-cutter/debian78"
   end
 
   #
