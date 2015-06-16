@@ -65,7 +65,7 @@ Installation
 
 Generate a private key and a certificate signing request (CSR):
 
-    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -out mycert.csr
+    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -sha256 -out mycert.csr
 
 Purchase a wildcard cert from a certificate authority, such as [Positive SSL](https://positivessl.com) or [AlphaSSL](https://www.alphassl.com). You will provide them with the contents of your CSR, and in return they will give you your signed public certificate. Place the certificate in `roles/common/files/wildcard_public_cert.crt`.
 
@@ -81,7 +81,7 @@ Purchasing SSL certs, and wildcard certs specifically, can be a significant fina
 
 To create a self-signed SSL cert, run the following commands:
 
-    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -out mycert.csr
+    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -sha256 -out mycert.csr
     openssl x509 -req -days 365 -in mycert.csr -signkey roles/common/files/wildcard_private.key -out roles/common/files/wildcard_public_cert.crt
     cp roles/common/files/wildcard_public_cert.crt roles/common/files/wildcard_ca.pem
 
