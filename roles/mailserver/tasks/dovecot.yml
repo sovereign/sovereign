@@ -3,7 +3,7 @@
   when: ansible_distribution_release == 'wheezy'
 
 - name: Install Dovecot and related packages on Debian 7
-  apt: pkg={{ item }} update_cache=yes state=installed default_release=wheezy-backports
+  apt: pkg={{ item }} update_cache=yes state=latest default_release=wheezy-backports
   with_items:
     - dovecot-core
     - dovecot-imapd
