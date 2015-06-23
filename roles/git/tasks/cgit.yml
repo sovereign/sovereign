@@ -5,6 +5,8 @@
     - groff
     - libssl-dev
     - python-pip
+  tags:
+    - deps
 
 - name: Install cgit pip dependencies
   pip: name={{ item }}

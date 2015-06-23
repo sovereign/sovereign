@@ -3,12 +3,18 @@
 - name: Set up closest mirror autoselect (ubuntu-only)
   template: src=apt_sources.list.j2 dest=/etc/apt/sources.list
   when: ansible_distribution == 'Ubuntu'
+  tags:
+    - deps
 
 - name: Update apt cache
   apt: update_cache=yes
+  tags:
+    - deps
 
 - name: Upgrade all safe packages
   apt: upgrade=safe
+  tags:
+    - deps
 
 - name: Install necessities and nice-to-haves
   apt: pkg={{ item }} state=installed
@@ -32,6 +38,8 @@
     - molly-guard
     - vim
     - zsh
+  tags:
+    - deps
 
 - name: Set timezone to UTC
   action: shell echo Etc/UTC > /etc/timezone

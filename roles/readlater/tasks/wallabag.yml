@@ -20,6 +20,8 @@
     - php5-mcrypt
     - php5-pgsql
     - php5-tidy
+  tags:
+    - deps
 
 - name: Create database user for wallabag
   postgresql_user: login_host=localhost

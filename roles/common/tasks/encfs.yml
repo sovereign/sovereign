@@ -4,6 +4,8 @@
     - encfs
     - fuse
     - libfuse-dev
+  tags:
+    - deps
 
 - name: Create encrypted directory
   file: state=directory path=/encrypted
