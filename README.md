@@ -182,6 +182,9 @@ To run just one or more piece, use tags. I try to tag all my includes for easy i
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there’s no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I’ve tried to add comments where manual intervention is necessary.
 
+The `deps` tag installs dependencies, the tagged tasks do not rely on the user settings (`vars/user.yml`).
+You might find that very convenient for cloud/Docker images.
+
 ### 6. Set up DNS
 
 If you’ve just bought a new domain name, point it at [Linode’s DNS Manager](https://library.linode.com/dns-manager) or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you’re using an existing domain that’s already managed elsewhere, you can probably just modify a few records.
