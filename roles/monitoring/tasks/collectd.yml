@@ -2,7 +2,7 @@
   apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main'
   when: ansible_distribution_release == 'wheezy'
   tags:
-    - deps
+    - dependencies
 
 - name: Install collectd dependencies on wheezy from backports
   apt: pkg={{ item }} state=installed default_release=wheezy-backports
@@ -12,7 +12,7 @@
     - python-dev
   when: ansible_distribution_release == 'wheezy'
   tags:
-    - deps
+    - dependencies
 
 - name: Install collectd dependencies on distributions other than wheezy
   apt: pkg={{ item }} state=installed
@@ -22,7 +22,7 @@
     - python-dev
   when: ansible_distribution_release != 'wheezy'
   tags:
-    - deps
+    - dependencies
 
 - name: Download collectd
   get_url: url=http://collectd.org/files/collectd-{{collectd_version}}.tar.gz

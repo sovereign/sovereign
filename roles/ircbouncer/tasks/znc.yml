@@ -16,7 +16,7 @@
     - python3-dev
     - swig
   tags:
-    - deps
+    - dependencies
 
 - name: Download znc release
   get_url: url=http://znc.in/releases/archive/znc-{{ znc_version }}.tar.gz dest=/root/znc-{{ znc_version }}.tar.gz

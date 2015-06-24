@@ -5,7 +5,7 @@
     - solr-tomcat
   when: ansible_distribution_release == 'wheezy'
   tags:
-    - deps
+    - dependencies
 
 - name: Install Solr and related packages on distributions other than wheezy
   apt: pkg={{ item }} state=installed
@@ -14,7 +14,7 @@
     - solr-tomcat
   when: ansible_distribution_release != 'wheezy'
   tags:
-    - deps
+    - dependencies
 
 - name: Work around Debian bug and copy Solr schema file into place
   copy: src=solr-schema.xml dest=/etc/solr/conf/schema.xml group=root owner=root

@@ -2,19 +2,19 @@
   apt: pkg=postgresql-9.1 state=present
   when: ansible_distribution_release != 'trusty' and ansible_distribution_release != 'jessie'
   tags:
-    - deps
+    - dependencies
 
 - name: Install Postgres 9.3 on Ubuntu Trusty
   apt: pkg=postgresql-9.3 state=present
   when: ansible_distribution_release == 'trusty'
   tags:
-    - deps
+    - dependencies
 
 - name: Install Postgres 9.4 on Debian Jessie
   apt: pkg=postgresql-9.4 state=present
   when: ansible_distribution_release == 'jessie'
   tags:
-    - deps
+    - dependencies
 
 - name: Install Postfix and related packages
   apt: pkg={{ item }} state=installed
@@ -27,7 +27,7 @@
     - python-psycopg2
     - sasl2-bin
   tags:
-    - deps
+    - dependencies
 
 - name: Set postgres password
   command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"

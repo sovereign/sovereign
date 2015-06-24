@@ -4,7 +4,7 @@
   changed_when: "tarnsap_installed.stderr != ''"
   ignore_errors: yes
   tags:
-    - deps
+    - dependencies
 
 - name: Install dependencies for Tarsnap
   when: tarnsap_installed|failed
@@ -14,7 +14,7 @@
     - libssl-dev
     - zlib1g-dev
   tags:
-    - deps
+    - dependencies
 
 - name: Download the current tarsnap code signing key
   when: tarnsap_installed|failed

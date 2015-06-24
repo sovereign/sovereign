@@ -21,7 +21,7 @@
     - php5-pgsql
     - php5-tidy
   tags:
-    - deps
+    - dependencies
 
 - name: Create database user for wallabag
   postgresql_user: login_host=localhost

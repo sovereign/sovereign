@@ -6,7 +6,7 @@
     - libssl-dev
     - python-pip
   tags:
-    - deps
+    - dependencies
 
 - name: Install cgit pip dependencies
   pip: name={{ item }}

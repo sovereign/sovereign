@@ -7,7 +7,7 @@
     - opendkim
     - opendkim-tools
   tags:
-    - deps
+    - dependencies
 
 - name: Create OpenDKIM config directory
   file: state=directory path=/etc/opendkim group=opendkim owner=opendkim

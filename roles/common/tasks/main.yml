@@ -4,17 +4,17 @@
   template: src=apt_sources.list.j2 dest=/etc/apt/sources.list
   when: ansible_distribution == 'Ubuntu'
   tags:
-    - deps
+    - dependencies
 
 - name: Update apt cache
   apt: update_cache=yes
   tags:
-    - deps
+    - dependencies
 
 - name: Upgrade all safe packages
   apt: upgrade=safe
   tags:
-    - deps
+    - dependencies
 
 - name: Install necessities and nice-to-haves
   apt: pkg={{ item }} state=installed
@@ -39,7 +39,7 @@
     - vim
     - zsh
   tags:
-    - deps
+    - dependencies
 
 - name: Set timezone to UTC
   action: shell echo Etc/UTC > /etc/timezone

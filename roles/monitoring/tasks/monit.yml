@@ -8,7 +8,7 @@
 - name: Install monit
   apt: pkg=monit state=installed
   tags:
-    - deps
+    - dependencies
 
 - name: Copy monit master config file into place
   copy: src=etc_monit_monitrc dest=/etc/monit/monitrc

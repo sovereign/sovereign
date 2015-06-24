@@ -16,7 +16,7 @@
     - python-lxml
     - supervisor
   tags:
-    - deps
+    - dependencies
 
 - name: Install Newebe
   pip: name='git+https://github.com/gelnior/newebe.git#egg=newebe'

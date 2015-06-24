@@ -4,7 +4,7 @@
     - libdate-manip-perl
     - logwatch
   tags:
-    - deps
+    - dependencies
 
 - name: Configure logwatch
   template: src=etc_logwatch_conf_logwatch.conf.j2 dest=/etc/logwatch/conf/logwatch.conf

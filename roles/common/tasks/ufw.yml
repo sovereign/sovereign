@@ -5,7 +5,7 @@
 - name: Install ufw
   apt: pkg=ufw state=present
   tags:
-    - deps
+    - dependencies
 
 - name: Deny everything
   ufw: policy=deny
