@@ -4,6 +4,8 @@
     - fail2ban
     - lynis
     - rkhunter
+  tags:
+    - dependencies
 
 - name: Copy fail2ban configuration into place
   template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local

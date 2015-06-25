@@ -1,9 +1,13 @@
 - name: Add backports for Roundcube on Debian
   lineinfile: dest=/etc/apt/sources.list line="deb http://http.debian.net/debian wheezy-backports main"
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
   
 - name: Update apt cache for backports
   apt: update_cache=yes
+  tags:
+    - dependencies
 
 - name: Install Roundcube from wheezy-backports
   apt: pkg={{ item }} state=latest default_release=wheezy-backports
@@ -12,6 +16,8 @@
   - roundcube-pgsql
   - roundcube-plugins
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Install Roundcube on Ubuntu 14.04 LTS
   apt: pkg={{ item }} state=latest
@@ -20,6 +26,8 @@
   - roundcube-pgsql
   - roundcube-plugins
   when: ansible_distribution_release == 'trusty'
+  tags:
+    - dependencies
 
 - name: Configure Roundcube database
   template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes

@@ -6,6 +6,8 @@
     - dspam
     - postfix-pcre
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Install dspam and related packages on distributions other than wheezy
   apt: pkg={{ item }} state=installed
@@ -15,6 +17,8 @@
     - dspam
     - postfix-pcre
   when: ansible_distribution_release != 'wheezy'
+  tags:
+    - dependencies
 
 - name: Create dspam directory
   file: state=directory path=/decrypted/dspam group=dspam owner=dspam

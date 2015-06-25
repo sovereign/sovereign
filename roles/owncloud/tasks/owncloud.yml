@@ -5,10 +5,14 @@
 - name: Install Postgres 9.1 on distributions other than Ubuntu Trusty
   apt: pkg=postgresql-9.1 state=present
   when: ansible_distribution_release != 'trusty'
+  tags:
+    - dependencies
 
 - name: Install Postgres 9.3 on Ubuntu Trusty
   apt: pkg=postgresql-9.3 state=present
   when: ansible_distribution_release == 'trusty'
+  tags:
+    - dependencies
 
 - name: Install ownCloud dependencies
   apt: pkg={{ item }} state=present
@@ -16,6 +20,8 @@
     - libapache2-mod-php5
     - php-apc
     - python-psycopg2
+  tags:
+    - dependencies
 
 - name: Set postgres password
   command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
@@ -29,29 +35,43 @@
 - name: Ensure repository key for ownCloud is in place for Debian 7
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Add ownCloud OpenSuSE repository for Debian 7
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Ensure repository key for ownCloud is in place for Ubuntu 14.04
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key state=present
   when: ansible_distribution_release == 'trusty'
+  tags:
+    - dependencies
 
 - name: Add ownCloud OpenSuSE repository for Ubuntu 14.04
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/ /'
   when: ansible_distribution_release == 'trusty'
+  tags:
+    - dependencies
 
 - name: Ensure repository key for ownCloud is in place for Ubuntu 12.04
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/Release.key state=present
   when: ansible_distribution_release == 'precise'
+  tags:
+    - dependencies
 
 - name: Add ownCloud OpenSuSE repository for Ubuntu 12.04
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/ /'
   when: ansible_distribution_release == 'precise'
+  tags:
+    - dependencies
 
 - name: Install ownCloud (possibly from OpenSuSE repository)
   apt: pkg=owncloud update_cache=yes
+  tags:
+    - dependencies
 
 - name: Owncloud www directory
   file: state=directory path=/var/www/owncloud
