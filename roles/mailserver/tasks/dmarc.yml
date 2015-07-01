@@ -1,0 +1,38 @@
+- name: Install OpenDMARC milter
+  apt: pkg=opendmarc state=installed update_cache=yes
+
+- name: Copy OpenDMARC configuration file into place
+  template: src=etc_opendmarc.conf.j2 dest=/etc/opendmarc.conf owner=root group=root
+  notify: restart opendmarc
+
+- name: Create OpenDMARC configuration directory
+  file: state=directory path=/etc/opendmarc
+
+- name: Copy OpenDMARC ignore hosts file into place
+  template: src=etc_opendmarc_ignore.hosts.j2 dest=/etc/opendmarc/ignore.hosts owner=root group=root
+
+- name: Copy OpenDMARC defaults file into place
+  copy: src=etc_default_opendmarc dest=/etc/default/opendmarc owner=root group=root
+  notify:
+    - restart opendmarc
+    - restart postfix
+
+- name: Copy OpenDMARC database schema file into place
+  copy: src=etc_opendmarc_import.sql dest=/etc/opendmarc/import.sql owner=root group=root
+
+- name: Create database user for OpenDMARC reports
+  mysql_user: user={{ mail_db_opendmarc_username }} password={{ mail_db_opendmarc_password }} state=present priv="opendmarc.*:ALL"
+
+- name: Create database for OpenDMARC reports
+  mysql_db: name={{ mail_db_opendmarc_database }} state=present
+
+- name: Import database schema for OpenDMARC reports
+  mysql_db: name={{ mail_db_opendmarc_database }} state=import target=/etc/opendmarc/import.sql
+  tags: import_mysql_postfix
+
+- name: Copy nightly OpenDMARC report generation script into place
+  template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="755"
+
+- name: Activate OpenDMARC report cronjob
+  cron: name="OpenDMARC report" hour="2" minute="0" job="/bin/bash /etc/opendmarc/report.sh >> /var/log/opendmarc_report.log"
+

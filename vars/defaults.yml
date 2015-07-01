@@ -63,6 +63,9 @@ mail_db_database: mailserver
 # mail_virtual_domains: (required)
 # mail_virtual_users: (required)
 # mail_virtual_aliases: (required)
+mail_db_opendmarc_username: opendmarc
+# mail_db_opendmarc_password: (required)
+mail_db_opendmarc_database: opendmarc
 
 # z-push
 zpush_version: 2.1.1-1788

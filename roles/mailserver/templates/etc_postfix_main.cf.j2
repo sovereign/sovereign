@@ -98,8 +98,8 @@ virtual_mailbox_maps = pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 virtual_alias_maps = pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf
 local_recipient_maps = $virtual_mailbox_maps
 
-# OpenDKIM
-smtpd_milters = inet:127.0.0.1:8891
+# OpenDKIM and OpenDMARC
+smtpd_milters = inet:127.0.0.1:8891,inet:127.0.0.1:54321
 non_smtpd_milters = $smtpd_milters
 milter_default_action = accept
 

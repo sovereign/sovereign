@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DB_SERVER='localhost'
+DB_USER='{{ mail_db_opendmarc_username }}'
+DB_PASS='{{ mail_db_opendmarc_password }}'
+DB_NAME='{{ mail_db_opendmarc_database }}'
+WORK_DIR='/var/run/opendmarc'
+REPORT_EMAIL='{{ admin_email }}'
+
+mv ${WORK_DIR}/opendmarc.dat ${WORK_DIR}/opendmarc_import.dat -f
+cat /dev/null > ${WORK_DIR}/opendmarc.dat
+
+/usr/sbin/opendmarc-import --dbhost=${DB_SERVER} --dbuser=${DB_USER} --dbpasswd=${DB_PASS} --dbname=${DB_NAME} --verbose < ${WORK_DIR}/opendmarc_import.dat
+
+{% for domain in mail_virtual_domains %}
+/usr/sbin/opendmarc-reports --dbhost=${DB_SERVER} --dbuser=${DB_USER} --dbpasswd=${DB_PASS} --dbname=${DB_NAME} --verbose --interval=86400 --report-email $REPORT_EMAIL --report-org '{{ domain.name }}'
+{% endfor %}
+
+/usr/sbin/opendmarc-expire --dbhost=${DB_SERVER} --dbuser=${DB_USER} --dbpasswd=${DB_PASS} --dbname=${DB_NAME} --verbose
