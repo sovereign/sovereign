@@ -53,6 +53,7 @@
   git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
        dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
        accept_hostkey=yes
+       version=master
 
 - name: Link plugins into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/{{ item }} dest=/var/lib/roundcube/plugins/{{ item }} force=yes
