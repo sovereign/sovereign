@@ -19,9 +19,9 @@
            dest=/root/cgit-{{ cgit_version }}.tar.xz
 
 - name: Decompress cgit source
-  command: tar xvfJ /root/cgit-{{ cgit_version }}.tar.xz
-           chdir=/root
-           creates=/root/cgit-{{ cgit_version }}/configure
+  unarchive: src=/root/cgit-{{ cgit_version }}.tar.xz
+             dest=/root copy=no
+             creates=/root/cgit-{{ cgit_version }}/configure
 
 - name: Build and install cgit
   shell: make get-git ; make ; make install

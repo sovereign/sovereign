@@ -42,7 +42,9 @@
     dest=/root/carddav_{{ carddav_version }}.tar.gz
 
 - name: Decompress carddav plugin source
-  command: tar xzf carddav_{{ carddav_version }}.tar.gz chdir=/root creates=/root/rcmcarddav-carddav_{{ carddav_version }}
+  unarchive: src=/root/carddav_{{ carddav_version }}.tar.gz
+             dest=/root copy=no
+             creates=/root/rcmcarddav-carddav_{{ carddav_version }}
 
 - name: Move carddav plugin files to /usr/share/roundcube/plugins/carddav
   command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav chdir=/root creates=/usr/share/roundcube/plugins/carddav
