@@ -3,7 +3,7 @@
   when: ansible_distribution_release == 'wheezy'
   tags:
     - dependencies
-  
+
 - name: Update apt cache for backports
   apt: update_cache=yes
   tags:
