@@ -23,9 +23,13 @@
 
 - name: Copy z-push source files to /usr/share/z-push
   shell: cp -R z-push-{{ zpush_version }}/* /usr/share/z-push/ chdir=/root
+  tags:
+    - skip_ansible_lint
 
 - name: Remove downloaded, temporary z-push source files
   shell: rm -rf z-push* chdir=/root
+  tags:
+    - skip_ansible_lint
 
 - name: Ensure z-push state and log directories are in place
   file: state=directory path={{ item }} owner=www-data group=www-data mode=755
