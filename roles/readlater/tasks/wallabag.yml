@@ -40,10 +40,14 @@
                  owner={{ wallabag_db_username }}
   notify: import wallabag sql
 
-- name: Build Composer
-  shell: curl -sS https://getcomposer.org/installer | php
-         chdir=/root
-         creates=/root/composer.phar
+- name: Get Composer installer
+  get_url: url=https://getcomposer.org/installer
+           dest=/tmp/composer-installer
+
+- name: Install Composer
+  command: php /tmp/composer-installer
+           chdir=/root
+           creates=/root/composer.phar
 
 - name: Initialize composer
   command: php /root/composer.phar install
