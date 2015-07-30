@@ -2,6 +2,7 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - fail2ban
+    - whois
     - lynis
     - rkhunter
   tags:
