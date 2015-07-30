@@ -38,7 +38,7 @@
   command: mv /etc/apache2/sites-available/cgit /etc/apache2/sites-available/cgit.conf removes=/etc/apache2/sites-available/cgit
 
 - name: Remove old sites-enabled/cgit symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/cgit removes=/etc/apache2/sites-enabled/cgit
+  file: path=/etc/apache2/sites-enabled/cgit state=absent
 
 - name: Configure the Apache HTTP server for cgit
   template: src=etc_apache2_sites-available_cgit.j2

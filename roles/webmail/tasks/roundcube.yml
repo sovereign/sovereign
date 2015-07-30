@@ -65,7 +65,7 @@
   command: mv /etc/apache2/sites-available/roundcube /etc/apache2/sites-available/roundcube.conf removes=/etc/apache2/sites-available/roundcube
 
 - name: Remove old sites-enabled/roundcube symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/roundcube removes=/etc/apache2/sites-enabled/roundcube
+  file: path=/etc/apache2/sites-enabled/roundcube state=absent
 
 - name: Configure the Apache HTTP server for roundcube
   template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes

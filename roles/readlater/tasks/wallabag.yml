@@ -81,7 +81,7 @@
   command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf removes=/etc/apache2/sites-available/wallabag
 
 - name: Remove old sites-enabled/wallabag symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/wallabag removes=/etc/apache2/sites-enabled/wallabag
+  file: path=/etc/apache2/sites-enabled/wallabag state=absent
 
 - name: Configure the Apache HTTP server for wallabag
   template: src=etc_apache2_sites-available_wallabag.j2
