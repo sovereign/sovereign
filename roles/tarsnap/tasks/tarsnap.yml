@@ -57,7 +57,9 @@
 
 - name: Decompress Tarsnap source
   when: tarnsap_installed|failed
-  command: tar xzf /root/tarsnap-autoconf-{{ tarsnap_version }}.tgz chdir=/root creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/COPYING
+  unarchive: src=/root/tarsnap-autoconf-{{ tarsnap_version }}.tgz
+             dest=/root copy=no
+             creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/COPYING
 
 - name: Configure Tarsnap for local build
   when: tarnsap_installed|failed

@@ -40,10 +40,14 @@
                  owner={{ wallabag_db_username }}
   notify: import wallabag sql
 
-- name: Build Composer
-  shell: curl -sS https://getcomposer.org/installer | php
-         chdir=/root
-         creates=/root/composer.phar
+- name: Get Composer installer
+  get_url: url=https://getcomposer.org/installer
+           dest=/tmp/composer-installer
+
+- name: Install Composer
+  command: php /tmp/composer-installer
+           chdir=/root
+           creates=/root/composer.phar
 
 - name: Initialize composer
   command: php /root/composer.phar install
@@ -77,7 +81,7 @@
   command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf removes=/etc/apache2/sites-available/wallabag
 
 - name: Remove old sites-enabled/wallabag symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/wallabag removes=/etc/apache2/sites-enabled/wallabag
+  file: path=/etc/apache2/sites-enabled/wallabag state=absent
 
 - name: Configure the Apache HTTP server for wallabag
   template: src=etc_apache2_sites-available_wallabag.j2
