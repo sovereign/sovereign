@@ -1,5 +1,8 @@
-- name: Install OpenDMARC milter
-  apt: pkg=opendmarc state=installed update_cache=yes
+- name: Install OpenDMARC milter and related packages
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+      - python-mysqldb
+      - opendmarc
 
 - name: Copy OpenDMARC configuration file into place
   template: src=etc_opendmarc.conf.j2 dest=/etc/opendmarc.conf owner=root group=root
