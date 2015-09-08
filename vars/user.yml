@@ -87,4 +87,3 @@ selfoss_password_hash: "TODO"
 # wallabag
 wallabag_salt: TODO
 wallabag_db_password: TODO
-
