@@ -88,5 +88,3 @@ selfoss_password_hash: "TODO"
 wallabag_salt: TODO
 wallabag_db_password: TODO
 
-mail_db_opendmarc_username: opendmarc
-mail_db_opendmarc_password: TODO
