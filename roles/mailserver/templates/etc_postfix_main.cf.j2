@@ -91,7 +91,9 @@ recipient_delimiter = +
 inet_interfaces = all
 
 # dovecot db
-virtual_transport = dovecot
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+mailbox_transport = lmtp:unix:private/dovecot-lmtp
+
 dovecot_destination_recipient_limit = 1
 virtual_mailbox_domains = pgsql:/etc/postfix/pgsql-virtual-mailbox-domains.cf
 virtual_mailbox_maps = pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
