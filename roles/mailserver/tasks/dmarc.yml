@@ -37,6 +37,9 @@
 - name: Copy nightly OpenDMARC report generation script into place
   template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="755"
 
+- name: Touch initial report dat file with correct permissions
+  file: path=/var/run/opendmarc/opendmarc.dat state=touch owner=opendmarc group=opendmarc
+
 - name: Activate OpenDMARC report cronjob
   cron: name="OpenDMARC report" hour="2" minute="0" job="/bin/bash /etc/opendmarc/report.sh >> /var/log/opendmarc_report.log"
 

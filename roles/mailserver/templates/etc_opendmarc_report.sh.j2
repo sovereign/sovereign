@@ -8,7 +8,8 @@ WORK_DIR='/var/run/opendmarc'
 REPORT_EMAIL='{{ admin_email }}'
 
 mv ${WORK_DIR}/opendmarc.dat ${WORK_DIR}/opendmarc_import.dat -f
-cat /dev/null > ${WORK_DIR}/opendmarc.dat
+touch ${WORK_DIR}/opendmarc.dat
+chown opendmarc:opendmarc ${WORK_DIR}/opendmarc.dat
 
 /usr/sbin/opendmarc-import --dbhost=${DB_SERVER} --dbuser=${DB_USER} --dbpasswd=${DB_PASS} --dbname=${DB_NAME} --verbose < ${WORK_DIR}/opendmarc_import.dat
 
