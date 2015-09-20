@@ -100,7 +100,7 @@ openvpn_protocol: "udp"
 # openvpn_clients: (required)
 
 # webmail
-webmail_domain: "mail.{{ domain }}"
+webmail_domain: "{{ mail_server_hostname }}"
 webmail_db_username: "roundcube"
 # webmail_db_password: (required)
 webmail_db_database: "roundcube"
