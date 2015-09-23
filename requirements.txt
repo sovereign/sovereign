@@ -1,2 +1,2 @@
-ansible==1.9.1
+ansible==1.9.3
 nose
