@@ -2,21 +2,10 @@
 # Installs the ownCloud personal cloud software
 # as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
 
-- name: Install Postgres 9.1 on distributions other than Ubuntu Trusty
-  apt: pkg=postgresql-9.1 state=present
-  when: ansible_distribution_release != 'trusty'
-  tags:
-    - dependencies
-
-- name: Install Postgres 9.3 on Ubuntu Trusty
-  apt: pkg=postgresql-9.3 state=present
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Install ownCloud dependencies
+- name: Install ownCloud  dependencies
   apt: pkg={{ item }} state=present
   with_items:
+    - postgres
     - libapache2-mod-php5
     - php-apc
     - python-psycopg2
@@ -38,45 +27,33 @@
   tags:
     - dependencies
 
-- name: Add ownCloud OpenSuSE repository for Debian 7
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
-  when: ansible_distribution_release == 'wheezy'
+- name: Add ownCloud OpenSuSE repository for Debian Jessie
+  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/Debian_8.0/ /'
+  when: ansible_distribution_release == 'jessie'
   tags:
     - dependencies
 
-- name: Ensure repository key for ownCloud is in place for Ubuntu 14.04
+- name: Ensure repository key for ownCloud is in place for Ubuntu Trusty
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key state=present
   when: ansible_distribution_release == 'trusty'
   tags:
     - dependencies
 
-- name: Add ownCloud OpenSuSE repository for Ubuntu 14.04
+- name: Add ownCloud OpenSuSE repository for Ubuntu Trusty
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/ /'
   when: ansible_distribution_release == 'trusty'
   tags:
     - dependencies
 
-- name: Ensure repository key for ownCloud is in place for Ubuntu 12.04
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/Release.key state=present
-  when: ansible_distribution_release == 'precise'
-  tags:
-    - dependencies
-
-- name: Add ownCloud OpenSuSE repository for Ubuntu 12.04
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/ /'
-  when: ansible_distribution_release == 'precise'
-  tags:
-    - dependencies
-
-- name: Install ownCloud (possibly from OpenSuSE repository)
+- name: Install ownCloud
   apt: pkg=owncloud update_cache=yes
   tags:
     - dependencies
 
-- name: Owncloud www directory
+- name: Ensure ownCloud directory is in place
   file: state=directory path=/var/www/owncloud
 
-- name: Store ownCloud data securely
+- name: Move ownCloud data to encrypted filesystem
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
 - file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
