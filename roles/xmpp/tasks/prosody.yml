@@ -3,7 +3,7 @@
   tags:
     - dependencies
 
-# Prosody supplies repo for sid, squeeze, wheezy, jessie, trusty, saucy, raring, quantal, precise and lucid
+# Prosody supplies repo for: sid, squeeze, wheezy, jessie, trusty, saucy, raring, quantal, precise and lucid
 - name: Add Prosody Debian/Ubuntu repository
   apt_repository: repo="deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
   tags:
@@ -19,7 +19,6 @@
   when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'precise'
   tags:
     - dependencies
-
 
 - name: Install lua-sec 0.5+
   apt: pkg=lua-sec update_cache=yes
