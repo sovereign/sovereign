@@ -7,23 +7,10 @@
 - name: Add www-data to the git group
   user: name=www-data groups=git append=yes
 
-- name: Download gitolite release
-  git: repo=git://github.com/sitaramc/gitolite
-       dest=/home/git/gitolite
-       version=v{{ gitolite_version }}
-       accept_hostkey=yes
-
-- name: Give git user file permissions
-  file: path=/home/git/gitolite
-        state=directory
-        recurse=yes
-        owner=git
-        group=git
-
-- name: Install gitolite
-  command: ./gitolite/install -ln /usr/local/bin
-           chdir=/home/git
-           creates=/usr/local/bin/gitolite
+- name: Install gitolite3 package
+  apt: pkg=gitolite3 state=installed
+  tags:
+    - dependencies
 
 - name: Copy .gitolite.rc file
   copy: src=home_git_.gitolite.rc
