@@ -77,7 +77,7 @@ owncloud_db_username: owncloud
 owncloud_db_database: owncloud
 
 # tarsnap
-tarsnap_version: 1.0.35
+tarsnap_version: 1.0.36.1
 
 # vpn
 # openvpn_key_country: (required)
