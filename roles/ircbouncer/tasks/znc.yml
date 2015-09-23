@@ -15,12 +15,16 @@
     - pkg-config
     - python3-dev
     - swig
+  tags:
+    - dependencies
 
 - name: Download znc release
   get_url: url=http://znc.in/releases/archive/znc-{{ znc_version }}.tar.gz dest=/root/znc-{{ znc_version }}.tar.gz
 
 - name: Decompress znc source
-  command: tar xzf /root/znc-{{ znc_version }}.tar.gz chdir=/root creates=/root/znc-{{ znc_version }}/configure
+  unarchive: src=/root/znc-{{ znc_version }}.tar.gz
+             dest=/root copy=no
+             creates=/root/znc-{{ znc_version }}/configure
 
 - name: Build and install znc
   shell: ./configure --enable-python && make && make install executable=/bin/bash chdir=/root/znc-{{ znc_version }} creates=/usr/local/bin/znc

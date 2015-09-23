@@ -15,6 +15,8 @@
     - python-setuptools
     - python-lxml
     - supervisor
+  tags:
+    - dependencies
 
 - name: Install Newebe
   pip: name='git+https://github.com/gelnior/newebe.git#egg=newebe'

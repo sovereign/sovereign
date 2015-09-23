@@ -1,17 +1,37 @@
-- name: Install collectd dependencies
+- name: Add wheezy-backports to be compatible with Dovecot packages on Debian 7
+  apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main'
+  when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
+
+- name: Install collectd dependencies on wheezy from backports
+  apt: pkg={{ item }} state=installed default_release=wheezy-backports
+  with_items:
+    - libcurl4-openssl-dev
+    - librrd2-dev
+    - python-dev
+  when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
+
+- name: Install collectd dependencies on distributions other than wheezy
   apt: pkg={{ item }} state=installed
   with_items:
     - libcurl4-openssl-dev
     - librrd2-dev
     - python-dev
+  when: ansible_distribution_release != 'wheezy'
+  tags:
+    - dependencies
 
 - name: Download collectd
   get_url: url=http://collectd.org/files/collectd-{{collectd_version}}.tar.gz
            dest=/root/collectd-{{collectd_version}}.tar.gz
 
 - name: Extract collectd
-  command: tar xzf collectd-{{collectd_version}}.tar.gz
-           chdir=/root creates=/root/collectd-{{collectd_version}}
+  unarchive: src=/root/collectd-{{collectd_version}}.tar.gz
+             dest=/root copy=no
+             creates=/root/collectd-{{collectd_version}}
 
 - name: Build and install collectd
   shell: ./configure ; make all ; make install
@@ -28,8 +48,9 @@
   when: collectd_librato_email|length > 0
 
 - name: Extract collectd-librato plugin
-  command: tar xzf collectd-librato-{{collectd_librato_version}}.tar.gz
-           chdir=/root creates=/root/collectd-librato-{{collectd_librato_version}}
+  unarchive: src=/root/collectd-librato-{{collectd_librato_version}}.tar.gz
+             dest=/root copy=no
+             creates=/root/collectd-librato-{{collectd_librato_version}}
   when: collectd_librato_email|length > 0
 
 - name: Install collectd-librato plugin

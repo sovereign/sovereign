@@ -5,6 +5,8 @@
     - groff
     - libssl-dev
     - python-pip
+  tags:
+    - dependencies
 
 - name: Install cgit pip dependencies
   pip: name={{ item }}
@@ -17,9 +19,9 @@
            dest=/root/cgit-{{ cgit_version }}.tar.xz
 
 - name: Decompress cgit source
-  command: tar xvfJ /root/cgit-{{ cgit_version }}.tar.xz
-           chdir=/root
-           creates=/root/cgit-{{ cgit_version }}/configure
+  unarchive: src=/root/cgit-{{ cgit_version }}.tar.xz
+             dest=/root copy=no
+             creates=/root/cgit-{{ cgit_version }}/configure
 
 - name: Build and install cgit
   shell: make get-git ; make ; make install
@@ -30,13 +32,13 @@
 - name: Copy cgitrc
   template: src=etc_cgitrc.j2 dest=/etc/cgitrc
             group=www-data
-            owner=www-data
+            owner=root
 
 - name: Rename existing Apache cgit virtualhost
   command: mv /etc/apache2/sites-available/cgit /etc/apache2/sites-available/cgit.conf removes=/etc/apache2/sites-available/cgit
 
 - name: Remove old sites-enabled/cgit symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/cgit removes=/etc/apache2/sites-enabled/cgit
+  file: path=/etc/apache2/sites-enabled/cgit state=absent
 
 - name: Configure the Apache HTTP server for cgit
   template: src=etc_apache2_sites-available_cgit.j2

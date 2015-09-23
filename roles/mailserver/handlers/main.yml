@@ -13,3 +13,6 @@
 - name: import sql postfix
   action: shell PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/import.sql --set ON_ERROR_STOP=1
   notify: restart postfix
+
+- name: restart opendmarc
+  service: name=opendmarc state=restarted

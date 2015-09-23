@@ -2,8 +2,11 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - fail2ban
+    - whois
     - lynis
     - rkhunter
+  tags:
+    - dependencies
 
 - name: Copy fail2ban configuration into place
   template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
@@ -19,7 +22,7 @@
 - name: Update sshd config for PFS and more secure defaults
   template: src=etc_ssh_sshd_config.j2 dest=/etc/ssh/sshd_config
   notify: restart ssh
-  
+
 - name: Update ssh config for more secure defaults
   template: src=etc_ssh_ssh_config.j2 dest=/etc/ssh/ssh_config
 

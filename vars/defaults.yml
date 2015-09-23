@@ -63,6 +63,9 @@ mail_db_database: mailserver
 # mail_virtual_domains: (required)
 # mail_virtual_users: (required)
 # mail_virtual_aliases: (required)
+mail_db_opendmarc_username: opendmarc
+# mail_db_opendmarc_password: (required)
+mail_db_opendmarc_database: opendmarc
 
 # z-push
 zpush_version: 2.1.1-1788
@@ -97,7 +100,7 @@ openvpn_protocol: "udp"
 # openvpn_clients: (required)
 
 # webmail
-webmail_domain: "mail.{{ domain }}"
+webmail_domain: "{{ mail_server_hostname }}"
 webmail_db_username: "roundcube"
 # webmail_db_password: (required)
 webmail_db_database: "roundcube"
@@ -123,7 +126,7 @@ gitolite_version: 3.5.3.1
 newebe_domain: "newebe.{{ domain }}"
 
 # wallabag
-wallabag_version: 1.7.1
+wallabag_version: 1.9.1
 wallabag_domain: "read.{{ domain }}"
 # wallabag_salt: (required)
 wallabag_db_username: wallabag

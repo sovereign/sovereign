@@ -1,9 +1,13 @@
 - name: Add backports for Roundcube on Debian
   lineinfile: dest=/etc/apt/sources.list line="deb http://http.debian.net/debian wheezy-backports main"
   when: ansible_distribution_release == 'wheezy'
-  
+  tags:
+    - dependencies
+
 - name: Update apt cache for backports
   apt: update_cache=yes
+  tags:
+    - dependencies
 
 - name: Install Roundcube from wheezy-backports
   apt: pkg={{ item }} state=latest default_release=wheezy-backports
@@ -12,6 +16,8 @@
   - roundcube-pgsql
   - roundcube-plugins
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Install Roundcube on Ubuntu 14.04 LTS
   apt: pkg={{ item }} state=latest
@@ -20,6 +26,8 @@
   - roundcube-pgsql
   - roundcube-plugins
   when: ansible_distribution_release == 'trusty'
+  tags:
+    - dependencies
 
 - name: Configure Roundcube database
   template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
@@ -34,7 +42,9 @@
     dest=/root/carddav_{{ carddav_version }}.tar.gz
 
 - name: Decompress carddav plugin source
-  command: tar xzf carddav_{{ carddav_version }}.tar.gz chdir=/root creates=/root/rcmcarddav-carddav_{{ carddav_version }}
+  unarchive: src=/root/carddav_{{ carddav_version }}.tar.gz
+             dest=/root copy=no
+             creates=/root/rcmcarddav-carddav_{{ carddav_version }}
 
 - name: Move carddav plugin files to /usr/share/roundcube/plugins/carddav
   command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav chdir=/root creates=/usr/share/roundcube/plugins/carddav
@@ -43,6 +53,7 @@
   git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
        dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
        accept_hostkey=yes
+       version=master
 
 - name: Link plugins into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/{{ item }} dest=/var/lib/roundcube/plugins/{{ item }} force=yes
@@ -54,7 +65,7 @@
   command: mv /etc/apache2/sites-available/roundcube /etc/apache2/sites-available/roundcube.conf removes=/etc/apache2/sites-available/roundcube
 
 - name: Remove old sites-enabled/roundcube symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/roundcube removes=/etc/apache2/sites-enabled/roundcube
+  file: path=/etc/apache2/sites-enabled/roundcube state=absent
 
 - name: Configure the Apache HTTP server for roundcube
   template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes

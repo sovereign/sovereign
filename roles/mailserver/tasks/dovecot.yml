@@ -1,9 +1,11 @@
 - name: Add wheezy-backports to get a reasonably current Dovecot on Debian 7
   apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main'
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Install Dovecot and related packages on Debian 7
-  apt: pkg={{ item }} update_cache=yes state=installed default_release=wheezy-backports
+  apt: pkg={{ item }} update_cache=yes state=latest default_release=wheezy-backports
   with_items:
     - dovecot-core
     - dovecot-imapd
@@ -12,6 +14,8 @@
     - dovecot-pgsql
     - dovecot-pop3d
   when: ansible_distribution_release == 'wheezy'
+  tags:
+    - dependencies
 
 - name: Install Dovecot and related packages on distributions other than Debian 7
   apt: pkg={{ item }} update_cache=yes state=installed
@@ -23,18 +27,26 @@
     - dovecot-pgsql
     - dovecot-pop3d
   when: ansible_distribution_release != 'wheezy'
+  tags:
+    - dependencies
 
-- name: Install Dovecot Postgres dependency for distributions other than Ubuntu Trusty
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - postgresql-9.1
-  when: ansible_distribution_release != 'trusty'
+- name: Install Postgres 9.1 for Dovecot on older distributions
+  apt: pkg=postgresql-9.1 state=present
+  when: ansible_distribution_release != 'trusty' and ansible_distribution_release != 'jessie'
+  tags:
+    - dependencies
 
-- name: Install Dovecot Postgres dependency for Ubuntu trusty
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - postgresql-9.3
+- name: Install Postgres 9.3 for Dovecot on Ubuntu Trusty
+  apt: pkg=postgresql-9.3 state=present
   when: ansible_distribution_release == 'trusty'
+  tags:
+    - dependencies
+
+- name: Install Postgres 9.4 for Dovecot on Debian Jessie
+  apt: pkg=postgresql-9.4 state=present
+  when: ansible_distribution_release == 'jessie'
+  tags:
+    - dependencies
 
 - name: Create vmail group
   group: name=vmail state=present gid=5000

@@ -4,6 +4,8 @@
 # ufw includes sensible icmp defaults
 - name: Install ufw
   apt: pkg=ufw state=present
+  tags:
+    - dependencies
 
 - name: Deny everything
   ufw: policy=deny

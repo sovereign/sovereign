@@ -1,66 +1,72 @@
 - name: Check if tarsnap {{ tarsnap_version }} is installed
   shell: tarsnap --version | grep {{ tarsnap_version }} --color=never
-  register: tarnsap_installed
-  changed_when: "tarnsap_installed.stderr != ''"
+  register: tarsnap_installed
+  changed_when: "tarsnap_installed.stderr != ''"
   ignore_errors: yes
+  tags:
+    - dependencies
 
 - name: Install dependencies for Tarsnap
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   apt: pkg={{ item }} state=installed
   with_items:
     - e2fslibs-dev
     - libssl-dev
     - zlib1g-dev
+  tags:
+    - dependencies
 
 - name: Download the current tarsnap code signing key
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   get_url:
     url=https://www.tarsnap.com/tarsnap-signing-key.asc
     dest=/root/tarsnap-signing-key.asc
 
 - name: Add the tarsnap code signing key to your list of keys
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   command:
     gpg --import tarsnap-signing-key.asc
     chdir=/root/
 
 - name: Download tarsnap SHA file
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   get_url:
     url="https://www.tarsnap.com/download/tarsnap-sigs-{{ tarsnap_version }}.asc"
     dest="/root/tarsnap-sigs-{{ tarsnap_version }}.asc"
 
 - name: Make the command that gets the current sha
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   template:
     src=getSha.sh
     dest=/root/getSha.sh
     mode=0755
 
 - name: get the SHA256sum for this tarsnap release
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   command:
     ./getSha.sh
     chdir=/root
   register: tarsnap_sha
 
 - name: Download Tarsnap source
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   get_url:
     url="https://www.tarsnap.com/download/tarsnap-autoconf-{{ tarsnap_version }}.tgz"
     dest="/root/tarsnap-autoconf-{{ tarsnap_version }}.tgz"
     sha256sum={{ tarsnap_sha.stdout_lines[0] }}
 
 - name: Decompress Tarsnap source
-  when: tarnsap_installed|failed
-  command: tar xzf /root/tarsnap-autoconf-{{ tarsnap_version }}.tgz chdir=/root creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/COPYING
+  when: tarsnap_installed|failed
+  unarchive: src=/root/tarsnap-autoconf-{{ tarsnap_version }}.tgz
+             dest=/root copy=no
+             creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/COPYING
 
 - name: Configure Tarsnap for local build
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   command: ./configure chdir=/root/tarsnap-autoconf-{{ tarsnap_version }} creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/Makefile
 
 - name: Build and install Tarsnap
-  when: tarnsap_installed|failed
+  when: tarsnap_installed|failed
   command: make all install clean chdir=/root/tarsnap-autoconf-{{ tarsnap_version }} creates=/usr/local/bin/tarsnap
 
 - name: Copy Tarsnap key file into place

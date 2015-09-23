@@ -3,6 +3,8 @@
 
 - name: Install ntp
   apt: pkg=ntp state=installed
+  tags:
+    - dependencies
 
 - name: Configure ntp
   template: src=ntp.conf.j2 dest=/etc/ntp.conf

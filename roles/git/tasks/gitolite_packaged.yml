@@ -9,6 +9,8 @@
 
 - name: Install gitolite3 package
   apt: pkg=gitolite3 state=installed
+  tags:
+    - dependencies
 
 - name: Copy .gitolite.rc file
   copy: src=home_git_.gitolite.rc
