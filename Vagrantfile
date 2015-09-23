@@ -33,11 +33,11 @@ Vagrant.configure('2') do |config|
 
   # Debian 8 64-bit (officially supported)
   config.vm.define 'jessie', primary: true do |jessie|
-    jessie.vm.box = 'dhoppe/debian-8.0.0-amd64-nocm'
+    jessie.vm.box = 'box-cutter/debian81'
   end
 
   # Ubuntu 14.04.2 (LTS) 64-bit
   config.vm.define 'trusty', autostart: false do |trusty|
-    trusty.vm.box = 'dhoppe/ubuntu-14.04.2-amd64-nocm'
+    trusty.vm.box = 'box-cutter/ubuntu1404'
   end
 end
