@@ -30,7 +30,7 @@
     - iotop
     - mosh
     - python-software-properties
-    - ruby1.9.3
+    - ruby
     - screen
     - sudo
     - update-notifier-common
