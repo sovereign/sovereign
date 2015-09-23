@@ -2,7 +2,7 @@
 # Installs the OpenVPN virtual private network server.
 # ref: https://library.linode.com/networking/openvpn/debian-6-squeeze
 
-- name: Install OpenVPN and dependencies from apt
+- name: Install OpenVPN and dependencies
   apt: pkg={{ item }} state=installed
   with_items:
     - dnsmasq
