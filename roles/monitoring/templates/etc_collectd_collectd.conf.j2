@@ -1,0 +1,29 @@
+BaseDir "/etc/collectd"
+
+LoadPlugin syslog
+LoadPlugin cpu
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin disk
+LoadPlugin df
+LoadPlugin rrdtool
+
+<Plugin rrdtool>
+  DataDir "/opt/collectd/var/lib/collectd/rrd"
+</Plugin>
+
+{% if (collectd_librato_email|length and collectd_librato_api_token|length) %}
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+
+<Plugin write_http>
+  <URL "https://collectd.librato.com/v1/measurements">
+    User "{{ collectd_librato_email }}"
+    Password "{{ collectd_librato_api_token }}"
+    Format "JSON"
+  </URL>
+</Plugin>
+{% endif %}
+
