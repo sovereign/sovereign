@@ -2,7 +2,7 @@
   git: repo=https://github.com/SSilence/selfoss.git
        dest=/var/www/selfoss
        accept_hostkey=yes
-       version=master
+       version={{ selfoss_version }}
 
 - name: Set selfoss ownership
   action: file owner=root group=www-data path=/var/www/selfoss recurse=yes state=directory

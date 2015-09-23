@@ -124,6 +124,7 @@ selfoss_domain: "news.{{ domain }}"
 selfoss_db_username: selfoss
 # selfoss_db_password: (required)
 selfoss_db_database: selfoss
+selfoss_version: 2.14
 
 # git
 cgit_version: 0.10.1
