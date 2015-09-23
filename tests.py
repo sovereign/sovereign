@@ -137,21 +137,6 @@ class WebTests(unittest.TestCase):
             r.content
         )
 
-    def test_newebe_http(self):
-        """Newebe is displaying home page"""
-        r = requests.get('http://newebe.' + TEST_SERVER, verify=False)
-
-        # We should be redirected to https
-        self.assertEquals(r.history[0].status_code, 301)
-        self.assertEquals(r.url, 'https://newebe.' + TEST_SERVER + '/')
-
-        # 200 - We should be at the repository page
-        self.assertEquals(r.status_code, 200)
-        self.assertIn(
-            'Newebe, Freedom to Share',
-            r.content
-        )
-
 
 class IRCTests(unittest.TestCase):
     def test_irc_auth(self):
