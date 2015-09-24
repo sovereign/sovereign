@@ -318,7 +318,7 @@ class MailTests(unittest.TestCase):
         m.logout()
 
     def test_smtp_headers(self):
-        """Email sent from an MTA via SMTP+TLS has X-DSPAM and TLS headers"""
+        """Email sent from an MTA via SMTP+TLS has TLS headers"""
         import smtplib
         import imaplib
 
@@ -337,11 +337,6 @@ class MailTests(unittest.TestCase):
         m.select()
         _, res = m.search(None, '(SUBJECT \"{}\")'.format(subject))
         _, data = m.fetch(res[0], '(RFC822)')
-
-        self.assertIn(
-            'X-DSPAM-Result: ',
-            data[0][1]
-        )
 
         self.assertIn(
             'ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)',

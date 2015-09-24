@@ -1,0 +1,35 @@
+---
+# Installs and configures the Rspamd spam filtering system.
+
+- name: Ensure repository key for Rspamd is in place for Debian Jessie
+  apt_key: url=http://download.opensuse.org/repositories/home:cebka/Debian_8.0/Release.key state=present
+  tags:
+    - dependencies
+  when: ansible_distribution_release == 'jessie'
+
+- name: Ensure repository key for Rspamd is in place for Ubuntu Trusty
+  apt_key: url=http://download.opensuse.org/repositories/home:cebka/xUbuntu_14.10/Release.key state=present
+  tags:
+    - dependencies
+  when: ansible_distribution_release == 'trusty'
+
+- name: Add Rspamd repository for Debian Jesse
+  apt_repository: repo="deb http://download.opensuse.org/repositories/home:/cebka/Debian_8.0/ /"
+  tags:
+    - dependencies
+  when: ansible_distribution_release == 'jessie'
+
+- name: Add Rspamd repository for Ubuntu Trusty
+  apt_repository: repo="deb http://download.opensuse.org/repositories/home:/cebka/xUbuntu_14.10/ /"
+  tags:
+    - dependencies
+  when: ansible_distribution_release == 'jessie'
+
+- name: Install Rspamd and Rmilter
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - rspamd
+    - rmilter
+  tags:
+    - dependencies
+

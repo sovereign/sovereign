@@ -26,10 +26,10 @@ What do you get if you point Sovereign at a server? All kinds of good stuff!
 -   An RSS Reader via [Selfoss](http://selfoss.aditu.de/).
 -   Virtual domains for your email, backed by [PostgreSQL](http://www.postgresql.org/).
 -   Secure on-disk storage for email and more via [EncFS](http://www.arg0.net/encfs).
--   Spam fighting via [DSPAM](http://dspam.sourceforge.net/) and [Postgrey](http://postgrey.schweikert.ch/).
--   Mail server verification via [OpenDKIM](http://www.opendkim.org/), so folks know you’re legit.
+-   Spam fighting via [Rspamd](https://www.rspamd.com/) and [Postgrey](http://postgrey.schweikert.ch/).
+-   Mail server verification via [OpenDKIM](http://www.opendkim.org/) and [OpenDMARC](http://www.trusteddomain.org/opendmarc/) so the Internet knows your mailserver is legit.
 -   [CalDAV](https://en.wikipedia.org/wiki/CalDAV) and [CardDAV](https://en.wikipedia.org/wiki/CardDAV) to keep your calendars and contacts in sync, via [ownCloud](http://owncloud.org/).
--   Your own private [Dropbox](https://www.dropbox.com/), also via [ownCloud](http://owncloud.org/).
+-   Your own private storage cloud via [ownCloud](http://owncloud.org/).
 -   Your own VPN server via [OpenVPN](http://openvpn.net/index.php/open-source.html).
 -   An IRC bouncer via [ZNC](http://wiki.znc.in/ZNC).
 -   [Monit](http://mmonit.com/monit/) to keep everything running smoothly (and alert you when it’s not).

@@ -16,3 +16,6 @@
 
 - name: restart opendmarc
   service: name=opendmarc state=restarted
+
+- name: restart rspamd
+  service: name=rspamd.socket state=restarted
