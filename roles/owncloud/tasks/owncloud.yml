@@ -1,6 +1,5 @@
 ---
-# Installs the ownCloud personal cloud software
-# as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
+# Installs the ownCloud personal cloud software.
 
 - name: Install ownCloud  dependencies
   apt: pkg={{ item }} state=present
@@ -21,9 +20,9 @@
 - name: Create database for ownCloud
   postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
 
-- name: Ensure repository key for ownCloud is in place for Debian 7
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
-  when: ansible_distribution_release == 'wheezy'
+- name: Ensure repository key for ownCloud is in place for Debian Jesse
+  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_8.0/Release.key state=present
+  when: ansible_distribution_release == 'jessie'
   tags:
     - dependencies
 
