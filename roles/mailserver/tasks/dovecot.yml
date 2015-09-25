@@ -1,4 +1,4 @@
-- name: Install Dovecot and related packages on distributions other than Debian 7
+- name: Install Dovecot and related packages
   apt: pkg={{ item }} update_cache=yes state=installed
   with_items:
     - dovecot-core

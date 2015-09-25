@@ -7,4 +7,4 @@ You'll want to set up a [local development environment](https://github.com/sover
 Make sure you agree with the license (GPLv3). See [LICENSE.md](./LICENSE.md) for details.
 
 If you issue a pull request, please specify what distribution you used for testing (if any).
-Code that is committed to the master branch should work with both Debian 7 and Ubuntu 14.04 LTS (Debian 8 support is coming up).
+Code that is committed to the master branch should work with both Debian 8 "Jessie" and Ubuntu 14.04 LTS "Trusty".
