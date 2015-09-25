@@ -1,18 +1,8 @@
-- name: Install Solr and related packages on wheezy from backports
-  apt: pkg={{ item }} state=installed default_release=wheezy-backports
-  with_items:
-    - dovecot-solr
-    - solr-tomcat
-  when: ansible_distribution_release == 'wheezy'
-  tags:
-    - dependencies
-
-- name: Install Solr and related packages on distributions other than wheezy
+- name: Install Solr and related packages
   apt: pkg={{ item }} state=installed
   with_items:
     - dovecot-solr
     - solr-tomcat
-  when: ansible_distribution_release != 'wheezy'
   tags:
     - dependencies
 
