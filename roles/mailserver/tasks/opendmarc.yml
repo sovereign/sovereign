@@ -1,9 +1,9 @@
 - name: Install OpenDMARC milter and related packages
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
-      - mysql-server
-      - python-mysqldb
-      - opendmarc
+    - postgresql
+    - python-psycopg2
+    - opendmarc
 
 - name: Copy OpenDMARC configuration file into place
   template: src=etc_opendmarc.conf.j2 dest=/etc/opendmarc.conf owner=root group=root
@@ -21,18 +21,15 @@
     - restart opendmarc
     - restart postfix
 
-- name: Copy OpenDMARC database schema file into place
-  copy: src=etc_opendmarc_import.sql dest=/etc/opendmarc/import.sql owner=root group=root
-
 - name: Create database user for OpenDMARC reports
-  mysql_user: user={{ mail_db_opendmarc_username }} password={{ mail_db_opendmarc_password }} state=present priv="opendmarc.*:ALL"
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_opendmarc_username }} password="{{ mail_db_opendmarc_password }}" state=present
 
 - name: Create database for OpenDMARC reports
-  mysql_db: name={{ mail_db_opendmarc_database }} state=present
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_opendmarc_database }} state=present owner={{ mail_db_opendmarc_username }}
 
-- name: Import database schema for OpenDMARC reports
-  mysql_db: name={{ mail_db_opendmarc_database }} state=import target=/etc/opendmarc/import.sql
-  tags: import_mysql_postfix
+- name: Copy OpenDMARC database schema file into place
+  copy: src=etc_opendmarc_import.sql dest=/etc/opendmarc/import.sql owner=root group=root mode=0600
+  notify: import sql opendmarc
 
 - name: Copy nightly OpenDMARC report generation script into place
   template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="755"

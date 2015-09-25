@@ -1,89 +1,106 @@
--- OpenDMARC database schema
---
--- Copyright (c) 2012, The Trusted Domain Project.
---      All rights reserved.
+# Source: http://www.trusteddomain.org/pipermail/opendmarc-users/2015-February/000447.html
 
-USE opendmarc;
+START TRANSACTION;
 
--- A table for mapping domain names and their DMARC policies to IDs
-CREATE TABLE IF NOT EXISTS domains (
-        id INT NOT NULL AUTO_INCREMENT,
-        name VARCHAR(255) NOT NULL,
-        firstseen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+SET standard_conforming_strings=off;
+SET escape_string_warning=off;
+SET CONSTRAINTS ALL DEFERRED;
 
-        PRIMARY KEY(id),
-        UNIQUE KEY(name)
+CREATE TABLE "domains" (
+  "id" integer NOT NULL,
+  "name" varchar(510) NOT NULL,
+  "firstseen" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("id"),
+  UNIQUE ("name")
 );
 
--- A table for logging reporting requests
-CREATE TABLE IF NOT EXISTS requests (
-        id INT NOT NULL AUTO_INCREMENT,
-        domain INT NOT NULL,
-        repuri VARCHAR(255) NOT NULL,
-        adkim TINYINT NOT NULL,
-        aspf TINYINT NOT NULL,
-        policy TINYINT NOT NULL,
-        spolicy TINYINT NOT NULL,
-        pct TINYINT NOT NULL,
-        locked TINYINT NOT NULL,
-        firstseen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        lastsent TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
-
-        PRIMARY KEY(id),
-        KEY(lastsent),
-        UNIQUE KEY(domain)
+CREATE TABLE "ipaddr" (
+  "id" integer NOT NULL,
+  "addr" varchar(128) NOT NULL,
+  "firstseen" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("id"),
+  UNIQUE ("addr")
 );
 
--- A table for reporting hosts
-CREATE TABLE IF NOT EXISTS reporters (
-        id INT NOT NULL AUTO_INCREMENT,
-        name VARCHAR(255) NOT NULL,
-        firstseen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        PRIMARY KEY(id),
-        UNIQUE KEY(name)
+CREATE TABLE "messages" (
+  "id" integer NOT NULL,
+  "date" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "jobid" varchar(256) NOT NULL,
+  "reporter" integer  NOT NULL,
+  "policy" tinyint(3)  NOT NULL,
+  "disp" tinyint(3)  NOT NULL,
+  "ip" integer  NOT NULL,
+  "env_domain" integer  NOT NULL,
+  "from_domain" integer  NOT NULL,
+  "policy_domain" integer  NOT NULL,
+  "spf" tinyint(3)  NOT NULL,
+  "align_dkim" tinyint(3)  NOT NULL,
+  "align_spf" tinyint(3)  NOT NULL,
+  "sigcount" tinyint(3)  NOT NULL,
+  PRIMARY KEY ("id"),
+  UNIQUE ("reporter", "date", "jobid")
 );
 
--- A table for IP addresses
-CREATE TABLE IF NOT EXISTS ipaddr (
-	id INT NOT NULL AUTO_INCREMENT,
-	addr VARCHAR(64) NOT NULL,
-	firstseen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-	PRIMARY KEY(id),
-	UNIQUE KEY(addr)
+CREATE TABLE "reporters" (
+  "id" integer NOT NULL,
+  "name" varchar(510) NOT NULL,
+  "firstseen" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("id"),
+  UNIQUE ("name")
 );
 
--- A table for messages
-CREATE TABLE IF NOT EXISTS messages (
-        id INT NOT NULL AUTO_INCREMENT,
-        date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        jobid VARCHAR(128) NOT NULL,
-        reporter INT UNSIGNED NOT NULL,
-        policy TINYINT UNSIGNED NOT NULL,
-        disp TINYINT UNSIGNED NOT NULL,
-        ip INT UNSIGNED NOT NULL,
-        env_domain INT UNSIGNED NOT NULL,
-        from_domain INT UNSIGNED NOT NULL,
-        policy_domain INT UNSIGNED NOT NULL,
-        spf TINYINT UNSIGNED NOT NULL,
-        align_dkim TINYINT UNSIGNED NOT NULL,
-        align_spf TINYINT UNSIGNED NOT NULL,
-        sigcount TINYINT UNSIGNED NOT NULL,
-
-        PRIMARY KEY(id),
-        KEY(date),
-        UNIQUE KEY(reporter, date, jobid)
+CREATE TABLE "requests" (
+  "id" integer NOT NULL,
+  "domain" integer NOT NULL,
+  "repuri" varchar(510) NOT NULL,
+  "adkim" tinyint(4) NOT NULL,
+  "aspf" tinyint(4) NOT NULL,
+  "policy" tinyint(4) NOT NULL,
+  "spolicy" tinyint(4) NOT NULL,
+  "pct" tinyint(4) NOT NULL,
+  "locked" tinyint(4) NOT NULL,
+  "firstseen" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "lastsent" timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY ("id"),
+  UNIQUE ("domain")
 );
 
--- A table for signatures
-CREATE TABLE IF NOT EXISTS signatures (
-        id INT NOT NULL AUTO_INCREMENT,
-        message INT NOT NULL,
-        domain INT NOT NULL,
-        pass TINYINT NOT NULL,
-        error TINYINT NOT NULL,
-
-        PRIMARY KEY(id),
-        KEY(message)
+CREATE TABLE "signatures" (
+  "id" integer NOT NULL,
+  "message" integer NOT NULL,
+  "domain" integer NOT NULL,
+  "pass" tinyint(4) NOT NULL,
+  "error" tinyint(4) NOT NULL,
+  PRIMARY KEY ("id")
 );
+
+COMMIT;
+
+-- Sequences --
+START TRANSACTION;
+
+CREATE SEQUENCE domains_id_seq;
+SELECT setval('domains_id_seq', max(id)) FROM domains;
+ALTER TABLE "domains" ALTER COLUMN "id" SET DEFAULT nextval('domains_id_seq');
+
+CREATE SEQUENCE ipaddr_id_seq;
+SELECT setval('ipaddr_id_seq', max(id)) FROM ipaddr;
+ALTER TABLE "ipaddr" ALTER COLUMN "id" SET DEFAULT nextval('ipaddr_id_seq');
+
+CREATE SEQUENCE messages_id_seq;
+SELECT setval('messages_id_seq', max(id)) FROM messages;
+ALTER TABLE "messages" ALTER COLUMN "id" SET DEFAULT nextval('messages_id_seq');
+
+CREATE SEQUENCE reporters_id_seq;
+SELECT setval('reporters_id_seq', max(id)) FROM reporters;
+ALTER TABLE "reporters" ALTER COLUMN "id" SET DEFAULT nextval('reporters_id_seq');
+
+CREATE SEQUENCE requests_id_seq;
+SELECT setval('requests_id_seq', max(id)) FROM requests;
+ALTER TABLE "requests" ALTER COLUMN "id" SET DEFAULT nextval('requests_id_seq');
+
+CREATE SEQUENCE signatures_id_seq;
+SELECT setval('signatures_id_seq', max(id)) FROM signatures;
+ALTER TABLE "signatures" ALTER COLUMN "id" SET DEFAULT nextval('signatures_id_seq');
+
+COMMIT;
