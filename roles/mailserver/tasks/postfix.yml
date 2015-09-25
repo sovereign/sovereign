@@ -1,9 +1,3 @@
-- name: Install Postgres 9.1 on older distributions
-  apt: pkg=postgresql-9.1 state=present
-  when: ansible_distribution_release != 'trusty' and ansible_distribution_release != 'jessie'
-  tags:
-    - dependencies
-
 - name: Install Postgres 9.3 on Ubuntu Trusty
   apt: pkg=postgresql-9.3 state=present
   when: ansible_distribution_release == 'trusty'
