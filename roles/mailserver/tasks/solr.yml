@@ -2,6 +2,7 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - dovecot-solr
+    - tomcat8
     - solr-tomcat
   tags:
     - dependencies
