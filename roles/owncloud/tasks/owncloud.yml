@@ -4,7 +4,7 @@
 - name: Install ownCloud  dependencies
   apt: pkg={{ item }} state=present
   with_items:
-    - postgres
+    - postgresql
     - libapache2-mod-php5
     - php-apc
     - python-psycopg2
