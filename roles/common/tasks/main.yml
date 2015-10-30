@@ -42,7 +42,7 @@
     - dependencies
 
 - name: Set timezone to UTC
-  action: shell echo Etc/UTC > /etc/timezone
+  copy: content='Etc/UTC' dest=/etc/timezone
 
 - name: Set localtime to UTC
   file: src=/usr/share/zoneinfo/Etc/UTC dest=/etc/localtime
