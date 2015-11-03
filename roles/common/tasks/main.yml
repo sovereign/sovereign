@@ -40,14 +40,22 @@
   tags:
     - dependencies
 
-- name: Set timezone to UTC
-  action: shell echo Etc/UTC > /etc/timezone
+- name: timezone - configure /etc/timezone
+  copy:
+    content: "{{ common_timezone | regex_replace('$', '\n') }}"
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: 0644
+  register: common_timezone_config
 
-- name: Set localtime to UTC
+- name: timezone - Set localtime to UTC
   file: src=/usr/share/zoneinfo/Etc/UTC dest=/etc/localtime
+  when: common_timezone_config.changed
 
-- name: Reconfigure tzdata
-  action: command dpkg-reconfigure -f noninteractive tzdata
+- name: timezone - reconfigure tzdata
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+  when: common_timezone_config.changed
 
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf

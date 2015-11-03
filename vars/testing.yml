@@ -5,6 +5,7 @@
 ###############################################################################
 
 # common
+common_timezone: 'Etc/UTC'
 domain: sovereign.local
 main_user_name: sovereign
 encfs_password: testPassword
