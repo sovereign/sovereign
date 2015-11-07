@@ -5,7 +5,6 @@
 ###############################################################################
 
 # common
-common_timezone: 'Etc/UTC'
 domain: TODO.com
 main_user_name: TODO
 encfs_password: TODO    # NOTE: must not contain dollar sign characters '$'
