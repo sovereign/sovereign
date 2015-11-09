@@ -5,6 +5,7 @@
 ###############################################################################
 
 # # common
+common_timezone: 'Etc/UTC'
 # domain: (required)
 # main_user_name: (required)
 admin_email: "{{ main_user_name }}@{{ domain }}"
