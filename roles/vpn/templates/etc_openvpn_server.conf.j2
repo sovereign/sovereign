@@ -190,6 +190,7 @@ ifconfig-pool-persist ipp.txt
 ;push "redirect-gateway def1 bypass-dhcp"
 push "redirect-gateway def1"
 push "dhcp-option DNS 10.8.0.1"
+push "dhcp-option DNS 8.8.8.8"
 
 # Certain Windows-specific network settings
 # can be pushed to clients, such as DNS
@@ -298,9 +299,18 @@ status openvpn-status.log
 # 4 is reasonable for general usage
 # 5 and 6 can help to debug connection problems
 # 9 is extremely verbose
-verb 3
+verb {{ openvpn_verb }}
 
 # Silence repeating messages.  At most 20
 # sequential messages of the same message
 # category will be output to the log.
 ;mute 20
+
+# Mask your settings with mtu
+# witch.valdikss.org.ru
+tun-mtu {{ openvpn_mtu }}
+
+# Set TLS settings
+# Only for openvpn 2.3.3 and >2.3.4
+{{ openvpn_tls_version_min }}
+{{ openvpn_tls_cipher }}
