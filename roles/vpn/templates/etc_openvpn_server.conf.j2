@@ -188,9 +188,9 @@ ifconfig-pool-persist ipp.txt
 # or bridge the TUN/TAP interface to the internet
 # in order for this to work properly).
 ;push "redirect-gateway def1 bypass-dhcp"
+;push "dhcp-option DNS 8.8.8.8"
 push "redirect-gateway def1"
 push "dhcp-option DNS 10.8.0.1"
-push "dhcp-option DNS 8.8.8.8"
 
 # Certain Windows-specific network settings
 # can be pushed to clients, such as DNS
