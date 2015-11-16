@@ -188,6 +188,7 @@ ifconfig-pool-persist ipp.txt
 # or bridge the TUN/TAP interface to the internet
 # in order for this to work properly).
 ;push "redirect-gateway def1 bypass-dhcp"
+;push "dhcp-option DNS 8.8.8.8"
 push "redirect-gateway def1"
 push "dhcp-option DNS 10.8.0.1"
 
@@ -298,9 +299,21 @@ status openvpn-status.log
 # 4 is reasonable for general usage
 # 5 and 6 can help to debug connection problems
 # 9 is extremely verbose
-verb 3
+verb {{ openvpn_verb }}
 
 # Silence repeating messages.  At most 20
 # sequential messages of the same message
 # category will be output to the log.
 ;mute 20
+
+# Openvpn changes length of network packets
+# in a way which depends on cipher and hash-sum
+# algorithms. This can be used for fingerprinting.
+# Mask your settings by using a lower mtu.
+# Check your settings here: witch.valdikss.org.ru
+tun-mtu {{ openvpn_mtu }}
+
+# Set TLS settings
+# Only for openvpn 2.3.3 and >2.3.4
+{{ openvpn_tls_version_min }}
+{{ openvpn_tls_cipher }}
