@@ -306,12 +306,11 @@ verb {{ openvpn_verb }}
 # category will be output to the log.
 ;mute 20
 
-# Openvpn changes length of network packages
-# in the certain chunk that depends on
-# chipher and hash-sum algorithms.
-# So, mask your settings by using a lower mtu ;)
-# You can check parameters at this site:
-# witch.valdikss.org.ru
+# Openvpn changes length of network packets
+# in a way which depends on cipher and hash-sum
+# algorithms. This can be used for fingerprinting.
+# Mask your settings by using a lower mtu.
+# Check your settings here: witch.valdikss.org.ru
 tun-mtu {{ openvpn_mtu }}
 
 # Set TLS settings
