@@ -20,6 +20,27 @@
 - name: Enable NameVirtualHost for HTTPS
   lineinfile: dest=/etc/apache2/ports.conf regexp='^    NameVirtualHost \*:443' insertafter='^<IfModule mod_ssl.c>' line='    NameVirtualHost *:443'
 
+- name: Enable Apache SOCACHE_SHMCB module for the SSL stapling cache
+  command: a2enmod socache_shmcb
+    creates=/etc/apache2/mods-enabled/socache_shmcb.load
+  notify: restart apache
+  when: ansible_distribution_release != 'wheezy'
+
+- name: Add Apache SSL stapling cache configuration
+  copy:
+    src=etc_apache2_conf-available_ssl-stapling-cache.conf
+    dest=/etc/apache2/conf-available/ssl-stapling-cache.conf
+    owner=root
+    group=root
+  when: ansible_distribution_release != 'wheezy'
+  notify: restart apache
+
+- name: Enable Apache SSL stapling cache configuration
+  command: a2enconf ssl-stapling-cache
+    creates=/etc/apache2/conf-enabled/ssl-stapling-cache.conf
+  when: ansible_distribution_release != 'wheezy'
+  notify: restart apache
+
 - name: Add common Apache SSL config
   template:
     src=etc_apache2_ssl.conf.j2
