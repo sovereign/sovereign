@@ -1,15 +1,19 @@
 - name: Copy SSL private key into place
   copy: src=wildcard_private.key dest=/etc/ssl/private/wildcard_private.key group=ssl-cert owner=root mode=640
+  register: private_key
 
 - name: Copy SSL public certificate into place
   copy: src=wildcard_public_cert.crt dest=/etc/ssl/certs/wildcard_public_cert.crt group=root owner=root mode=644
+  register: certificate
 
 - name: Copy CA combined certificate into place
   copy: src=wildcard_ca.pem dest=/etc/ssl/certs/wildcard_ca.pem group=root owner=root mode=644
+  register: ca_certificate
 
 - name: Create a combined version of the public cert with intermediate and root CAs
   shell: cat /etc/ssl/certs/wildcard_public_cert.crt /etc/ssl/certs/wildcard_ca.pem >
-    /etc/ssl/certs/wildcard_combined.pem creates=/etc/ssl/certs/wildcard_combined.pem
+    /etc/ssl/certs/wildcard_combined.pem
+  when: private_key.changed or certificate.changed or ca_certificate.changed
 
 - name: Set permissions on combined public cert
   file: name=/etc/ssl/certs/wildcard_combined.pem mode=644
@@ -22,7 +26,10 @@
   command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load
 
 - name: Enable NameVirtualHost for HTTPS
-  lineinfile: dest=/etc/apache2/ports.conf regexp='^    NameVirtualHost \*:443' insertafter='^<IfModule mod_ssl.c>' line='    NameVirtualHost *:443'
+  lineinfile:
+    dest=/etc/apache2/ports.conf regexp='^    NameVirtualHost \*:443'
+    insertafter='^<IfModule mod_ssl.c>'
+    line='    NameVirtualHost *:443'
 
 - name: Enable Apache SOCACHE_SHMCB module for the SSL stapling cache
   command: a2enmod socache_shmcb
