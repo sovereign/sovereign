@@ -11,4 +11,7 @@ SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-R
 SSLCertificateFile      /etc/ssl/certs/wildcard_public_cert.crt
 SSLCertificateKeyFile   /etc/ssl/private/wildcard_private.key
 SSLCACertificateFile    /etc/ssl/certs/wildcard_ca.pem
-Header add Strict-Transport-Security "max-age=15768000; includeSubdomains"
+
+{% if http_add_hsts_header %}
+    Header add Strict-Transport-Security "max-age=15768000; includeSubdomains"
+{% endif %}
