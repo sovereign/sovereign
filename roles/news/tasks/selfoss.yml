@@ -9,7 +9,11 @@
 
 # only data/cache, data/favicons, data/logs, data/thumbnails, data/sqlite public/ should be writeable by httpd
 - name: Set selfoss permission
-  action: file path=/var/www/selfoss/{{ item }} mode=0775
+  action:
+    file path=/var/www/selfoss/{{ item }}
+    owner=www-data
+    group=www-data
+    recurse=yes
   with_items:
     - data/cache
     - data/favicons
