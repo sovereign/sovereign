@@ -315,3 +315,11 @@ tun-mtu {{ openvpn_mtu }}
 # Only for openvpn 2.3.3 and >2.3.4
 {{ openvpn_tls_version_min }}
 {{ openvpn_tls_cipher }}
+
+# Change default network buffer size
+# Should increase tcp tunnel speed for openvpn < 2.3.9
+# https://community.openvpn.net/openvpn/ticket/461
+sndbuf 0
+rcvbuf 0
+push "sndbuf 393216"
+push "rcvbuf 393216"
