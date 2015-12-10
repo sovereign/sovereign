@@ -1,0 +1,13 @@
+[Unit]
+Description=/etc/rc.local Compatibility
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/rc.local
+TimeoutSec=0
+StandardInput=tty
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -122,6 +122,17 @@
 - name: Copy rc.local with firewall and dnsmasq rules into place
   template: src=etc_rc.local dest=/etc/rc.local
 
+- name: Check if systemd exists
+  command: pidof systemd
+  register: check_systemd
+  ignore_errors: yes
+
+- name: Install systemd unit file for rc.local
+  copy: src=rc-local.service dest=/lib/systemd/system/rc-local.service owner=root mode=644
+  when: check_systemd|succes
+  notify:
+    - reload systemd
+
 - name: Enable IPv4 traffic forwarding
   sysctl: name=net.ipv4.ip_forward value=1
 
