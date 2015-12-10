@@ -14,6 +14,10 @@
 - name: Set permissions on combined public cert
   file: name=/etc/ssl/certs/wildcard_combined.pem mode=644
 
+- name: Create strong Diffie-Hellman group
+  command: openssl dhparam -out /etc/ssl/private/dhparam2048.pem 2048
+    creates=/etc/ssl/private/dhparam2048.pem
+
 - name: Enable Apache SSL module
   command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load
 
