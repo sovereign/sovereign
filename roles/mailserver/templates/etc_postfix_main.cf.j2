@@ -51,7 +51,7 @@ smtp_tls_note_starttls_offer = yes
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 # http://www.postfix.org/FORWARD_SECRECY_README.html
 smtp_tls_ciphers = medium
-
+smtpd_tls_dh1024_param_file = /etc/ssl/private/dhparam2048.pem
 
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
