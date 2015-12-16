@@ -100,7 +100,8 @@ openvpn_hmac_firewall: "{{ openvpn_path }}/ta.key"
 openvpn_server: "{{ domain }}"
 openvpn_port: "1194"
 openvpn_protocol: "udp"
-openvpn_mtu: "1300"
+# Disable openvpn_mtu if you'll use ios clients
+openvpn_mtu: "tun-mtu 1300"
 openvpn_verb: "3" # "0" for anonymity
 # uncomment for openvpn 2.3.3 and >2.3.4
 openvpn_tls_version_min: "" # "tls-version-min 1.2"
