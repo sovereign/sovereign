@@ -13,6 +13,8 @@ main_user_shell: "/bin/bash"
 # encfs_password: (required)
 friendly_networks:
   - ""
+letsencrypt_server: "https://acme-v01.api.letsencrypt.org/directory"
+subdomains: "www.{{ domain }},mail.{{ domain }},autoconfig.{{ domain }},read.{{ domain }},news.{{ domain }},cloud.{{ domain }},git.{{ domain }}"
 
 # ssh
 kex_algorithms: "diffie-hellman-group-exchange-sha256"

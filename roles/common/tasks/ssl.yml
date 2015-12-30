@@ -19,7 +19,7 @@
   notify: restart apache
 
 - name: Add common Apache SSL config
-  copy: src=etc_apache2_conf-available_ssl.conf
+  template: src=etc_apache2_conf-available_ssl.conf.j2
     dest=/etc/apache2/conf-available/ssl.conf
     owner=root
     group=root
