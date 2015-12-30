@@ -1,0 +1,38 @@
+- name: Download LetsEncrypt release
+  git : repo=https://github.com/letsencrypt/letsencrypt
+        dest=/root/letsencrypt
+
+- name: Create directory for LetsEncrypt configuration and certificates
+  file: state=directory path=/etc/letsencrypt group=root owner=root
+
+- name: Configure LetsEncrypt
+  template:
+    src=etc_letsencrypt_cli.conf.j2
+    dest=/etc/letsencrypt/cli.conf
+    owner=root
+    group=root
+
+- name: Install LetsEncrypt package dependencies
+  command: /root/letsencrypt/letsencrypt-auto --help
+
+- name: Install crontab entry for LetsEncrypt
+  copy:
+    src=etc_cron-monthly_letsencrypt-renew
+    dest=/etc/cron.monthly/letsencrypt-renew
+    owner=root
+    group=root
+    mode=755
+
+- name: Create live directory for LetsEncrypt cron job
+  file: state=directory path=/etc/letsencrypt/live group=root owner=root
+
+- name: Stop Apache
+  service: name=apache2 state=stopped
+
+- name: Get an SSL certificate for {{ domain }}
+  command: /root/letsencrypt/letsencrypt-auto certonly -c /etc/letsencrypt/cli.conf -d {{ domain }} -d www.{{ domain }} -d cloud.{{ domain }} -d autoconfig.{{ domain }} -d mail.{{ domain }}
+  args:
+    creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
+
+- name: Start Apache
+  service: name=apache2 state=started
