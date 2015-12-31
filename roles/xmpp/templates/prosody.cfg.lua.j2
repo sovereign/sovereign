@@ -86,8 +86,8 @@ allow_registration = false;
 -- These are the SSL/TLS-related settings. If you don't want
 -- to use SSL/TLS, you may comment or remove this
 ssl = {
-	key = "/etc/ssl/private/wildcard_private.key";
-	certificate = "/etc/ssl/certs/wildcard_public_cert.crt";
+	key = "/etc/letsencrypt/live/{{ domain }}/privkey.pem";
+	certificate = "/etc/letsencrypt/live/{{ domain }}/cert.pem";
 }
 
 -- Force clients to use encrypted connections? This option will
