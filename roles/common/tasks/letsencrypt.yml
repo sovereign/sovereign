@@ -30,7 +30,7 @@
   service: name=apache2 state=stopped
 
 - name: Get an SSL certificate for {{ domain }}
-  command: /root/letsencrypt/letsencrypt-auto certonly -c /etc/letsencrypt/cli.conf -d {{ domain }} -d www.{{ domain }} -d cloud.{{ domain }} -d autoconfig.{{ domain }} -d mail.{{ domain }}
+  command: /root/letsencrypt/letsencrypt-auto certonly -c /etc/letsencrypt/cli.conf -d {{ domain }} -d mail.{{ domain }} -d autoconfig.{{ domain }} -d cloud.{{ domain }} -d www.{{ domain }} -d news.{{ domain }} -d read.{{ domain }} -d git.{{ domain }}  
   args:
     creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
 
