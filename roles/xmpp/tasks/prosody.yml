@@ -16,15 +16,24 @@
   tags:
     - dependencies
 
-- name: Add prosody user to ssl-cert group
-  user: name=prosody groups=ssl-cert append=yes
-
 - name: Create Prosody data directory
   file: state=directory path=/decrypted/prosody owner=prosody group=prosody
 
 - name: Configure Prosody
   template: src=prosody.cfg.lua.j2 dest=/etc/prosody/prosody.cfg.lua group=root owner=root
   notify: restart prosody
+
+- name: Copy SSL private key and cert
+  shell: cp /etc/letsencrypt/live/{{ domain }}/{{ item }} /etc/prosody/certs
+  with_items:
+    - privkey.pem
+    - cert.pem
+
+- name: Assert mode and ownership on SSL private key and cert
+  file: dest=/etc/prosody/certs/{{ item }} owner=root group=prosody mode=0640
+  with_items:
+    - privkey.pem
+    - cert.pem
 
 - name: Create Prosody accounts
   command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
