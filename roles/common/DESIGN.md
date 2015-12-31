@@ -8,11 +8,13 @@ The Let's Encrypt service uses DNS to look up domains being registered and then 
 
 A single certificate is created using Let's Encrypt with SANs used for the subdomains. The user must configure the list of subdomains to register in `vars/user.yml` unless they are installing all services, i.e., the default list of subdomains is everything.
 
-Certificate renewal is done automatically using cron.
+The role is designed to fail if a certificate cannot be generated for all subdomains listed.  This catches DNS configuration errors where a subdomain should have a record but does not.  Errors in the other direction (not all subdomains are listed in the SANs) can be addressed after detection by fixing the configuration and rerunning the role.
+
+Several packages need access to the private key. Not all are run as root. Examples include Prosody (XMPP) and ZNC (IRC bouncer). The approach in these cases is to copy the certificates and manage ownership and mode for them separately. This is to avoid stomping on directory ownership and modes in /etc/letsencrypt.
 
 Certificates and private keys are backed up using tarsnap.
 
-The role is designed to fail if a certificate cannot be generated for all subdomains listed.  This catches DNS configuration errors where a subdomain should have a record but does not.  Errors in the other direction (not all subdomains are listed in the SANs) can be addressed after detection by fixing the configuration and rerunning the role.
+Certificate renewal is done automatically using cron. The cron script must be aware of private key copies and update them as well. Services that depend on new keys must also be bounced. It is up to roles that rely on keys to modify the cron script (preferably using `linein` or similar games) to accomplish this.
 
 ### Alternative approaches
 
