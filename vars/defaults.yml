@@ -111,7 +111,7 @@ openvpn_tls_cipher: "" # "tls-cipher TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256:TLS-E
 webmail_domain: "{{ mail_server_hostname }}"
 webmail_db_username: "roundcube"
 # webmail_db_password: (required)
-webmail_db_database: "roundcube"
+webmail_db_database: "roundcubemail"
 carddav_version: "1.0.0"
 
 # xmpp

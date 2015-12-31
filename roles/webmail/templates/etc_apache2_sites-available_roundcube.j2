@@ -6,53 +6,98 @@
 
 <VirtualHost *:443>
     ServerName {{ webmail_domain }}
-
+    
     Include /etc/apache2/ssl.conf
 
-    # Those aliases do not work properly with several hosts on your apache server
-    # Uncomment them to use it or adapt them to your configuration
-    #    Alias /roundcube/program/js/tiny_mce/ /usr/share/tinymce/www/
-    #    Alias /roundcube /var/lib/roundcube
+    Alias / /opt/roundcube/
 
-    # Access to tinymce files
-    DocumentRoot /var/lib/roundcube 
-    <Directory "/usr/share/tinymce/www/">
-          Options Indexes MultiViews FollowSymLinks
-          AllowOverride None
-          Order allow,deny
-          allow from all
+    <Directory /opt/roundcube>
+     Options +FollowSymLinks
+     # AddDefaultCharset UTF-8
+     AddType text/x-component .htc
+ 
+     <IfModule mod_php5.c>
+     AddType application/x-httpd-php .php
+     php_flag display_errors Off
+     php_flag log_errors On
+     # php_value error_log logs/errors
+     php_value upload_max_filesize 10M
+     php_value post_max_size 12M
+     php_value memory_limit 64M
+     php_flag zlib.output_compression Off
+     php_flag magic_quotes_gpc Off
+     php_flag magic_quotes_runtime Off
+     php_flag zend.ze1_compatibility_mode Off
+     php_flag suhosin.session.encrypt Off
+     #php_value session.cookie_path /
+     php_flag session.auto_start Off
+     php_value session.gc_maxlifetime 21600
+     php_value session.gc_divisor 500
+     php_value session.gc_probability 1
+     </IfModule>
+
+     <IfModule mod_rewrite.c>
+     RewriteEngine On
+     RewriteRule ^favicon\.ico$ skins/larry/images/favicon.ico
+     # security rules:
+     # - deny access to files not containing a dot or starting with a dot
+     # in all locations except installer directory
+     RewriteRule ^(?!installer)(\.?[^\.]+)$ - [F]
+     # - deny access to some locations
+ RewriteRule ^/?(\.git|\.tx|SQL|bin|config|logs|temp|tests|program\/(include|lib|localization|steps)) - [F]
+     # - deny access to some documentation files
+     RewriteRule /?(README\.md|composer\.json-dist|composer\.json|package\.xml)$ - [F]
+     </IfModule>
+
+     <IfModule mod_deflate.c>
+     SetOutputFilter DEFLATE
+     </IfModule>
+
+     <IfModule mod_expires.c>
+     ExpiresActive On
+     ExpiresDefault "access plus 1 month"
+     </IfModule>
+
+     FileETag MTime Size
+
+     <IfModule mod_autoindex.c>
+     Options -Indexes
+     </ifModule>
+
+     AllowOverride None
+     Order allow,deny
+     Allow from all
     </Directory>
 
-    <Directory /var/lib/roundcube/>
-      Options +FollowSymLinks
-      # This is needed to parse /var/lib/roundcube/.htaccess. See its
-      # content before setting AllowOverride to None.
-      AllowOverride All
-      order allow,deny
-      allow from all
+    <Directory /opt/roundcube/plugins/enigma/home>
+     Options -FollowSymLinks
+     AllowOverride None
+     Order allow,deny
+     Deny from all
     </Directory>
 
-    # Protecting basic directories:
-    <Directory /var/lib/roundcube/config>
-            Options -FollowSymLinks
-            AllowOverride None
+    <Directory /opt/roundcube/config>
+     Options -FollowSymLinks
+     AllowOverride None
+     Order allow,deny
+     Deny from all
     </Directory>
 
-    <Directory /var/lib/roundcube/temp>
-            Options -FollowSymLinks
-            AllowOverride None
-        Order allow,deny
-        Deny from all
+    <Directory /opt/roundcube/temp>
+     Options -FollowSymLinks
+     AllowOverride None
+     Order allow,deny
+     Deny from all
     </Directory>
 
-    <Directory /var/lib/roundcube/logs>
-            Options -FollowSymLinks
-            AllowOverride None
-        Order allow,deny
-        Deny from all
+    <Directory /opt/roundcube/logs>
+     Options -FollowSymLinks
+     AllowOverride None
+     Order allow,deny
+     Deny from all
     </Directory>
 
+    LogLevel warn
     CustomLog /var/log/apache2/webmail_access.log combined 
     ErrorLog /var/log/apache2/webmail_error.log 
 </VirtualHost>
-

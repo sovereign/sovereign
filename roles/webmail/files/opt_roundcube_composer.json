@@ -1,0 +1,33 @@
+{
+    "name": "roundcube/roundcubemail",
+    "description": "The Roundcube Webmail suite",
+    "license": "GPL-3.0+",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.php.net/"
+        },
+        {
+            "type": "composer",
+            "url": "https://plugins.roundcube.net/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.7",
+        "roundcube/plugin-installer": "~0.1.6",
+        "pear-pear.php.net/auth_sasl": "~1.0.6",
+        "pear-pear.php.net/net_idna2": "~0.1.1",
+        "pear-pear.php.net/net_sieve": "~1.3.4",
+        "pear-pear.php.net/mail_mime": "~1.9.0",
+        "pear-pear.php.net/net_smtp": "~1.7.1",
+        "patchwork/utf8": "~1.2.3",
+	"roundcube/carddav": "dev-master",
+	"alexandregz/twofactor_gauthenticator": "dev-master",
+	"johndoh/sieverules": "dev-release-2.2"
+    },
+    "require-dev": {
+        "pear-pear.php.net/crypt_gpg": "*",
+        "phpunit/phpunit": "*"
+    },
+    "minimum-stability": "dev"
+}

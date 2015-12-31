@@ -210,6 +210,8 @@ Set up SPF and reverse DNS [as per this post](http://sealedabstract.com/code/nsa
 
 ### 7. Miscellaneous Configuration
 
+Complete the installation of Roundcube.  Browse to `http://mail.example.com/installer` and follow its steps.  Once you are satisfied, log into your server, delete the installer folder (`/opt/roundcube/installer`), and edit Roundcube's configuration (`/opt/roundcube/config/config.inc.php`) to set the `enable_installer` option to `false`.
+
 Sign in to the ZNC web interface and set things up to your liking. It isn’t exposed through the firewall, so you must first set up an SSH tunnel:
 
 	ssh deploy@example.com -L 6643:localhost:6643
