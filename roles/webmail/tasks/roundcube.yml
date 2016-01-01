@@ -7,6 +7,7 @@
   - php5-enchant
   - php5-curl
   - php5-mcrypt
+  - php5-intl
 
 - name: Download Roundcube 1.1.4
   get_url: url=https://downloads.sourceforge.net/project/roundcubemail/roundcubemail/1.1.4/roundcubemail-1.1.4-complete.tar.gz
