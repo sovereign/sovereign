@@ -49,6 +49,7 @@ Consider the following checklist when reviewing a module's design.
 - Does the role create data on the server that is impossible or difficult to reproduce, e.g., private keys? If so, update the tarsnap role to include precious data in backups.
 - Does the role need an SSL certificate for a new subdomain?  If so, update the letsencrypt tasklist in the common role.
 - Does the role add an Apache virtual site?  If so, has somebody knowledgable in Apache configuration and security reviewed the configuration?
+- Does README.md need to be updated based on new or changed finalization instructions?
 
 ## Submitting pull requests
 
