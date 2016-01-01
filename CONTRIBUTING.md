@@ -12,6 +12,10 @@ You'll want to set up a [local development environment](https://github.com/sover
 
 Sovereign is an Ansible playbook that uses the modules in this repository to configure a server. Modules should conform to the following design principles.
 
+### Making decisions
+
+A module exists to make decisions about how a service should be installed and configured. Make these decisions and minimize or eliminate configuration options exposed to the user. When in doubt, make a decision, and if the community feedback is vocal enough, only then expose an option.
+
 ### Idempotency
 
 A module must be idempotent. If it's run once or many times, the result should be the same. This means that in some cases the user will be left with post-installation finalization work to do. Post-install finalization should be reduced or eliminated if possible, but not at the cost of idempotency.
