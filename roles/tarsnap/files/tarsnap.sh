@@ -4,7 +4,7 @@
 # Written by Tim Bishop, 2009.
 
 # Directories to backup (relative to /)
-DIRS="home root decrypted var/www"
+DIRS="home root decrypted var/www etc/letsencrypt"
 
 # Number of daily backups to keep
 DAILY=7
