@@ -42,6 +42,12 @@ A module should be designed and implemented to run as quickly as possible in ord
 
 A module should have tests. TBD: more about this and what the expectation is.
 
+### Design document
+
+A module should have a design description explaining the approach to implementing a service and what tradeoffs were made when choosing the design that was implemented. Do not leave this for comments in a pull request as we want this close to the code for the sake of future maintainers.
+
+The design description should be succinct and to the point. Assume the reader is familiar with Sovereign but not your module. As a rule of thumb, 500-1000 words is about the right length for a module design description.
+
 ## Design checklist
 
 Consider the following checklist when reviewing a module's design.
@@ -54,4 +60,3 @@ Consider the following checklist when reviewing a module's design.
 ## Submitting pull requests
 
 When you issue a pull request, please specify what distribution you used for testing (if any).  Code that is committed to the master branch should work with both Debian 7 and Ubuntu 14.04 LTS.  Support for Debian 8 is coming.
-
