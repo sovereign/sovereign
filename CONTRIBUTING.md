@@ -34,6 +34,10 @@ A module's design should anticipate upgrades to the services it provides. Config
 
 A module should be designed and implemented to run as quickly as possible in order to minimize the time to run an entire playbook or even the role itself. A small performance penalty here and a small penalty there eventually adds to a very slow deployment system. Performance is important.
 
+### Tests
+
+A module should have tests. TBD: more about this and what the expectation is.
+
 ## Design checklist
 
 Consider the following checklist when reviewing a module's design.
