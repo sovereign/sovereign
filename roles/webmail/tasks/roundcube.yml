@@ -74,7 +74,8 @@
     state=present
 
 - name: Fix permissions
-  shell: chown -R www-data:www-data /opt/roundcube
+  file: dest=/opt/roundcube recurse=yes state=directory
+    owner=www-data group=www-data
 
 - name: Configure Apache for Roundcube
   template: src=etc_apache2_sites-available_roundcube.j2
