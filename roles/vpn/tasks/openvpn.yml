@@ -135,6 +135,7 @@
 
 - name: Allow OpenVPN through ufw
   ufw: rule=allow port={{ openvpn_port }} proto={{ openvpn_protocol }}
+  tags: ufw
 
 - name: Copy OpenVPN configuration file into place
   template: src=etc_openvpn_server.conf.j2 dest=/etc/openvpn/server.conf

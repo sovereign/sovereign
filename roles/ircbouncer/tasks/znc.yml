@@ -64,6 +64,7 @@
 
 - name: Set firewall rule for znc
   ufw: rule=allow port=6697 proto=tcp
+  tags: ufw
 
 - name: Ensure znc is a system service
   service: name=znc state=started enabled=true

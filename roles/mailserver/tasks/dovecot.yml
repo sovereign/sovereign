@@ -93,3 +93,4 @@
   with_items:
     - imaps
     - pop3s
+  tags: ufw
