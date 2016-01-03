@@ -52,17 +52,17 @@ class WebTests(unittest.TestCase):
             self.assertIn('clientConfig version="1.1"', r.content)
 
     def test_webmail_http(self):
-        """Webmail is redirecting to https and displaying login page"""
-        r = requests.get('http://mail.' + TEST_SERVER)
+        """Webmail is redirecting to https and displaying install page"""
+        r = requests.get('http://mail.' + TEST_SERVER + '/installer/')
 
         # We should be redirected to https
         self.assertEquals(r.history[0].status_code, 301)
-        self.assertEquals(r.url, 'https://mail.' + TEST_SERVER + '/')
+        self.assertEquals(r.url, 'https://mail.' + TEST_SERVER + '/installer/?_step=1')
 
         # 200 - We should be at the login page
         self.assertEquals(r.status_code, 200)
         self.assertIn(
-            'Welcome to Roundcube Webmail',
+            'Roundcube Webmail Installer',
             r.content
         )
 
