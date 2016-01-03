@@ -59,6 +59,8 @@ Consider the following checklist when reviewing a module's design.
 
 ## Submitting pull requests
 
-When you issue a pull request, please specify what distribution you used for testing (if any).  Code that is committed to the master branch should work with both Debian 7 and Ubuntu 14.04 LTS.  Support for Debian 8 is coming.
+Verify that your changes pass [ansible-lint](https://github.com/willthames/ansible-lint) before submitting a pull request.
 
 Use good commit practices to document your changes. Don't assume the developer reviewing your commits has access to GitHub. The developer could be a future maintainer in a different environment. Similarly, as you address feedback on the pull request, do not assume the reviewer has access to GitHub.
+
+When you issue a pull request, please specify what distribution you used for testing (if any).  Code that is committed to the master branch should work with both Debian 7 and Ubuntu 14.04 LTS.  Support for Debian 8 is coming.
