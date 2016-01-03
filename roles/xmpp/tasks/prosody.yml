@@ -46,3 +46,4 @@
   with_items:
     - 5222  # xmpp c2s
     - 5269  # xmpp s2s
+  tags: ufw
