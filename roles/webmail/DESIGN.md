@@ -21,3 +21,5 @@ It's not clear how robust Roundcube's story is for upgrades. We'll get our first
 # Additional notes
 
 There is a system table of key/value pairs in the database. This could be checked to see if the database already exists.  Version information appears to be in the table also. This would make scripting the initial install pretty easy.
+
+We use sqlite3 for the back end, since not much data is stored in the database.  The database is kept in /decrypted so that it is backed up by tarnsap if that role is deployed.

@@ -1,7 +1,7 @@
 - name: Install Roundcube prerequisites
   apt: pkg={{ item }} state=latest
   with_items:
-  - php5-mysql
+  - php5-sqlite
   - aspell
   - aspell-en
   - php5-enchant
@@ -24,20 +24,16 @@
     chdir=/root
     creates=/opt/roundcube
 
-- name: Create Roundcube database user
-  mysql_user: name={{ webmail_db_username }}
-    password={{ webmail_db_password }}
-    priv=*.*:ALL,GRANT
-    state=present
-
-- name: Create Roundcube database
-  mysql_db: name={{ webmail_db_database }}
-    login_user={{ webmail_db_username }}
-    login_password={{ webmail_db_password }}
-    state=present
-
 - name: Install Roundcube configuration
   template: src=opt_roundcube_config_config.inc.php.j2 dest=/opt/roundcube/config/config.inc.php
+
+- name: Create directory for database
+  file: dest=/decrypted/roundcube state=directory
+    owner=www-data group=www-data mode=0770
+
+- name: Link to database directory
+  file: src=/decrypted/roundcube dest=/opt/roundcube/db state=link
+    owner=www-data group=www-data
 
 - name: Download composer
   get_url: url=https://getcomposer.org/installer
