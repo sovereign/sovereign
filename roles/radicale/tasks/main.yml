@@ -1,0 +1,4 @@
+---
+# Provides the Radicale CalDAV (calendar) and CardDAV (contact) server .
+
+- include: radicale.yml tags=radicale
