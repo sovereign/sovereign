@@ -1,0 +1,135 @@
+# -*- mode: conf -*-
+# vim:ft=cfg
+
+# Config file for Radicale - A simple calendar server
+#
+# Place it into /etc/radicale/config (global)
+# or ~/.config/radicale/config (user)
+#
+# The commented out values are the defaults.
+
+
+[server]
+# CalDAV server hostnames separated by a comma
+# IPv4 syntax: address:port
+# IPv6 syntax: [address]:port
+# IPv6 adresses are configured to only allow IPv6 connections
+hosts = {{ domain }}:{{ radicale_port }}
+# Daemon flag
+daemon = True
+# File storing the PID in daemon mode
+#pid =
+# SSL flag, enable HTTPS protocol
+ssl = True
+# SSL certificate path
+certificate = /etc/ssl/certs/wildcard_public_cert.crt
+# SSL private key
+key = /etc/ssl/private/wildcard_private.key
+# Reverse DNS to resolve client address in logs
+#dns_lookup = True
+# Root URL of Radicale (starting and ending with a slash)
+base_prefix = /
+# Message displayed in the client when a password is needed
+#realm = Radicale - Password Required lol
+
+
+[encoding]
+# Encoding for responding requests
+request = utf-8
+# Encoding for storing local collections
+stock = utf-8
+
+
+[auth]
+# Authentication method
+# Value: None | htpasswd | IMAP | LDAP | PAM | courier | http
+type = htpasswd
+
+# Usernames used for public collections, separated by a comma
+#public_users = public
+# Usernames used for private collections, separated by a comma
+#private_users = private
+
+# Htpasswd filename
+htpasswd_filename = /etc/radicale/users
+# Htpasswd encryption method
+# Value: plain | sha1 | crypt
+htpasswd_encryption = bcrypt
+
+# LDAP server URL, with protocol and port
+#ldap_url = ldap://localhost:389/
+# LDAP base path
+#ldap_base = ou=users,dc=example,dc=com
+# LDAP login attribute
+#ldap_attribute = uid
+# LDAP filter string
+# placed as X in a query of the form (&(...)X)
+# example: (objectCategory=Person)(objectClass=User)(memberOf=cn=calenderusers,ou=users,dc=example,dc=org)
+# leave empty if no additional filter is needed
+#ldap_filter =
+# LDAP dn for initial login, used if LDAP server does not allow anonymous searches
+# Leave empty if searches are anonymous
+#ldap_binddn =
+# LDAP password for initial login, used with ldap_binddn
+#ldap_password =
+# LDAP scope of the search
+#ldap_scope = OneLevel
+
+# IMAP Configuration
+#imap_hostname = localhost
+#imap_port = 143
+#imap_ssl = False
+
+# PAM group user should be member of
+#pam_group_membership =
+
+# Path to the Courier Authdaemon socket
+#courier_socket =
+
+# HTTP authentication request URL endpoint
+#http_url =
+# POST parameter to use for username
+#http_user_parameter =
+# POST parameter to use for password
+#http_password_parameter =
+
+
+[rights]
+# Rights management method
+# Value: None | owner_only | owner_write | from_file
+type = owner_only
+
+# File for rights management from_file
+#file = ~/.config/radicale/rights
+
+
+[storage]
+# Storage backend
+# Value: filesystem | database
+type = database
+
+# Folder for storing local collections, created if not present
+filesystem_folder = /var/lib/radicale/collections
+
+# Database URL for SQLAlchemy
+# dialect+driver://user:password@host/dbname[?key=value..]
+# For example: sqlite:///var/db/radicale.db, postgresql://user:password@localhost/radicale
+# See http://docs.sqlalchemy.org/en/rel_0_8/core/engines.html#sqlalchemy.create_engine
+database_url = postgresql://{{ radicale_db_username }}:{{ radicale_db_password }}@localhost/{{ radicale_db_username }}
+
+
+[logging]
+# Logging configuration file
+# If no config is given, simple information is printed on the standard output
+# For more information about the syntax of the configuration file, see:
+# http://docs.python.org/library/logging.config.html
+#config = /etc/radicale/logging
+# Set the default logging level to debug
+#debug = False
+# Store all environment variables (including those set in the shell)
+#full_environment = False
+
+
+# Additional HTTP headers
+#[headers]
+#Access-Control-Allow-Origin = *
