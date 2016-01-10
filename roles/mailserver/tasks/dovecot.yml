@@ -70,3 +70,8 @@
   with_items:
     - imaps
     - pop3s
+
+- name: Update certificate renwal cron job
+  lineinfile: dest=/etc/cron.monthly/letsencrypt-renew state=present
+    line="service dovecot restart"
+    insertafter="EOF"

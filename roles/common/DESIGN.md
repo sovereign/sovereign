@@ -14,7 +14,7 @@ Several packages need access to the private key. Not all are run as root. Exampl
 
 Certificates and private keys are backed up using tarsnap.
 
-Certificate renewal is done automatically using cron. The cron script must be aware of private key copies and update them as well. Services that depend on new keys must also be bounced. It is up to roles that rely on keys to modify the cron script (preferably using `linein` or similar games) to accomplish this.
+Certificate renewal is done automatically using cron. The cron script must be aware of private key copies and update them as well. Services that depend on new keys must also be bounced. It is up to roles that rely on keys to modify the cron script (preferably using `lineinfile` or something similar) to accomplish this.
 
 ### Alternative approaches
 
