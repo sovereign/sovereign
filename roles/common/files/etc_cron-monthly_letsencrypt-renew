@@ -16,3 +16,8 @@ for c in `ls /etc/letsencrypt/live`; do
   /root/letsencrypt/letsencrypt-auto --renew certonly -c /etc/letsencrypt/cli.conf --domains=$domains
 done
 service apache2 start
+
+# Services that rely on LE certificates will need restarted.  In some cases
+# their certificates are based on copies of the LE certs and will need
+# regenerated as well.
+
