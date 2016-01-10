@@ -35,6 +35,11 @@
     - privkey.pem
     - cert.pem
 
+- name: Update certificate renewal cron job
+  lineinfile: dest=/etc/cron.monthly/letsencrypt-renew state=present
+    line="cp /etc/letsencrypt/live/{{ domain }}/{privkey,cert}.pem /etc/prosody/certs; chown root.prosody /etc/prosody/certs/{privkey,cert}.pem; chmod 640 /etc/prosody/certs/{privkey,cert}.pem; service prosody restart"
+    insertafter="EOF"
+
 - name: Create Prosody accounts
   command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
   with_items: prosody_accounts
