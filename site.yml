@@ -2,7 +2,7 @@
 # This is the top-level playbook that defines our entire infrastructure.
 
 - hosts: all
-  user: deploy
+  become_user: deploy
   become: True
   become_method: sudo
   gather_facts: True
