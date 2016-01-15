@@ -3,7 +3,8 @@
 
 - hosts: all
   user: deploy
-  sudo: True
+  become: True
+  become_method: sudo
   gather_facts: True
   vars_files:
     - vars/defaults.yml
