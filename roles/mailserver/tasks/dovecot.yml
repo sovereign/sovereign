@@ -71,8 +71,11 @@
     - 10-auth.conf
     - 10-mail.conf
     - 10-master.conf
-    - 10-ssl.conf
     - auth-sql.conf.ext
+  notify: restart dovecot
+
+- name: Template 10-ssl.conf
+  template: src=etc_dovecot_conf.d_10-ssl.conf.j2 dest=/etc/dovecot/conf.d/10-ssl.conf
   notify: restart dovecot
 
 - name: Template 15-lda.conf
@@ -94,3 +97,8 @@
     - imaps
     - pop3s
   tags: ufw
+
+- name: Update certificate renwal cron job
+  lineinfile: dest=/etc/cron.monthly/letsencrypt-renew state=present
+    line="service dovecot restart"
+    insertafter="EOF"

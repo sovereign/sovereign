@@ -39,14 +39,20 @@
 - name: Copy znc init file into place
   copy: src=etc_init.d_znc dest=/etc/init.d/znc mode=0755
 
-- name: Create a combined version of the private key with public cert and intermediate + root CAs
-  shell: cat /etc/ssl/private/wildcard_private.key /etc/ssl/certs/wildcard_combined.pem >
-    /var/lib/znc/znc.pem creates=/var/lib/znc/znc.pem
+- name: Create a combined version of the SSL private key and full certificate chain
+  shell: cat /etc/letsencrypt/live/{{ domain }}/privkey.pem
+    /etc/letsencrypt/live/{{ domain }}/fullchain.pem >
+    /var/lib/znc/znc.pem
+    creates=/var/lib/znc/znc.pem
   notify: restart znc
+
+- name: Update certificate renwal cron job
+  lineinfile: dest=/etc/cron.monthly/letsencrypt-renew state=present
+    line="cat /etc/letsencrypt/live/{{ domain }}/{privkey,fullchain}.pem > /var/lib/znc/znc.pem; chown znc.znc /var/lib/znc/znc.pem; chmod 640 /var/lib/znc/znc.pem; service znc restart"
+    insertafter="EOF"
 
 - name: Ensure znc user and group can read cert
   file: path=/var/lib/znc/znc.pem group=znc owner=znc mode=640
-  notify: restart znc
 
 - name: Check for existing config file
   command: cat /var/lib/znc/configs/znc.conf

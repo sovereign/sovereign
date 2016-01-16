@@ -61,31 +61,7 @@ What You’ll Need
 Installation
 ------------
 
-### 1. Get a wildcard SSL certificate
-
-Generate a private key and a certificate signing request (CSR):
-
-    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -sha256 -out mycert.csr
-
-Purchase a wildcard cert from a certificate authority, such as [Positive SSL](https://positivessl.com) or [AlphaSSL](https://www.alphassl.com). You will provide them with the contents of your CSR, and in return they will give you your signed public certificate. Place the certificate in `roles/common/files/wildcard_public_cert.crt`.
-
-Download your certificate authority’s combined cert to `roles/common/files/wildcard_ca.pem`. You can also download the intermediate and root certificates separately and concatenate them together in that order.
-
-Lastly, test your certificate:
-
-    openssl verify -verbose -CAfile roles/common/files/wildcard_ca.pem roles/common/files/wildcard_public_cert.crt
-
-#### Self-signed SSL certificate
-
-Purchasing SSL certs, and wildcard certs specifically, can be a significant financial burden. It is possible to generate a self-signed SSL certificate (i.e. one that isn’t signed by a Certificate Authority) that is free of charge by nature. However, since a self-signed cert has no CA chain that can confirm its authenticity, some services might behave erratically when using such a certificate.
-
-To create a self-signed SSL cert, run the following commands:
-
-    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -sha256 -out mycert.csr
-    openssl x509 -req -days 365 -in mycert.csr -signkey roles/common/files/wildcard_private.key -out roles/common/files/wildcard_public_cert.crt
-    cp roles/common/files/wildcard_public_cert.crt roles/common/files/wildcard_ca.pem
-
-### 2. Get a Tarsnap machine key
+### 1. Get a Tarsnap machine key
 
 If you haven’t already, [download and install Tarsnap](https://www.tarsnap.com/download.html), or use `brew install tarsnap` if you use [Homebrew](http://brew.sh).
 
@@ -93,7 +69,7 @@ Create a new machine key for your server:
 
     tarsnap-keygen --keyfile roles/tarsnap/files/decrypted_tarsnap.key --user me@example.com --machine example.com
 
-### 3. Prep the server
+### 2. Prep the server
 
 For goodness sake, change the root password:
 
@@ -116,7 +92,7 @@ Authorize your ssh key if you want passwordless ssh login (optional):
 
 Your new account will be automatically set up for passwordless `sudo`.
 
-### 4. Configure your installation
+### 3. Configure your installation
 
 Modify the settings in `vars/user.yml` to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 
@@ -168,6 +144,22 @@ For Git hosting, copy your public key into place:
 
 Finally, replace the TODOs in the file `hosts`. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address. In that case you also need to add your custom port to the task `Set firewall rules for web traffic and SSH` in the file `roles/common/tasks/ufw.yml`.
 
+### 4. Set up DNS
+
+If you’ve just bought a new domain name, point it at [Linode’s DNS Manager](https://library.linode.com/dns-manager) or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you’re using an existing domain that’s already managed elsewhere, you can probably just modify a few records.
+
+Create `A` records which point to your server's IP address:
+
+* `example.com`
+* `mail.example.com`
+* `autoconfig.example.com` (for email client automatic configuration)
+* `read.example.com` (for Wallabag)
+* `news.example.com` (for Selfoss)
+* `cloud.example.com` (for ownCloud)
+* `git.example.com` (for cgit)
+
+Verify that the `subdomains` variable in `vars/user.yml` matches the list of subdomains you have just set up.
+
 ### 5. Run the Ansible Playbooks
 
 First, make sure you’ve [got Ansible 1.6+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
@@ -184,21 +176,9 @@ You might find that it fails at one point or another. This is probably because s
 
 The `dependencies` tag just installs dependencies, performing no other operations. The tasks associated with the `dependencies` tag do not rely on the user-provided settings that live in `vars/user.yml`. Running the playbook with the `dependencies` tag is particularly convenient for working with Docker images.
 
-### 6. Set up DNS
+### 6. Finish DNS set-up
 
-If you’ve just bought a new domain name, point it at [Linode’s DNS Manager](https://library.linode.com/dns-manager) or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you’re using an existing domain that’s already managed elsewhere, you can probably just modify a few records.
-
-Create `A` records which point to your server's IP address:
-
-* `example.com`
-* `mail.example.com`
-* `autoconfig.example.com` (for email client automatic configuration)
-* `read.example.com` (for Wallabag)
-* `news.example.com` (for Selfoss)
-* `cloud.example.com` (for ownCloud)
-* `git.example.com` (for cgit)
-
-Create a `MX` record for `example.com` which assigns `mail.example.com` as the domain’s mail server.
+Create an `MX` record for `example.com` which assigns `mail.example.com` as the domain’s mail server.
 
 To ensure your emails pass DKIM checks you need to add a `txt` record. The name field will be `default._domainkey.EXAMPLE.COM.` The value field contains the public key used by OpenDKIM. The exact value needed can be found in the file `/etc/opendkim/keys/EXAMPLE.COM/default.txt` it’ll look something like this:
 

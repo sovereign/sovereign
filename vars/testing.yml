@@ -26,6 +26,7 @@ irc_timezone: "America/New_York" #Example: "America/New_York"
 
 # mailserver
 mail_db_password: testPassword
+mail_db_opendmarc_password: testPassword
 mail_virtual_domains:
   - name: "{{ domain }}"
     pk_id: 1
