@@ -6,7 +6,7 @@
     - dependencies
 
 - name: Install radicale
-  apt: pkg=radicale update_cache=yes
+  apt: pkg=radicale state=present
   tags:
     - dependencies
 
