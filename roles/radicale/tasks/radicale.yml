@@ -37,3 +37,4 @@
 
 - name: Set firewall rules for radicale
   ufw: rule=allow port={{ radicale_port }} proto=tcp
+  tags: ufw
