@@ -1,2 +1,2 @@
 - name: restart radicale
-  command: /etc/init.d/radicale restart
+  command: name=radicale state=restarted
