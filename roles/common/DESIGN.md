@@ -2,6 +2,8 @@
 
 ## Let's Encrypt Support
 
+[Let's Encrypt](https://letsencrypt.org) (LE) is an automated certificate authority that provides free SSL certificates that are trusted by all major browsers.  LE certificates are used by Sovereign instead of purchased certificates from authorities like RapidSSL in order to reduce the out-of-pocket cost of deploying Sovereign and avoid end-user problems with self-signed certificates.
+
 ### Design approach
 
 The Let's Encrypt service uses DNS to look up domains being registered and then contact the client to verify. For this to work, DNS records must be configured before the playbook is run the first time.
