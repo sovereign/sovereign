@@ -216,6 +216,12 @@ Sign in to the ZNC web interface and set things up to your liking. It isn’t ex
 
 Then proceed to http://localhost:6643 in your web browser.
 
+Similarly, to access the server monitoring page, use another SSH tunnel:
+
+    ssh deploy@example.com -L 2812:localhost:2812
+
+Again proceeding to http://localhost:2812 in your web browser.
+
 Finally, sign into ownCloud to set it up. You should select PostgreSQL as the configuration backend.
 
 How To Use Your New Personal Cloud
