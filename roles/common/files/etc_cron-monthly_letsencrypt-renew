@@ -17,7 +17,5 @@ for c in `ls /etc/letsencrypt/live`; do
 done
 service apache2 start
 
-# Services that rely on LE certificates will need restarted.  In some cases
-# their certificates are based on copies of the LE certs and will need
-# regenerated as well.
+# Services that rely on LE certificates will need restarted.
 
