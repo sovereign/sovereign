@@ -36,6 +36,9 @@
     creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
   when: ansible_ssh_user != "vagrant"
 
+- name: Modify permissions to allow ssl-cert group access
+  file: path=/etc/letsencrypt/archive owner=root group=ssl-cert mode=750
+
 ### Several steps to install a self-signed wildcard key to support offline testing
 
 - name: Create live directory for testing keys
