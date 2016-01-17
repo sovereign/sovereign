@@ -31,7 +31,7 @@
   service: name=apache2 state=stopped
 
 - name: Get an SSL certificate for {{ domain }} from Let's Encrypt
-  command: /root/letsencrypt/letsencrypt-auto certonly -c /etc/letsencrypt/cli.conf --domains {{ domain }},{{ subdomains }}
+  script: gencert {{ domain }}
   args:
     creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
   when: ansible_ssh_user != "vagrant"

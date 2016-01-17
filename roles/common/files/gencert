@@ -1,0 +1,8 @@
+#!/bin/bash
+d="$1"
+for i in www mail autoconfig read news cloud git; do
+  if (getent hosts $i.$1 > /dev/null); then
+    d="$d,$i.$1";
+  fi
+done
+/root/letsencrypt/letsencrypt-auto certonly -c /etc/letsencrypt/cli.conf --domains $d
