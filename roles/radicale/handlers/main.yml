@@ -1,2 +1,2 @@
 - name: restart radicale
-  command: name=radicale state=restarted
+  service: name=radicale state=restarted
