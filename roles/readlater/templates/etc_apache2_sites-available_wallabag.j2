@@ -6,8 +6,7 @@
 
 <VirtualHost *:443>
     ServerName {{ wallabag_domain }}
-
-    Include /etc/apache2/ssl.conf
+    SSLEngine On
 
     DocumentRoot            /var/www/wallabag
     Options                 -Indexes
