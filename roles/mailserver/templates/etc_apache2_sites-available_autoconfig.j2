@@ -17,8 +17,7 @@
 
 <VirtualHost *:443>
     ServerName {{ mail_server_autoconfig_hostname }}
-
-    Include /etc/apache2/ssl.conf
+    SSLEngine On
 
     DocumentRoot            "/var/www/autoconfig"
     Options                 -Indexes
