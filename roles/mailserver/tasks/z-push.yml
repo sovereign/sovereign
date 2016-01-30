@@ -44,7 +44,7 @@
 - name: Configure z-push apache alias and php settings
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf.d/z-push.conf
   notify: restart apache
-  when: ansible_distribution_release != 'trusty' or ansible_distribution_release != 'jessie'
+  when: ansible_distribution_release != 'trusty' and ansible_distribution_release != 'jessie'
 
 
 - name: Create z-push apache alias and php configuration file for Ubuntu Trusty / jessie
