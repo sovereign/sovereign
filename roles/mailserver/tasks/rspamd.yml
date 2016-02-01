@@ -23,7 +23,7 @@
   apt_repository: repo="deb http://download.opensuse.org/repositories/home:/cebka/xUbuntu_14.10/ /"
   tags:
     - dependencies
-  when: ansible_distribution_release == 'jessie'
+  when: ansible_distribution_release == 'trusty'
 
 - name: Install Rspamd and Rmilter
   apt: pkg={{ item }} state=installed update_cache=yes
