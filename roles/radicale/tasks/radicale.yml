@@ -2,6 +2,7 @@
   apt: pkg={{ item }} state=present
   with_items:
     - apache2-utils
+    - python-passlib
   tags:
     - dependencies
 
