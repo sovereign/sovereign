@@ -9,8 +9,7 @@
 <VirtualHost *:443>
     ServerName {{ domain }}
     ServerAlias www.{{ domain }}
-
-    Include /etc/apache2/ssl.conf
+    SSLEngine On
 
     DocumentRoot            "/var/www/{{ domain }}"
     DirectoryIndex          index.html

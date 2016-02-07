@@ -21,8 +21,10 @@
   lineinfile: dest=/etc/apache2/ports.conf regexp='^    NameVirtualHost \*:443' insertafter='^<IfModule mod_ssl.c>' line='    NameVirtualHost *:443'
 
 - name: Add common Apache SSL config
-  template:
-    src=etc_apache2_ssl.conf.j2
-    dest=/etc/apache2/ssl.conf
+  template: src=etc_apache2_ssl.conf.j2 dest=/etc/apache2/conf-available/ssl.conf
     owner=root
     group=root
+
+- name: Enable Apache SSL config
+  command: a2enconf ssl creates=/etc/apache2/conf-enabled/ssl.conf
+  notify: restart apache
