@@ -124,7 +124,7 @@ selfoss_domain: "news.{{ domain }}"
 selfoss_db_username: selfoss
 # selfoss_db_password: (required)
 selfoss_db_database: selfoss
-selfoss_version: 2.14
+selfoss_version: "2.14"
 
 # git
 cgit_version: 0.10.1
@@ -135,7 +135,7 @@ gitolite_version: 3.5.3.1
 newebe_domain: "newebe.{{ domain }}"
 
 # wallabag
-wallabag_version: 1.9.1
+wallabag_version: "1.9.1"
 wallabag_domain: "read.{{ domain }}"
 # wallabag_salt: (required)
 wallabag_db_username: wallabag
