@@ -3,6 +3,7 @@
   with_items:
     - apache2-utils
     - python-passlib
+    - python-sqlalchemy
   tags:
     - dependencies
 
