@@ -13,8 +13,8 @@
 
 - name: Configure radicale to start at boot
   lineinfile: dest=/etc/default/radicale
-              regexp="^ENABLED"
-              line="ENABLED=1"
+              regexp="^ENABLE_RADICALE"
+              line="ENABLE_RADICALE=yes"
 
 - name: Add radicale user to ssl-cert group
   user: name=radicale groups=ssl-cert append=yes
