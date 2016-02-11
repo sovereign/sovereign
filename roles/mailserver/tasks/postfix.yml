@@ -68,3 +68,4 @@
   with_items:
     - smtp
     - ssmtp
+  tags: ufw
