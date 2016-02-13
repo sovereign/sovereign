@@ -1,11 +1,4 @@
 ---
-# Defines tasks applicable across all machines in the infrastructure.
-- name: Set up closest mirror autoselect (Ubuntu-only)
-  template: src=apt_sources.list.j2 dest=/etc/apt/sources.list
-  when: ansible_distribution == 'Ubuntu'
-  tags:
-    - dependencies
-
 - name: Update apt cache
   apt: update_cache=yes
   tags:

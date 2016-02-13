@@ -1,12 +1,5 @@
-- name: Install Postgres 9.3 on Ubuntu Trusty
-  apt: pkg=postgresql-9.3 state=present
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Install Postgres 9.4 on Debian Jessie
-  apt: pkg=postgresql-9.4 state=present
-  when: ansible_distribution_release == 'jessie'
+- name: Install Postgres
+  apt: pkg=postgresql state=present
   tags:
     - dependencies
 
