@@ -36,8 +36,8 @@ Vagrant.configure('2') do |config|
     jessie.vm.box = 'box-cutter/debian81'
   end
 
-  # Ubuntu 14.04.2 (LTS) 64-bit
-  config.vm.define 'trusty', autostart: false do |trusty|
-    trusty.vm.box = 'box-cutter/ubuntu1404'
+  # Ubuntu 16.04 (LTS) 64-bit (currently unavailable)
+  config.vm.define 'xenial', autostart: false do |xenial|
+    xenial.vm.box = 'box-cutter/ubuntu1604'
   end
 end
