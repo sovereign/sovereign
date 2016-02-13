@@ -15,7 +15,7 @@
   notify: restart monit
 
 - name: Determine if ZNC is installed
-  stat: path=/etc/lib/znc/configs/znc.conf
+  stat: path=/usr/lib/znc/configs/znc.conf
   register: znc_config_file
 
 - name: Copy ZNC monit service config files into place
