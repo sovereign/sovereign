@@ -41,7 +41,6 @@
   command: a2enmod socache_shmcb
     creates=/etc/apache2/mods-enabled/socache_shmcb.load
   notify: restart apache
-  when: ansible_distribution_release != 'wheezy'
 
 - name: Add Apache SSL stapling cache configuration
   copy:
