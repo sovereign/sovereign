@@ -43,25 +43,13 @@
   notify: restart apache
   when: ansible_distribution_release != 'wheezy'
 
-- name: Add Apache SSL stapling cache configuration
-  copy:
-    src=etc_apache2_conf-available_ssl-stapling-cache.conf
-    dest=/etc/apache2/conf-available/ssl-stapling-cache.conf
-    owner=root
-    group=root
-  when: ansible_distribution_release != 'wheezy'
-  notify: restart apache
-
-- name: Enable Apache SSL stapling cache configuration
-  command: a2enconf ssl-stapling-cache
-    creates=/etc/apache2/conf-enabled/ssl-stapling-cache.conf
-  when: ansible_distribution_release != 'wheezy'
-  notify: restart apache
-
 - name: Add common Apache SSL config
-  template:
-    src=etc_apache2_ssl.conf.j2
-    dest=/etc/apache2/ssl.conf
+  copy: src=etc_apache2_conf-available_ssl.conf
+    dest=/etc/apache2/conf-available/ssl.conf
     owner=root
     group=root
+  notify: restart apache
+
+- name: Enable Apache SSL config
+  command: a2enconf ssl creates=/etc/apache2/conf-enabled/ssl.conf
   notify: restart apache
