@@ -127,9 +127,9 @@ selfoss_db_database: selfoss
 selfoss_version: 2.14
 
 # git
-cgit_version: 0.10.1
+cgit_version: 0.12
 cgit_domain: "git.{{ domain }}"
-gitolite_version: 3.5.3.1
+gitolite_version: 3.6.4
 
 # wallabag
 wallabag_version: 1.9.1
