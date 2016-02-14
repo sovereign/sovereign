@@ -20,7 +20,9 @@
      Documentation at /docs/config/server.html
  -->
 <Server port="8005" shutdown="SHUTDOWN">
-
+  <!-- Security listener. Documentation at /docs/config/listeners.html
+  <Listener className="org.apache.catalina.security.SecurityListener" />
+  -->
   <!--APR library loader. Documentation at /docs/apr.html -->
   <!--
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
@@ -29,9 +31,8 @@
   <Listener className="org.apache.catalina.core.JasperListener" />
   <!-- Prevent memory leaks due to use of particular java/javax APIs-->
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
-  <!-- JMX Support for the Tomcat server. Documentation at /docs/non-existent.html -->
-  <Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <!-- Global JNDI resources
        Documentation at /docs/jndi-resources-howto.html
@@ -80,12 +81,13 @@
                redirectPort="8443" />
     -->
     <!-- Define a SSL HTTP/1.1 Connector on port 8443
-         This connector uses the JSSE configuration, when using APR, the
-         connector should be using the OpenSSL style configuration
-         described in the APR documentation -->
+         This connector uses the BIO implementation that requires the JSSE
+         style configuration. When using the APR/native implementation, the
+         OpenSSL style configuration is required as described in the APR/native
+         documentation -->
     <!--
-    <Connector port="8443" protocol="HTTP/1.1" SSLEnabled="true"
-               maxThreads="150" scheme="https" secure="true"
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
+               maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS" />
     -->
 
@@ -113,26 +115,19 @@
       <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
       -->
 
-      <!-- The request dumper valve dumps useful debugging information about
-           the request and response data received and sent by Tomcat.
-           Documentation at: /docs/config/valve.html -->
-      <!--
-      <Valve className="org.apache.catalina.valves.RequestDumperValve"/>
-      -->
+      <!-- Use the LockOutRealm to prevent attempts to guess user passwords
+           via a brute-force attack -->
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <!-- This Realm uses the UserDatabase configured in the global JNDI
+             resources under the key "UserDatabase".  Any edits
+             that are performed against this UserDatabase are immediately
+             available for use by the Realm.  -->
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
 
-      <!-- This Realm uses the UserDatabase configured in the global JNDI
-           resources under the key "UserDatabase".  Any edits
-           that are performed against this UserDatabase are immediately
-           available for use by the Realm.  -->
-      <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
-             resourceName="UserDatabase"/>
-
-      <!-- Define the default virtual host
-           Note: XML Schema validation will not work with Xerces 2.2.
-       -->
       <Host name="localhost"  appBase="webapps"
-            unpackWARs="true" autoDeploy="true"
-            xmlValidation="false" xmlNamespaceAware="false">
+            unpackWARs="true" autoDeploy="true">
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
@@ -141,11 +136,11 @@
         -->
 
         <!-- Access log processes all example.
-             Documentation at: /docs/config/valve.html -->
-        <!--
+             Documentation at: /docs/config/valve.html
+             Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-               prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
-        -->
+               prefix="localhost_access_log." suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 
       </Host>
     </Engine>
