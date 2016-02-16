@@ -5,6 +5,18 @@
   with_items:
     - znc
 
+- name: Create znc group
+  group: name=znc state=present
+
+- name: Create znc user
+  user: name=znc state=present home=/var/lib/znc system=yes group=znc shell=/usr/sbin/nologin
+
+- name: Ensure pid directory exists
+  file: state=directory path=/var/run/znc group=znc owner=znc
+
+- name: Copy znc service file into place
+  copy: src=etc_systemd_system_znc.service dest=/etc/systemd/system/znc.service mode=0644
+
 - name: Create a combined version of the private key with public cert and intermediate + root CAs
   shell: cat /etc/ssl/private/wildcard_private.key /etc/ssl/certs/wildcard_combined.pem >
     /usr/lib/znc/znc.pem creates=/usr/lib/znc/znc.pem
@@ -33,4 +45,4 @@
   tags: ufw
 
 - name: Ensure znc is a system service
-  service: name=znc state=started enabled=true
+  service: name=znc state=restarted enabled=true
