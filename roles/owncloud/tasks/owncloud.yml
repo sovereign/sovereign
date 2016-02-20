@@ -20,27 +20,13 @@
 - name: Create database for ownCloud
   postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
 
-- name: Ensure repository key for ownCloud is in place for Debian Jesse
+- name: Ensure repository key for ownCloud is in place
   apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_8.0/Release.key state=present
-  when: ansible_distribution_release == 'jessie'
   tags:
     - dependencies
 
-- name: Add ownCloud OpenSuSE repository for Debian Jessie
+- name: Add ownCloud OpenSuSE repository
   apt_repository: repo='deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/Debian_8.0/ /'
-  when: ansible_distribution_release == 'jessie'
-  tags:
-    - dependencies
-
-- name: Ensure repository key for ownCloud is in place for Ubuntu Trusty
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key state=present
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Add ownCloud OpenSuSE repository for Ubuntu Trusty
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/ /'
-  when: ansible_distribution_release == 'trusty'
   tags:
     - dependencies
 

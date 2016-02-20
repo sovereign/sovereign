@@ -4,7 +4,7 @@
 
 Make sure you agree with the license (GPLv3). See [LICENSE.md](./LICENSE.md) for details.
 
-Code that is committed to the master branch should work with both Debian 8 "Jessie" and Ubuntu 14.04 LTS "Trusty".
+Code that is committed to the master branch should work with both Debian 8 "Jessie" (and Ubuntu 16.04 LTS "Xenial" once it is available).
 
 ## Development environment
 

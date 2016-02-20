@@ -1,2 +1,0 @@
-- include: roundcube.yml tags=roundcube
-  when: ansible_distribution_release == 'trusty'
