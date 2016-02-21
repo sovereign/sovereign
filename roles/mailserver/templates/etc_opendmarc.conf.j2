@@ -12,7 +12,7 @@
 ##  provided, the name of the host running the filter (as returned by the
 ##  gethostname(3) function) will be used.  
 #
-# AuthservID name
+AuthservID {{ mail_server_hostname }}
 
 ##  AuthservIDWithJobID { true | false }
 ##  	default "false"
@@ -163,13 +163,13 @@
 ##  rather periodically imported into a relational database from which the
 ##  aggregate reports can be extracted by a tool such as opendmarc-import(8).
 #
-# HistoryFile /var/run/opendmarc.dat
+HistoryFile /var/run/opendmarc/opendmarc.dat
 
 ##  IgnoreAuthenticatedClients { true | false }
 ##  	default "false"
 ##
 ##  If set, causes mail from authenticated clients (i.e., those that used
-##  SMTP AUTH) to be ignored by the filter.
+##  SMTP UATH) to be ignored by the filter.
 #
 # IgnoreAuthenticatedClients false
 
@@ -181,7 +181,7 @@
 ##  connections are to be ignored by the filter.  If not specified, defaults
 ##  to "127.0.0.1" only.
 #
-# IgnoreHosts /usr/local/etc/opendmarc/ignore.hosts
+IgnoreHosts /etc/opendmarc/ignore.hosts
 
 ##  IgnoreMailFrom domain[,...]
 ##  	default (none)
@@ -207,7 +207,7 @@
 ##  containing the process ID.
 ##
 #
-# PidFile /var/run/opendmarc.pid
+PidFile /var/run/opendmarc.pid
 
 ##  PublicSuffixList path
 ##  	default (none)
@@ -239,7 +239,7 @@
 ##  evaluation of the message.  Instead, an Authentication-Results header
 ##  field will be added.
 #
-# RejectFailures false
+RejectFailures false
 
 ##  ReportCommand string
 ##  	default "/usr/sbin/sendmail -t"
@@ -283,7 +283,7 @@
 ##  delivery.  The product's name, version, and the job ID are included in
 ##  the header field's contents.
 #
-# SoftwareHeader false
+SoftwareHeader true
 
 ##  SPFIgnoreResults { true | false }
 ##	default "false"
@@ -312,7 +312,7 @@
 ##
 ##  Log via calls to syslog(3) any interesting activity.
 #
-# Syslog false
+Syslog true
 
 ##  SyslogFacility facility-name
 ##  	default "mail"
@@ -338,8 +338,7 @@
 ##  with a comma.  The key word "HOSTNAME" will be replaced by the name of
 ##  the host running the filter as reported by the gethostname(3) function.
 #
-# TrustedAuthservIDs HOSTNAME
-
+TrustedAuthservIDs {{ mail_server_hostname }}
 
 ##  UMask mask
 ##  	default (none)
@@ -351,7 +350,7 @@
 ##  specific file mode on creation regardless of the process umask.  See
 ##  umask(2) for more information.
 #
-# UMask 077
+UMask 0002
 
 ##  UserID user[:group]
 ##  	default (none)
@@ -360,4 +359,4 @@
 ##  The process will be assigned all of the groups and primary group ID of
 ##  the named userid unless an alternate group is specified.
 #
-# UserID opendmarc
+UserID opendmarc:opendmarc
