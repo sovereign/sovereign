@@ -1,32 +1,27 @@
 ---
 # Installs the ownCloud personal cloud software.
 
-- name: Install ownCloud  dependencies
+- name: Install ownCloud dependencies
   apt: pkg={{ item }} state=present
   with_items:
     - postgresql
-    - libapache2-mod-php5
-    - php-apc
     - python-psycopg2
   tags:
     - dependencies
 
-- name: Set postgres password
-  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+- name: Set postgres administrator password
+  command: sudo -u {{ db_admin_username }} psql -c "ALTER USER postgres with password '{{ db_admin_password }}';"
 
 - name: Create database user for ownCloud
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" state=present
-
-- name: Create database for ownCloud
-  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" role_attr_flags=CREATEDB state=present
 
 - name: Ensure repository key for ownCloud is in place
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_8.0/Release.key state=present
+  apt_key: url=https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key state=present
   tags:
     - dependencies
 
-- name: Add ownCloud OpenSuSE repository
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/Debian_8.0/ /'
+- name: Add ownCloud repository
+  apt_repository: repo='deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /'
   tags:
     - dependencies
 
@@ -42,27 +37,12 @@
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
 - file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
-- name: Enable Apache rewrite module
-  command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
+- name: Remove conf-enabled/owncloud symlink
+  file: path=/etc/apache2/conf-enabled/owncloud.conf state=absent
   notify: restart apache
-
-- name: Enable Apache headers module
-  command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
-  notify: restart apache
-
-- name: Enable Apache expires module
-  command: a2enmod expires creates=/etc/apache2/mods-enabled/expires.load
-  notify: restart apache
-
-- name: Rename existing Apache owncloud virtualhost
-  command: mv /etc/apache2/sites-available/owncloud /etc/apache2/sites-available/owncloud.conf removes=/etc/apache2/sites-available/owncloud
-
-- name: Remove old sites-enabled/owncloud symlink (new one will be created by a2ensite)
-  file: path=/etc/apache2/sites-enabled/owncloud state=absent
 
 - name: Configure the Apache HTTP server for ownCloud
-  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root owner=root
-
+  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root
 - name: Enable the owncloud site
   command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
   notify: restart apache
