@@ -38,6 +38,7 @@
 
 - name: Modify permissions to allow ssl-cert group access
   file: path=/etc/letsencrypt/archive owner=root group=ssl-cert mode=750
+  when: ansible_ssh_user != "vagrant"
 
 ### Several steps to install a self-signed wildcard key to support offline testing
 
