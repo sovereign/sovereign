@@ -41,10 +41,10 @@ $config['managesieve_usetls'] = false;
 $config['managesieve_conn_options'] = null;
 
 // default contents of filters script (eg. default spam filter)
-$config['managesieve_default'] = '/etc/dovecot/sieve/global';
+$config['managesieve_default'] = '/etc/roundcube/global.sieve';
 
 // The name of the script which will be used when there's no user script
-$config['managesieve_script_name'] = 'managesieve';
+$config['managesieve_script_name'] = 'roundcube';
 
 // Sieve RFC says that we should use UTF-8 endcoding for mailbox names,
 // but some implementations does not covert UTF-8 to modified UTF-7.

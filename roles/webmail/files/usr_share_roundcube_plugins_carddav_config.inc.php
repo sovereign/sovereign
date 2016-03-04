@@ -14,7 +14,7 @@
 // $prefs['_GLOBAL']['fixed'] = true;
 
 // When enabled, this option hides the 'CardDAV' section inside Preferences.
-// $prefs['_GLOBAL']['hide_preferences'] = true;
+// $prefs['_GLOBAL']['hide_preferences'] = false;
 
 // Scheme for storing the CardDAV passwords.
 // Options:

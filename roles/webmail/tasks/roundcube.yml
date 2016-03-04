@@ -42,15 +42,13 @@
 
 - name: Move carddav plugin files to /usr/share/roundcube/plugins/carddav
   command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav
-  args:
-    chdir: /root
-    creates: /usr/share/roundcube/plugins/carddav
+  args: chdir=/root creates=/usr/share/roundcube/plugins/carddav
 
 - name: Download Google Authenticator roundcube plugin
   git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
-       dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
-       accept_hostkey=yes
-       version=master
+   dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
+   accept_hostkey=yes
+   version=master
 
 - name: Link plugins into /var/lib/roundcube/plugins
   file: state=link src=/usr/share/roundcube/plugins/{{ item }} dest=/var/lib/roundcube/plugins/{{ item }} force=yes
@@ -59,10 +57,16 @@
     - twofactor_gauthenticator
 
 - name: Configure roundcube
+  template: src=etc_roundcube_config.inc.php.j2 dest=/etc/roundcube/config.inc.php
+    group=www-data
+    owner=root
+    mode=640
+    force=yes
+
+- name: Configure roundcube plugins
   copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
   with_items:
   - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
-  - { src: 'etc_roundcube_config.inc.php',                                        dest: '/etc/roundcube/config.inc.php' }
   - { src: 'usr_share_roundcube_plugins_carddav_config.inc.php',                  dest: '/usr/share/roundcube/plugins/carddav/config.inc.php' }
   - { src: 'usr_share_roundcube_plugins_managesieve_config.inc.php',              dest: '/usr/share/roundcube/plugins/managesieve/config.inc.php' }
   - { src: 'usr_share_roundcube_plugins_twofactor_gauthenticator_config.inc.php', dest: '/usr/share/roundcube/plugins/twofactor_gauthenticator/config.inc.php' }

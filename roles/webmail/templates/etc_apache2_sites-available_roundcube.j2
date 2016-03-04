@@ -1,48 +1,61 @@
-# Those aliases do not work properly with several hosts on your apache server
-# Uncomment them to use it or adapt them to your configuration
-#    Alias /roundcube /var/lib/roundcube
+<VirtualHost *:80> 
+    ServerName {{ webmail_domain }}
 
-<Directory /var/lib/roundcube/>
-  Options +FollowSymLinks
-  # This is needed to parse /var/lib/roundcube/.htaccess. See its
-  # content before setting AllowOverride to None.
-  AllowOverride All
-  <IfVersion >= 2.3>
-    Require all granted
-  </IfVersion> 
-  <IfVersion < 2.3>
-    Order allow,deny
-    Allow from all
-  </IfVersion>
-</Directory>
+    Redirect permanent / https://{{ webmail_domain }}/
+</VirtualHost>
 
-# Protecting basic directories:
-<Directory /var/lib/roundcube/config>
-        Options -FollowSymLinks
-        AllowOverride None
-</Directory>
+<VirtualHost *:443>
+    ServerName {{ webmail_domain }}
+    SSLEngine On
 
-<Directory /var/lib/roundcube/temp>
-        Options -FollowSymLinks
-        AllowOverride None
-        <IfVersion >= 2.3>
-          Require all denied
-        </IfVersion> 
-        <IfVersion < 2.3>
-          Order allow,deny
-          Deny from all
-        </IfVersion>
-</Directory>
+    # Those aliases do not work properly with several hosts on your apache server
+    # Uncomment them to use it or adapt them to your configuration
+    Alias / /var/lib/roundcube/
 
-<Directory /var/lib/roundcube/logs>
-        Options -FollowSymLinks
-        AllowOverride None
-        <IfVersion >= 2.3>
-          Require all denied
-        </IfVersion> 
-        <IfVersion < 2.3>
-          Order allow,deny
-          Deny from all
-        </IfVersion>
-</Directory>
+    <Directory /var/lib/roundcube/>
+      Options +FollowSymLinks
+      # This is needed to parse /var/lib/roundcube/.htaccess. See its
+      # content before setting AllowOverride to None.
+      AllowOverride All
+      <IfVersion >= 2.3>
+        Require all granted
+      </IfVersion> 
+      <IfVersion < 2.3>
+        Order allow,deny
+        Allow from all
+      </IfVersion>
+    </Directory>
 
+    # Protecting basic directories:
+    <Directory /var/lib/roundcube/config>
+            Options -FollowSymLinks
+            AllowOverride None
+    </Directory>
+
+    <Directory /var/lib/roundcube/temp>
+            Options -FollowSymLinks
+            AllowOverride None
+            <IfVersion >= 2.3>
+              Require all denied
+            </IfVersion> 
+            <IfVersion < 2.3>
+              Order allow,deny
+              Deny from all
+            </IfVersion>
+    </Directory>
+
+    <Directory /var/lib/roundcube/logs>
+            Options -FollowSymLinks
+            AllowOverride None
+            <IfVersion >= 2.3>
+              Require all denied
+            </IfVersion> 
+            <IfVersion < 2.3>
+              Order allow,deny
+              Deny from all
+            </IfVersion>
+    </Directory>
+    
+    CustomLog /var/log/apache2/webmail_access.log combined 
+    ErrorLog /var/log/apache2/webmail_error.log 
+</VirtualHost>

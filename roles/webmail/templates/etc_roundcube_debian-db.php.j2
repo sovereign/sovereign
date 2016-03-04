@@ -9,10 +9,10 @@
 ## you'll probably also want to edit the configuration file mentioned
 ## above too.
 ##
-$dbuser='roundcube';
-$dbpass='ufno9vN0s04b';
+$dbuser='{{ webmail_db_username }}';
+$dbpass='{{ webmail_db_password }}';
 $basepath='';
-$dbname='roundcube';
+$dbname='{{ webmail_db_database }}';
 $dbserver='localhost';
 $dbport='';
-$dbtype='mysql';
+$dbtype='pgsql';
