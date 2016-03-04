@@ -1,0 +1,6 @@
+- name: set roundcube password
+  command: sudo -u {{ db_admin_username }} psql -d {{ webmail_db_database }} -c "ALTER USER {{ webmail_db_username }} with password '{{ webmail_db_password }}';"
+  notify: import sql carddav
+
+- name: import sql carddav
+  action: shell PGPASSWORD='{{ webmail_db_password }}' psql -h localhost -d {{ webmail_db_database }} -U {{ webmail_db_username }} -f /usr/share/roundcube/plugins/carddav/dbinit/postgres.sql
