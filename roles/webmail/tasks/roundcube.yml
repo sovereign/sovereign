@@ -8,8 +8,12 @@
   tags:
     - dependencies
 
-- name: Tell debconf we want to install Roundcube with postgresql backend
+- name: Tell debconf how to install Roundcube
   debconf: name=roundcube-core question='roundcube/database-type' vtype=select value='pgsql'
+  debconf: name=roundcube-core question='roundcube/pgsql/admin-user' vtype=text value='{{ db_admin_username }}'
+  debconf: name=roundcube-core question='roundcube/pgsql/admin-pass' vtype=password value='{{ db_admin_password }}'
+  debconf: name=roundcube-core question='roundcube/db/app-user' vtype=text value='{{ webmail_db_username }}'
+  debconf: name=roundcube-core question='roundcube/pgsql/app-pass' vtype=password value='{{ webmail_db_password }}'
 
 - name: Install Roundcube from jessie-backports
   apt: pkg={{ item }} state=latest default_release=jessie-backports
@@ -20,15 +24,6 @@
   - roundcube
   tags:
     - dependencies
-
-- name: Configure Roundcube database
-  template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
-  with_items:
-  - { src: 'etc_dbconfig-common_roundcube.conf.j2', dest: '/etc/dbconfig-common/roundcube.conf', group: 'root',     mode: 600 }
-  - { src: 'etc_roundcube_debian-db.php.j2',        dest: '/etc/roundcube/debian-db.php',        group: 'www-data', mode: 640 }
-
-- name: set roundcube password
-  command: sudo -u {{ db_admin_username }} psql -d {{ webmail_db_database }} -c "ALTER USER {{ webmail_db_username }} with password '{{ webmail_db_password }}';"
 
 - name: Download carddav plugin release
   get_url:
