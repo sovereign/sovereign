@@ -12,6 +12,7 @@
   roles:
     - common
     - mailserver
+    - webmail
     - blog
     - ircbouncer
     - xmpp
