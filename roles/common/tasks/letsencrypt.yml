@@ -2,6 +2,7 @@
   git: repo=https://github.com/letsencrypt/letsencrypt
        dest=/root/letsencrypt
        version=master
+       force=yes
 
 - name: Create directory for LetsEncrypt configuration and certificates
   file: state=directory path=/etc/letsencrypt group=root owner=root
