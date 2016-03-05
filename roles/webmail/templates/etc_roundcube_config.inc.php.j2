@@ -19,12 +19,8 @@ $config = array();
 // SQL DATABASE
 // ----------------------------------
 
-// Database connection string (DSN) for read+write operations
-// Format (compatible with PEAR MDB2): db_provider://user:password@host/database
-// Currently supported db_providers: mysql, pgsql, sqlite, mssql or sqlsrv
-// For examples see http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
-// NOTE: for SQLite use absolute path: 'sqlite:////full/path/to/sqlite.db?mode=0646'
-$config['db_dsnw'] = 'mysql://roundcube:@localhost/roundcubemail';
+/* Do not set db_dsnw here, use dpkg-reconfigure roundcube-core to configure database ! */
+include_once("/etc/roundcube/debian-db-roundcube.php");
 
 // Database DSN for read-only operations (if empty write database will be used)
 // useful for database replication
@@ -124,7 +120,7 @@ $config['smtp_debug'] = false;
 // For example %n = mail.domain.tld, %t = domain.tld
 // WARNING: After hostname change update of mail_host column in users table is
 //          required to match old user data records with the new host.
-$config['default_host'] = 'localhost';
+$config['default_host'] = 'ssl://{{ mail_server_hostname }}:993';
 
 // TCP port used for IMAP connections
 $config['default_port'] = 143;
@@ -229,19 +225,19 @@ $config['messages_cache_threshold'] = 50;
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = '';
+$config['smtp_server'] = 'ssl://{{ mail_server_hostname }}';
 
 // SMTP port (default is 25; use 587 for STARTTLS or 465 for the
 // deprecated SSL over SMTP (aka SMTPS))
-$config['smtp_port'] = 25;
+$config['smtp_port'] = 465;
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
-$config['smtp_user'] = '';
+$config['smtp_user'] = '%u';
 
 // SMTP password (if required) if you use %p as the password Roundcube
 // will use the current user's password for login
-$config['smtp_pass'] = '';
+$config['smtp_pass'] = '%p';
 
 // SMTP AUTH type (DIGEST-MD5, CRAM-MD5, LOGIN, PLAIN or empty to use
 // best server supported one)
@@ -420,7 +416,7 @@ $config['x_frame_options'] = 'sameorigin';
 // this key is used to encrypt the users imap password which is stored
 // in the session record (and the client cookie if remember password is enabled).
 // please provide a string of exactly 24 chars.
-$config['des_key'] = 'rcmail-!24ByteDESkey*Str';
+$config['des_key'] = 'cQro25fVv3ruWTNh0a6Sm1Rp';
 
 // Automatically add this domain to user names for login
 // Only for IMAP servers that require full e-mail addresses for login
@@ -580,7 +576,7 @@ $config['assets_dir'] = '';
 // ----------------------------------
 
 // List of active plugins (in plugins/ directory)
-$config['plugins'] = array();
+$config['plugins'] = array('managesieve', 'carddav', 'twofactor_gauthenticator');
 
 // ----------------------------------
 // USER INTERFACE
