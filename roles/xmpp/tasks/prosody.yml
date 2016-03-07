@@ -17,7 +17,7 @@
     - dependencies
 
 - name: Add prosody user to ssl-cert group
-  user: name=prosody groups=ssl-cert append=yes
+  user: name=prosody group=ssl-cert
 
 - name: Create Prosody data directory
   file: state=directory path=/decrypted/prosody owner=prosody group=prosody

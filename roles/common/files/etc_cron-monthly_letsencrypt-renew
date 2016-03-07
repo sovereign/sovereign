@@ -1,0 +1,21 @@
+#!/bin/bash
+# Renew all live certificates with LetsEncrypt.  This needs to run at least
+# once every three months.
+
+# Given a certificate file returns "domain1,domain2"
+# https://community.letsencrypt.org/t/help-me-understand-renewal-config/7115
+function getDomains() {
+        openssl x509 -text -in "$1" |
+        grep -A1 "Subject Alternative Name:" | tail -n1 |
+        tr -d ' ' | tr -d 'DNS:'
+}
+
+service apache2 stop
+for c in `ls /etc/letsencrypt/live`; do
+  domains=$(getDomains /etc/letsencrypt/live/$c/cert.pem)
+  /root/letsencrypt/letsencrypt-auto --renew certonly -c /etc/letsencrypt/cli.conf --domains=$domains
+done
+service apache2 start
+
+# Services that rely on LE certificates will need restarted.
+
