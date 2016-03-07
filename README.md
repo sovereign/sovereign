@@ -159,8 +159,6 @@ Create `A` or `CNAME` records which point to your server's IP address:
 * `cloud.example.com` (for ownCloud)
 * `git.example.com` (for cgit)
 
-Verify that the `subdomains` variable in `vars/user.yml` matches the list of subdomains you have just set up.
-
 ### 5. Run the Ansible Playbooks
 
 First, make sure you’ve [got Ansible 1.6+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
