@@ -1,2 +1,1 @@
-ansible==1.9.3
-nose
+ansible>=1.9.3,<2
