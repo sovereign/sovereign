@@ -32,7 +32,7 @@
   service: name=apache2 state=stopped
 
 - name: Get an SSL certificate for {{ domain }} from Let's Encrypt
-  script: gencert {{ domain }}
+  script: letsencrypt-gencert {{ domain }}
   args:
     creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
   when: ansible_ssh_user != "vagrant"
