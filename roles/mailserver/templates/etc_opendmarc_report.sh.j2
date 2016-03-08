@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# ensure this script errors out if any of its steps do
+set -e
+
 DB_SERVER='localhost'
 DB_USER='{{ mail_db_opendmarc_username }}'
 DB_PASS='{{ mail_db_opendmarc_password }}'
