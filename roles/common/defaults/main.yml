@@ -1,0 +1,4 @@
+common_timezone: 'Etc/UTC'
+
+# encfs
+encfs_password: "{{ lookup('password', 'credentials/' + role + '/encfs_password' length=32') }}"
