@@ -38,5 +38,4 @@
   file: path=/var/run/opendmarc/opendmarc.dat state=touch owner=opendmarc group=opendmarc
 
 - name: Activate OpenDMARC report cronjob
-  cron: name="OpenDMARC report" hour="2" minute="0" job="/bin/bash /etc/opendmarc/report.sh >> /var/log/opendmarc_report.log"
-
+  cron: name="OpenDMARC report" hour="2" minute="0" job="/bin/bash /etc/opendmarc/report.sh >> /var/log/opendmarc_report.log 2>&1 || tail /var/log/opendmarc_report.log"
