@@ -11,10 +11,26 @@
   tags:
     - dependencies
 
-- name: Install Rspamd and Rmilter
+- name: Install Rspamd, Rmilter, and Redis
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - rspamd
     - rmilter
+    - redis-server
   tags:
     - dependencies
+
+- name: Configure rmilter
+  copy: src=etc_rmilter.conf.common dest=/etc/rmilter.conf.common
+
+- name: Configure rmilter socket service
+  copy: src=lib_systemd_system_rmilter.socket dest=/lib/systemd/system/rmilter.socket
+
+- name: Start redis
+  service: name=redis-server state=started
+
+- name: Start rspamd systemd socket listener
+  service: name=rspamd.socket state=started
+
+- name: Start rmilter systemd socket listener
+  service: name=rmilter.socket state=started
