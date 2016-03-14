@@ -53,7 +53,7 @@ What You’ll Need
 ----------------
 
 1.  A VPS (or bare-metal server if you wanna ball hard). My VPS is hosted at [Linode](http://www.linode.com/?r=45405878277aa04ee1f1d21394285da6b43f963b). You’ll probably want at least 512 MB of RAM between Apache, Solr, and PostgreSQL. Mine has 1024.
-2.  [64-bit Debian 7](http://www.debian.org/) or an equivalent Linux distribution. (You can use whatever distro you want, but deviating from Debian will require more tweaks to the playbooks. See Ansible’s different [packaging](http://docs.ansible.com/ansible/list_of_packaging_modules.html) modules.)
+2.  [64-bit Debian 8.3](http://www.debian.org/) or an equivalent Linux distribution. (You can use whatever distro you want, but deviating from Debian will require more tweaks to the playbooks. See Ansible’s different [packaging](http://docs.ansible.com/ansible/list_of_packaging_modules.html) modules.)
 3.  A [Tarsnap](http://www.tarsnap.com) account with some credit in it. You could comment this out if you want to use a different backup service. Consider paying your hosting provider for backups or using an additional backup service for redundancy.
 
 You do not need to acquire an SSL certificate.  The SSL certificates you need will be obtained from [Let's Encrypt](https://letsencrypt.org/) automatically when you deploy your server.
@@ -161,7 +161,7 @@ Create `A` or `CNAME` records which point to your server's IP address:
 
 ### 5. Run the Ansible Playbooks
 
-First, make sure you’ve [got Ansible 1.6+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
+First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
 
 To run the whole dang thing:
 
