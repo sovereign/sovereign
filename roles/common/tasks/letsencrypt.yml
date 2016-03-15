@@ -33,9 +33,6 @@
 - name: Create live directory for LetsEncrypt cron job
   file: state=directory path=/etc/letsencrypt/live group=root owner=root
 
-- name: Stop Apache
-  service: name=apache2 state=stopped
-
 - name: Get an SSL certificate for {{ domain }} from Let's Encrypt
   script: letsencrypt-gencert {{ domain }} creates=/etc/letsencrypt/live/{{ domain }}/privkey.pem
   when: ansible_ssh_user != "vagrant"
