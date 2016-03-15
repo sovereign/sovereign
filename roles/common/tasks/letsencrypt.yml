@@ -37,9 +37,7 @@
   service: name=apache2 state=stopped
 
 - name: Get an SSL certificate for {{ domain }} from Let's Encrypt
-  script: letsencrypt-gencert {{ domain }}
-  args:
-    creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
+  script: letsencrypt-gencert {{ domain }} creates=/etc/letsencrypt/live/{{ domain }}/privkey.pem
   when: ansible_ssh_user != "vagrant"
 
 - name: Modify permissions to allow ssl-cert group access
