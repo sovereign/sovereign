@@ -5,5 +5,10 @@
   template: src=etc_collectd_collectd.conf.j2 dest=/etc/collectd/collectd.conf
   notify: restart collectd
 
-- name: Ensure collectd is a system service
-  service: name=collectd state=started enabled=true
+- name: Ensure collectd is started
+  service: name=collectd state=started
+
+# Work around https://github.com/ansible/ansible-modules-core/issues/915
+# otherwise we'd use enabled=yes in previous task
+- name: Ensure collectd is enabled
+  command: update-rc.d collectd enable creates=/etc/rc3.d/S03collectd
