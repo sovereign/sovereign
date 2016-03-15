@@ -18,5 +18,8 @@ for c in $(find /etc/letsencrypt/live/ -mindepth 1  -type d); do
 done
 service apache2 start
 
-# Services that rely on LE certificates will need restarted.
-
+# Services that rely on LE certificates may need restarted and/or other actions.
+for script in $(find /etc/letsencrypt/postrenew/ -maxdepth 1 -type f); do
+  echo "Executing ${script}."
+  $script
+done

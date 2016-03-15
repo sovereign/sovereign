@@ -17,6 +17,9 @@
 - name: Install LetsEncrypt package dependencies
   command: /root/letsencrypt/letsencrypt-auto --help
 
+- name: Create directory for post-renewal scripts
+  file: state=directory path=/etc/letsencrypt/postrenew group=root owner=root
+
 - name: Install crontab entry for LetsEncrypt
   copy:
     src=etc_cron-monthly_letsencrypt-renew

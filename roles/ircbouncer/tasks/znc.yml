@@ -24,10 +24,13 @@
     creates=/usr/lib/znc/znc.pem
   notify: restart znc
 
-- name: Update certificate renwal cron job
-  lineinfile: dest=/etc/cron.monthly/letsencrypt-renew state=present
-    line="cat /etc/letsencrypt/live/{{ domain }}/{privkey,fullchain}.pem > /usr/lib/znc/znc.pem; chown znc.znc /usr/lib/znc/znc.pem; chmod 640 /usr/lib/znc/znc.pem; service znc restart"
-    insertafter="EOF"
+- name: Update post-certificate-renewal task
+  template:
+    src: etc_letsencrypt_postrenew_znc.sh.j2
+    dest: /etc/letsencrypt/postrenew/znc.sh
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Ensure znc user and group can read cert
   file: path=/usr/lib/znc/znc.pem group=znc owner=znc mode=640
