@@ -16,6 +16,8 @@
 
 - name: Install LetsEncrypt package dependencies
   command: /root/letsencrypt/letsencrypt-auto --help
+  register: le_deps_result
+  changed_when: "'Bootstrapping dependencies' in le_deps_result.stdout"
 
 - name: Create directory for post-renewal scripts
   file: state=directory path=/etc/letsencrypt/postrenew group=root owner=root
