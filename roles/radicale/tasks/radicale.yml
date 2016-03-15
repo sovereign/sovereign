@@ -38,7 +38,7 @@
   copy: src=etc_logrotate_radicale dest=/etc/logrotate.d/radicale owner=root group=root mode=0644
 
 - name: Copy radicale config file into place
-  copy: src=etc_radicale_config dest=/etc/radicale/config mode=0644
+  template: src=config.j2 dest=/etc/radicale/config mode=0644
 
 - name: Copy radicale init file into place
   copy: src=etc_init.d_radicale dest=/etc/init.d/radicale mode=0755
