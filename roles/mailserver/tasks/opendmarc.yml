@@ -26,16 +26,13 @@
 
 - name: Create database for OpenDMARC reports
   mysql_db: name={{ mail_db_opendmarc_database }} state=present
-
-- name: Import database schema for OpenDMARC reports
-  mysql_db: name={{ mail_db_opendmarc_database }} state=import target=/usr/share/doc/opendmarc/schema.mysql
-  tags: import_mysql_postfix
+  notify: import opendmarc schema
 
 - name: Copy nightly OpenDMARC report generation script into place
   template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="755"
 
-- name: Touch initial report dat file with correct permissions
-  file: path=/var/run/opendmarc/opendmarc.dat state=touch owner=opendmarc group=opendmarc
+- name: Ensure initial report dat file exists with correct permissions
+  copy: content="" dest=/var/run/opendmarc/opendmarc.dat owner=opendmarc group=opendmarc
 
 - name: Activate OpenDMARC report cronjob
   cron: name="OpenDMARC report" hour="2" minute="0" job="/bin/bash /etc/opendmarc/report.sh >> /var/log/opendmarc_report.log 2>&1 || tail /var/log/opendmarc_report.log"
