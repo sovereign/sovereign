@@ -16,7 +16,7 @@
   tags:
     - dependencies
 
-- name: Set postgres user password
+- name: Set password for PostgreSQL admin user
   become: true
   become_user: postgres
   postgresql_user: name={{ db_admin_username }} password={{ db_admin_password }} encrypted=yes
