@@ -14,6 +14,13 @@
 - name: Ensure pid directory exists
   file: state=directory path=/var/run/znc group=znc owner=znc
 
+- name: Ensure configuration folders exist
+  file: state=directory path=/usr/lib/znc/{{ item }} group=znc owner=znc
+  with_items:
+    - moddata
+    - modules
+    - users
+
 - name: Copy znc service file into place
   copy: src=etc_systemd_system_znc.service dest=/etc/systemd/system/znc.service mode=0644
 
