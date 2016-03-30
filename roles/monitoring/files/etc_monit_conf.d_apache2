@@ -1,4 +1,4 @@
-check process apache2 with pidfile /var/run/apache2.pid
+check process apache2 with pidfile /var/run/apache2/apache2.pid
   group www
   start program = "systemctl start apache2"
   stop program = "systemctl stop apache2"
