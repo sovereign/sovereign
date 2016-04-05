@@ -83,6 +83,3 @@
   when: ansible_ssh_user == "vagrant"
 
 ### Back to normal
-
-- name: Start Apache
-  service: name=apache2 state=started
