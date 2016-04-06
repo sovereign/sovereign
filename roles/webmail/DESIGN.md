@@ -6,7 +6,7 @@ The goal of this role is twofold: 1) provide an interface for configuring doveco
 
 ## Approach
 
-The Roundcube package is used for this role.  It's provided in backports on Debian and included in Xenial.  Plugins are used for optional two-factor authentication for additional security and for CardDAV support.
+The Roundcube package is used for this role.  It's provided in backports on Debian and included in Xenial.  Plugins are used for configuring [sieve filters](http://sieve.info/), optional two-factor authentication for additional security, and CardDAV support.
 
 Roundcube uses a database.  Multiple backends are supported including postgres.  Postgres is used by sovereign.  Configuration is handled using `debconf` to anticipate package updates.
 
