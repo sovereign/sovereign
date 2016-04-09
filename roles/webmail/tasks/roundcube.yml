@@ -8,12 +8,22 @@
   tags:
     - dependencies
 
-- name: Tell debconf how to install Roundcube
+- name: Configure roundcube-core package to install using postgres
   debconf: name=roundcube-core question='roundcube/database-type' vtype=select value='pgsql'
+
+- name: Configure roundcube-core package who the admin user is...
   debconf: name=roundcube-core question='roundcube/pgsql/admin-user' vtype=text value='{{ db_admin_username }}'
+
+- name: ...and the admin password
   debconf: name=roundcube-core question='roundcube/pgsql/admin-pass' vtype=password value='{{ db_admin_password }}'
+  changed_when: False
+
+- name: Configure roundcube-core package who the app user is...
   debconf: name=roundcube-core question='roundcube/db/app-user' vtype=text value='{{ webmail_db_username }}'
+
+- name: ...and the app user password
   debconf: name=roundcube-core question='roundcube/pgsql/app-pass' vtype=password value='{{ webmail_db_password }}'
+  changed_when: False
 
 - name: Install Roundcube from jessie-backports
   apt: pkg={{ item }} state=latest default_release=jessie-backports
