@@ -16,6 +16,11 @@
 
 - name: Install LetsEncrypt package dependencies
   command: /root/letsencrypt/letsencrypt-auto --help
+  register: le_deps_result
+  changed_when: "'Bootstrapping dependencies' in le_deps_result.stdout"
+
+- name: Create directory for post-renewal scripts
+  file: state=directory path=/etc/letsencrypt/postrenew group=root owner=root
 
 - name: Install crontab entry for LetsEncrypt
   copy:
@@ -28,13 +33,8 @@
 - name: Create live directory for LetsEncrypt cron job
   file: state=directory path=/etc/letsencrypt/live group=root owner=root
 
-- name: Stop Apache
-  service: name=apache2 state=stopped
-
 - name: Get an SSL certificate for {{ domain }} from Let's Encrypt
-  script: letsencrypt-gencert {{ domain }}
-  args:
-    creates: /etc/letsencrypt/live/{{ domain }}/privkey.pem
+  script: letsencrypt-gencert {{ domain }} creates=/etc/letsencrypt/live/{{ domain }}/privkey.pem
   when: ansible_ssh_user != "vagrant"
 
 - name: Modify permissions to allow ssl-cert group access
@@ -83,6 +83,3 @@
   when: ansible_ssh_user == "vagrant"
 
 ### Back to normal
-
-- name: Start Apache
-  service: name=apache2 state=started
