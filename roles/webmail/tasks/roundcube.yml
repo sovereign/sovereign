@@ -72,11 +72,11 @@
   template: src=etc_roundcube_config.inc.php.j2 dest=/etc/roundcube/config.inc.php
     group=www-data
     owner=root
-    mode=640
+    mode=0640
     force=yes
 
 - name: Configure roundcube plugins
-  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
+  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=0640 force=yes
   with_items:
   - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
   - { src: 'usr_share_roundcube_plugins_carddav_config.inc.php',                  dest: '/usr/share/roundcube/plugins/carddav/config.inc.php' }
