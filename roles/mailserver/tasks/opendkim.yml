@@ -38,7 +38,7 @@
 
 - name: Set OpenDKIM config directory permissions
   file: state=directory path=/etc/opendkim
-          group=opendkim owner=opendkim mode=700 recurse=yes
+          group=opendkim owner=opendkim mode=0700 recurse=yes
   notify:
     - restart opendkim
     - restart postfix

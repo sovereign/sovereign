@@ -40,7 +40,7 @@
     mode: 0755
 
 - name: Ensure znc user and group can read cert
-  file: path=/usr/lib/znc/znc.pem group=znc owner=znc mode=640
+  file: path=/usr/lib/znc/znc.pem group=znc owner=znc mode=0640
   notify: restart znc
 
 - name: Check for existing config file
