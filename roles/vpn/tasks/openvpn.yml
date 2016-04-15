@@ -35,7 +35,7 @@
         state=directory
         owner=root
         group=root
-        mode=600
+        mode=0600
 
 - name: Generate CA certificate
   command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=ca-certificate"
@@ -120,10 +120,10 @@
            creates={{ openvpn_dhparam }}
 
 - name: Add empty rc.local if it doesn't exist
-  copy: src=rc.local dest=/etc/rc.local mode=700 owner=root group=root force=no
+  copy: src=rc.local dest=/etc/rc.local mode=0700 owner=root group=root force=no
 
 - name: custom rc.local file with iptables rules
-  template: src=rc.local_ansible_openvpn dest=/etc/rc.local_ansible_openvpn mode=700 owner=root group=root
+  template: src=rc.local_ansible_openvpn dest=/etc/rc.local_ansible_openvpn mode=0700 owner=root group=root
 
 - name: Ensure custom rc.local file is included in rc.local
   lineinfile: dest=/etc/rc.local line='bash /etc/rc.local_ansible_openvpn' insertbefore='exit 0'
