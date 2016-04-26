@@ -153,6 +153,7 @@ Create `A` or `CNAME` records which point to your server's IP address:
 
 * `example.com`
 * `mail.example.com`
+* `www.example.com` (for Web hosting)
 * `autoconfig.example.com` (for email client automatic configuration)
 * `read.example.com` (for Wallabag)
 * `news.example.com` (for Selfoss)
