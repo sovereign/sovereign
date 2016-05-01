@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 # Renew all live certificates with LetsEncrypt.  This needs to run at least
-# once every three months, but recommanded frequency is once a day.
+# once every three months, but recommended frequency is once a day.
 
 /root/letsencrypt/letsencrypt-auto renew --pre-hook="service apache2 stop" --post-hook="service apache2 start" \
     -c /etc/letsencrypt/cli.conf

@@ -24,8 +24,8 @@
 
 - name: Install crontab entry for LetsEncrypt
   copy:
-    src=etc_cron-monthly_letsencrypt-renew
-    dest=/etc/cron.monthly/letsencrypt-renew
+    src=etc_cron-daily_letsencrypt-renew
+    dest=/etc/cron.daily/letsencrypt-renew
     owner=root
     group=root
     mode=0755
