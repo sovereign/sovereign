@@ -19,16 +19,35 @@
   register: le_deps_result
   changed_when: "'Bootstrapping dependencies' in le_deps_result.stdout"
 
+- name: Create directory for pre-renewal scripts
+  file: state=directory path=/etc/letsencrypt/prerenew group=root owner=root
+
 - name: Create directory for post-renewal scripts
   file: state=directory path=/etc/letsencrypt/postrenew group=root owner=root
 
+- name: Create pre-renew hook to stop apache
+  copy:
+    content: "#!/bin/bash\n\nservice apache2 stop\n"
+    dest: /etc/letsencrypt/prerenew/apache
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create post-renew hook to start apache
+  copy:
+    content: "#!/bin/bash\n\nservice apache2 start\n"
+    dest: /etc/letsencrypt/postrenew/apache
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Install crontab entry for LetsEncrypt
   copy:
-    src=etc_cron-daily_letsencrypt-renew
-    dest=/etc/cron.daily/letsencrypt-renew
-    owner=root
-    group=root
-    mode=0755
+    src: etc_cron-daily_letsencrypt-renew
+    dest: /etc/cron.daily/letsencrypt-renew
+    owner: root
+    group: root
+    mode: 0755
 
 - name: Create live directory for LetsEncrypt cron job
   file: state=directory path=/etc/letsencrypt/live group=root owner=root
