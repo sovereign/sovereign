@@ -1,5 +1,5 @@
 #!/bin/bash
-# Executed by /etc/cron.monthly/letsencrypt-renew
+# Executed by /etc/cron.daily/letsencrypt-renew
 
 cat /etc/letsencrypt/live/{{ domain }}/{privkey,fullchain}.pem > /usr/lib/znc/znc.pem
 chown znc.znc /usr/lib/znc/znc.pem
