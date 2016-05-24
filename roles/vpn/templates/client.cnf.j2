@@ -13,6 +13,10 @@ comp-lzo
 key-direction 1
 verb 3
 route {{ ansible_default_ipv4.address }} 255.255.255.255 net_gateway
+{{ openvpn_tls_version_min }}
+remote-cert-eku "TLS Web Server Authentication"
+
+verify-x509-name 'C={{ openvpn_key_country }}, ST={{ openvpn_key_province }}, L={{ openvpn_key_city }}, O={{ openvpn_key_org }}, OU={{ openvpn_key_ou }}, CN=server' subject
 
 # If you'd like to enable 2FA support, uncomment the following line
 ;auth-user-pass
