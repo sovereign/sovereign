@@ -62,7 +62,11 @@ You do not need to acquire an SSL certificate.  The SSL certificates you need wi
 Installation
 ------------
 
-### 1. Get a Tarsnap machine key
+### 1. Install required packages
+
+    apt-get install sudo
+
+### 2. Get a Tarsnap machine key
 
 If you haven’t already, [download and install Tarsnap](https://www.tarsnap.com/download.html), or use `brew install tarsnap` if you use [Homebrew](http://brew.sh).
 
@@ -70,7 +74,7 @@ Create a new machine key for your server:
 
     tarsnap-keygen --keyfile roles/tarsnap/files/decrypted_tarsnap.key --user me@example.com --machine example.com
 
-### 2. Prep the server
+### 3. Prep the server
 
 For goodness sake, change the root password:
 
@@ -93,7 +97,7 @@ Authorize your ssh key if you want passwordless ssh login (optional):
 
 Your new account will be automatically set up for passwordless `sudo`.
 
-### 3. Configure your installation
+### 4. Configure your installation
 
 Modify the settings in `vars/user.yml` to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 
@@ -145,7 +149,7 @@ For Git hosting, copy your public key into place:
 
 Finally, replace the TODOs in the file `hosts`. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address. In that case you also need to add your custom port to the task `Set firewall rules for web traffic and SSH` in the file `roles/common/tasks/ufw.yml`.
 
-### 4. Set up DNS
+### 5. Set up DNS
 
 If you’ve just bought a new domain name, point it at [Linode’s DNS Manager](https://library.linode.com/dns-manager) or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you’re using an existing domain that’s already managed elsewhere, you can probably just modify a few records.
 
@@ -160,7 +164,7 @@ Create `A` or `CNAME` records which point to your server's IP address:
 * `cloud.example.com` (for ownCloud)
 * `git.example.com` (for cgit)
 
-### 5. Run the Ansible Playbooks
+### 6. Run the Ansible Playbooks
 
 First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
 
@@ -176,7 +180,7 @@ You might find that it fails at one point or another. This is probably because s
 
 The `dependencies` tag just installs dependencies, performing no other operations. The tasks associated with the `dependencies` tag do not rely on the user-provided settings that live in `vars/user.yml`. Running the playbook with the `dependencies` tag is particularly convenient for working with Docker images.
 
-### 6. Finish DNS set-up
+### 7. Finish DNS set-up
 
 Create an `MX` record for `example.com` which assigns `mail.example.com` as the domain’s mail server.
 
@@ -188,7 +192,7 @@ For DMARC you'll also need to add a `txt` record. The name field should be `_dma
 
 Set up SPF and reverse DNS [as per this post](http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/). Make sure to validate that it’s all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
-### 7. Miscellaneous Configuration
+### 8. Miscellaneous Configuration
 
 Sign in to the ZNC web interface and set things up to your liking. It isn’t exposed through the firewall, so you must first set up an SSH tunnel:
 
