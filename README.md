@@ -99,7 +99,8 @@ Your new account will be automatically set up for passwordless `sudo`.
 
 ### 4. Configure your installation
 
-Modify the settings in `vars/user.yml` to your liking. If you want to see how they’re used in context, just search for the corresponding string.
+Modify the settings in `group_vars/sovereign` to your liking. If you want to see how they’re used in context, just search for the corresponding string.
+All of the variables in `group_vars/sovereign` must be set for sovereign to function.
 
 Setting `password_hash` for your mail users is a bit tricky. You can generate one using [doveadm-pw](http://wiki2.dovecot.org/Tools/Doveadm/Pw).
 
@@ -147,7 +148,7 @@ For Git hosting, copy your public key into place:
 
 	cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub
 
-Finally, replace the TODOs in the file `hosts`. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address. In that case you also need to add your custom port to the task `Set firewall rules for web traffic and SSH` in the file `roles/common/tasks/ufw.yml`.
+Finally, replace the `host.example.net` in the file `hosts`. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address. In that case you also need to add your custom port to the task `Set firewall rules for web traffic and SSH` in the file `roles/common/tasks/ufw.yml`.
 
 ### 5. Set up DNS
 
@@ -178,7 +179,7 @@ To run just one or more piece, use tags. I try to tag all my includes for easy i
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there’s no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I’ve tried to add comments where manual intervention is necessary.
 
-The `dependencies` tag just installs dependencies, performing no other operations. The tasks associated with the `dependencies` tag do not rely on the user-provided settings that live in `vars/user.yml`. Running the playbook with the `dependencies` tag is particularly convenient for working with Docker images.
+The `dependencies` tag just installs dependencies, performing no other operations. The tasks associated with the `dependencies` tag do not rely on the user-provided settings that live in `group_vars/sovereign`. Running the playbook with the `dependencies` tag is particularly convenient for working with Docker images.
 
 ### 7. Finish DNS set-up
 
@@ -206,7 +207,7 @@ Similarly, to access the server monitoring page, use another SSH tunnel:
 
 Again proceeding to http://localhost:2812 in your web browser.
 
-Finally, sign into ownCloud with a new administrator account to set it up. You should select PostgreSQL as the configuration backend. Use `owncloud` as the database user and the database name. For the database password use the password you set for `owncloud_db_password` in `vars/user.yml`.
+Finally, sign into ownCloud with a new administrator account to set it up. You should select PostgreSQL as the configuration backend. Use `owncloud` as the database user and the database name. For the database password use the password you set for `owncloud_db_password` in `group_vars/sovereign`.
 
 How To Use Your New Personal Cloud
 ----------------------------------
