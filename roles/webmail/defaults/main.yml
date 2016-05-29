@@ -1,0 +1,11 @@
+secret_root: '{{ inventory_dir | realpath }}'
+secret_name: 'secret'
+secret: '{{ secret_root + "/" + secret_name }}'
+
+db_admin_username: 'postgres'
+db_admin_password: "{{ lookup('password', secret + '/' + 'db_admin_password', length=32) }}"
+webmail_db_username: 'roundcube'
+webmail_db_password: "{{ lookup('password', secret + '/' + 'webmail_db_password', length=32) }}"
+webmail_db_database: 'roundcube'
+carddav_version: "1.0.0"
+webmail_domain: "{{ mail_server_hostname }}"
