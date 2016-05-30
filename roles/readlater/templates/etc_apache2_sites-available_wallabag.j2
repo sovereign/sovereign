@@ -16,8 +16,7 @@
 
     <Directory /var/www/wallabag>
         AllowOverride All
-        Order allow,deny
-        allow from all
+        Require all granted
         DirectoryIndex index.php
     </Directory>
 </VirtualHost>
