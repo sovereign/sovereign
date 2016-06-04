@@ -14,6 +14,8 @@ key-direction 1
 verb 3
 route {{ ansible_default_ipv4.address }} 255.255.255.255 net_gateway
 
+{{ openvpn_tls_version_min }}
+
 # If you'd like to enable 2FA support, uncomment the following line
 ;auth-user-pass
 
