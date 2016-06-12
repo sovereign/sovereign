@@ -8,6 +8,9 @@ Vagrant.configure('2') do |config|
     ansible.playbook = 'site.yml'
     ansible.host_key_checking = false
     ansible.extra_vars = { ansible_ssh_user: 'vagrant', testing: true }
+    ansible.groups = {
+      "testing" => ["jessie"]
+    }
 
     # ansible.tags = ['blog']
     # ansible.skip_tags = ['openvpn']
