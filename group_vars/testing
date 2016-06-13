@@ -1,0 +1,67 @@
+---
+###############################################################################
+# Variables used when testing with Vagrant.  Secrets are stored in
+# `.vagrant/provisioners/ansible/inventory/secret.
+#
+# selfoss_password_hash is the SHA512 hash of `foo`
+# 
+###############################################################################
+
+# common
+domain: sovereign.local
+main_user_name: sovereign
+friendly_networks:
+  - "172.16.100.0/24"
+
+# admin email
+# fail2ban reports will be sent to this address
+admin_email: "{{ main_user_name }}@{{ domain }}"
+
+# mailserver
+mail_virtual_domains:
+  - name: "{{ domain }}"
+    pk_id: 1
+mail_virtual_users:
+  - account: "{{ main_user_name }}"
+    domain: "{{ domain }}"
+    password_hash: "$6$IYJfaF3jvmbAzlSe$1HBkbIdrOTWA31WYon7VSE2xAcFzYSZuVb8d3I0NDWzPxXBaqkHqKs4rLeNO9CVQEKv7wA15QctCyXbdRqFDy." #foo
+    domain_pk_id: 1
+mail_virtual_aliases:
+  - source: "root@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+  - source: "postmaster@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+  - source: "webmaster@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+
+# timezone
+# common_timezone will be used in the common and mailserver roles
+common_timezone: 'Etc/UTC'
+
+# znc
+irc_nick: sovereign
+irc_ident: sovereign
+irc_realname: Mr. Sovereign
+irc_quitmsg: Bye
+irc_password_hash: "310c5f99825e80d5b1d663a0a993b8701255f16b2f6056f335ba6e3e720e57ed" #foo
+irc_password_salt: "YdlPM5yjBmc/;JO6cfL5"
+irc_timezone: "America/New_York" #Example: "America/New_York"
+
+# xmpp
+prosody_accounts:
+  - name: "{{ main_user_name }}"
+    password: foo
+
+# openvpn
+openvpn_key_country:  "US"
+openvpn_key_province: "California"
+openvpn_key_city: "Beverly Hills"
+openvpn_key_org: "ACME CORPORATION"
+openvpn_key_ou: "Anvil Department"
+openvpn_clients:
+  - laptop
+  - phone
+  - tablet
