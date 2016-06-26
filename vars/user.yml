@@ -57,6 +57,12 @@ zpush_timezone: "TODO"  #Example: "America/New_York"
 # owncloud
 owncloud_db_password: TODO
 
+# radicale
+radicale_db_password: TODO
+radicale_accounts:
+  - name: "{{ main_user_name }}"
+    password: TODO
+
 # vpn
 openvpn_key_country:  "US"
 openvpn_key_province: "California"
