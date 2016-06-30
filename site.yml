@@ -6,6 +6,7 @@
   sudo: True
   gather_facts: True
   vars_files:
+    - vars/private.yml
     - vars/defaults.yml
     - vars/{{ 'testing' if testing is defined else 'user' }}.yml
 
