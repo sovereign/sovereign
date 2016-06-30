@@ -1,0 +1,16 @@
+---
+# Removes cgit and content
+
+- name:  Disable cgit site
+  command: a2dissite cgit.conf removes=/etc/apache2/sites-enabled/cgit.conf
+
+- name: Remove cgit configuration file from apache
+  file: dest=/etc/apache2/sites-available/cgit.conf state=absent
+  notify: restart apache
+
+- name: Remove cgit 
+  file: dest=/var/www/htdocs/cgit state=absent
+
+- name: Remove cgitrc
+  file: dest=/etc/cgitrc state=absent
+

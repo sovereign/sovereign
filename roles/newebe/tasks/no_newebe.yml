@@ -1,0 +1,32 @@
+---
+# Removes newebe and content
+
+- name: Stop newebe
+  supervisorctl: name=newebe state=stopped
+
+- name: Disable newebe
+  command: a2dissite newebe.conf removes=/etc/apache2/sites-enabled/newebe.conf
+  notify: restart apache
+
+- name: Remove newebe configuration file from apache
+  file: dest=/etc/apache2/sites-available/newebe.conf state=absent
+
+- name: Stop supervisor
+  service: name=supervisor state=stopped enabled=no
+  ignore_errors: true
+
+- name: Remove supervisor
+  apt: name=supervisor state=absent purge=yes
+
+- name: Remove group Newebe
+  group: name=newebe state=absent
+
+- name: Remove user Newebe
+  user: name=newebe state=absent remove=yes
+
+- name: Remove newebe configuration directory
+  file: path=/usr/local/etc/newebe/ state=absent
+
+- name: Remove newebe var directory
+  file: path=/usr/local/var/newebe/ state=absent
+

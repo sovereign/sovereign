@@ -1,0 +1,13 @@
+---
+# Removes configuration for blogging
+
+- name: Create directory for blog HTML
+  file: state=absent path=/var/www/{{ domain }} group=www-data owner=www-data
+
+- name: Disable blog site
+  command: a2dissite {{ domain }}.conf removes=/etc/apache2/sites-enabled/{{ domain }}.conf
+
+- name: Remove apache configuration file
+  file: dest=/etc/apache2/sites-available/{{ domain }}.conf state=absent
+  notify: restart apache
+
