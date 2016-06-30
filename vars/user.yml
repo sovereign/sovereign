@@ -7,7 +7,7 @@
 # common
 domain: TODO.com
 main_user_name: TODO
-encfs_password: TODO
+encfs_password: TODO    # NOTE: must not contain dollar sign characters '$'
 
 # database
 db_admin_username: postgres
@@ -24,6 +24,7 @@ irc_timezone: TODO      #Example: "America/New_York"
 
 # mailserver
 mail_db_password: TODO
+mail_db_opendmarc_password: TODO
 mail_virtual_domains:
   - name: "{{ domain }}"
     pk_id: 1

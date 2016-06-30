@@ -5,6 +5,7 @@
 ###############################################################################
 
 # # common
+common_timezone: 'Etc/UTC'
 # domain: (required)
 # main_user_name: (required)
 admin_email: "{{ main_user_name }}@{{ domain }}"
@@ -12,6 +13,11 @@ main_user_shell: "/bin/bash"
 # encfs_password: (required)
 friendly_networks:
   - ""
+
+# ssh
+kex_algorithms: "diffie-hellman-group-exchange-sha256"
+ciphers: "aes256-ctr,aes192-ctr,aes128-ctr"
+macs: "hmac-sha2-512,hmac-sha2-256,hmac-ripemd160"
 
 # ntp
 ntp_servers:
@@ -58,6 +64,9 @@ mail_db_database: mailserver
 # mail_virtual_domains: (required)
 # mail_virtual_users: (required)
 # mail_virtual_aliases: (required)
+mail_db_opendmarc_username: opendmarc
+# mail_db_opendmarc_password: (required)
+mail_db_opendmarc_database: opendmarc
 
 # z-push
 zpush_version: 2.1.1-1788
@@ -72,6 +81,8 @@ owncloud_db_database: owncloud
 tarsnap_version: 1.0.35
 
 # vpn
+# Notes about security: https://blog.g3rt.nl/openvpn-security-tips.html
+# Check privacy: http://witch.valdikss.org.ru/
 # openvpn_key_country: (required)
 # openvpn_key_province: (required)
 # openvpn_key_city: (required)
@@ -80,8 +91,8 @@ tarsnap_version: 1.0.35
 openvpn_days_valid: "1825"
 openssl_request_subject: "/C={{ openvpn_key_country }}/ST={{ openvpn_key_province }}/L={{ openvpn_key_city }}/O={{ openvpn_key_org }}/OU={{ openvpn_key_ou }}"
 openvpn_key_size: "2048"
-openvpn_cipher: "BF-CBC"
-openvpn_auth_digest: "SHA1"
+openvpn_cipher: "AES-256-CBC"
+openvpn_auth_digest: "SHA512"
 openvpn_path: "/etc/openvpn"
 openvpn_ca: "{{ openvpn_path }}/ca"
 openvpn_dhparam: "{{ openvpn_path }}/dh{{ openvpn_key_size }}.pem"
@@ -89,10 +100,15 @@ openvpn_hmac_firewall: "{{ openvpn_path }}/ta.key"
 openvpn_server: "{{ domain }}"
 openvpn_port: "1194"
 openvpn_protocol: "udp"
+openvpn_mtu: "1300"
+openvpn_verb: "3" # "0" for anonymity
+# uncomment for openvpn 2.3.3 and >2.3.4
+openvpn_tls_version_min: "" # "tls-version-min 1.2"
+openvpn_tls_cipher: "" # "tls-cipher TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256:TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256:TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-256-CBC-SHA256"
 # openvpn_clients: (required)
 
 # webmail
-webmail_domain: "mail.{{ domain }}"
+webmail_domain: "{{ mail_server_hostname }}"
 webmail_db_username: "roundcube"
 # webmail_db_password: (required)
 webmail_db_database: "roundcube"
@@ -108,6 +124,7 @@ selfoss_domain: "news.{{ domain }}"
 selfoss_db_username: selfoss
 # selfoss_db_password: (required)
 selfoss_db_database: selfoss
+selfoss_version: "2.14"
 
 # git
 cgit_version: 0.10.1
@@ -118,7 +135,7 @@ gitolite_version: 3.5.3.1
 newebe_domain: "newebe.{{ domain }}"
 
 # wallabag
-wallabag_version: 1.7.1
+wallabag_version: "1.9.1"
 wallabag_domain: "read.{{ domain }}"
 # wallabag_salt: (required)
 wallabag_db_username: wallabag

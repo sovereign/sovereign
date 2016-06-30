@@ -5,6 +5,8 @@
     - php5
     - php5-cli
     - php5-imap
+  tags:
+    - dependencies
 
 - name: Download z-push release
   get_url:
@@ -12,16 +14,22 @@
     dest=/root/z-push-{{ zpush_version }}.tar.gz
 
 - name: Decompress z-push source
-  command: tar xzf z-push-{{ zpush_version }}.tar.gz chdir=/root creates=/root/z-push-{{ zpush_version }}
+  unarchive: src=/root/z-push-{{ zpush_version }}.tar.gz
+             dest=/root copy=no
+             creates=/root/z-push-{{ zpush_version }}
 
 - name: Create /usr/share/z-push
   file: state=directory path=/usr/share/z-push
 
 - name: Copy z-push source files to /usr/share/z-push
   shell: cp -R z-push-{{ zpush_version }}/* /usr/share/z-push/ chdir=/root
+  tags:
+    - skip_ansible_lint
 
 - name: Remove downloaded, temporary z-push source files
   shell: rm -rf z-push* chdir=/root
+  tags:
+    - skip_ansible_lint
 
 - name: Ensure z-push state and log directories are in place
   file: state=directory path={{ item }} owner=www-data group=www-data mode=755

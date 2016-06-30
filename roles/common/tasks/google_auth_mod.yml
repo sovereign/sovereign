@@ -8,6 +8,8 @@
     - libpam-google-authenticator
     - libpam0g-dev
     - libqrencode3
+  tags:
+    - dependencies
 
 - name: Update sshd config to enable challenge responses
   lineinfile: dest=/etc/ssh/sshd_config

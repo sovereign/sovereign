@@ -4,5 +4,5 @@
 {{ domain.name }}
 {% endfor %}
 {% for domain in mail_virtual_domains %}
-mail.{{ domain.name }}
+{{ mail_server_hostname }}
 {% endfor %}

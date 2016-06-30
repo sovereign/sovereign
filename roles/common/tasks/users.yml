@@ -1,2 +1,5 @@
 - name: Create main user account
-  user: name={{ main_user_name }} state=present shell={{ main_user_shell }} groups=sudo,fuse
+  user: name={{ main_user_name }} state=present shell={{ main_user_shell }} groups=sudo
+
+- name: Give main user account sudo power
+  template: src=roles/common/templates/sudoers.j2 dest=/etc/sudoers.d/sudoers owner=root group=root mode=0440 validate='visudo -cf %s'

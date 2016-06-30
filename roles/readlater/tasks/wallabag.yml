@@ -20,6 +20,8 @@
     - php5-mcrypt
     - php5-pgsql
     - php5-tidy
+  tags:
+    - dependencies
 
 - name: Create database user for wallabag
   postgresql_user: login_host=localhost
@@ -38,34 +40,48 @@
                  owner={{ wallabag_db_username }}
   notify: import wallabag sql
 
-- name: Build Composer
-  shell: curl -sS https://getcomposer.org/installer | php
-         chdir=/root
-         creates=/root/composer.phar
+- name: Get Composer installer
+  get_url: url=https://getcomposer.org/installer
+           dest=/tmp/composer-installer
+
+- name: Install Composer
+  command: php /tmp/composer-installer
+           chdir=/root
+           creates=/root/composer.phar
 
 - name: Initialize composer
   command: php /root/composer.phar install
            chdir=/var/www/wallabag
            creates=/var/www/wallabag/vendor/autoload.php
 
-- name: Set wallabag permissions
-  file: owner=www-data
+- name: Set wallabag ownership
+  file: owner=root
         group=www-data
         path=/var/www/wallabag
         recurse=yes
         state=directory
 
+# the httpd only needs write access to the wallabag assets, cache and db directories
+- name: Set wallabag assets, cache and db permissions
+  file: path=/var/www/wallabag/{{ item }}
+        mode=0775
+        state=directory
+  with_items:
+    - assets
+    - cache
+    - db
+
 - name: Create the configuration file
   template: src=var_www_wallabag_inc_poche_config.inc.php.j2
             dest=/var/www/wallabag/inc/poche/config.inc.php
-            owner=www-data
+            owner=root
             group=www-data
 
 - name: Rename existing Apache wallabag virtualhost
   command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf removes=/etc/apache2/sites-available/wallabag
 
 - name: Remove old sites-enabled/wallabag symlink (new one will be created by a2ensite)
-  command: rm /etc/apache2/sites-enabled/wallabag removes=/etc/apache2/sites-enabled/wallabag
+  file: path=/etc/apache2/sites-enabled/wallabag state=absent
 
 - name: Configure the Apache HTTP server for wallabag
   template: src=etc_apache2_sites-available_wallabag.j2

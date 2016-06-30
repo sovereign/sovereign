@@ -1,0 +1,85 @@
+# This is a basic configuration that can easily be adapted to suit a standard
+# installation. For more advanced options, see opendkim.conf(5) and/or
+# /usr/share/doc/opendmarc/examples/opendmarc.conf.sample.
+
+##  AuthservID (string)
+##      defaults to MTA name
+#
+AuthservID {{ mail_server_hostname }}
+
+##  ForensicReports { true | false }
+##      default "false"
+##
+# ForensicReports false
+
+PidFile /var/run/opendmarc.pid
+
+##  RejectFailures { true | false }
+##      default "false"
+##
+RejectFailures false
+
+##  Syslog { true | false }
+##      default "false"
+##
+##  Log via calls to syslog(3) any interesting activity.
+#
+Syslog true
+
+##  SyslogFacility facility-name
+##      default "mail"
+##
+##  Log via calls to syslog(3) using the named facility.  The facility names
+##  are the same as the ones allowed in syslog.conf(5).
+#
+# SyslogFacility mail
+
+##  TrustedAuthservIDs string
+##      default HOSTNAME
+##
+##  Specifies one or more "authserv-id" values to trust as relaying true
+##  upstream DKIM and SPF results.  The default is to use the name of
+##  the MTA processing the message.  To specify a list, separate each entry
+##  with a comma.  The key word "HOSTNAME" will be replaced by the name of
+##  the host running the filter as reported by the gethostname(3) function.
+#
+TrustedAuthservIDs {{ mail_server_hostname }}
+
+
+##  UMask mask
+##      default (none)
+##
+##  Requests a specific permissions mask to be used for file creation.  This
+##  only really applies to creation of the socket when Socket specifies a
+##  UNIX domain socket, and to the HistoryFile and PidFile (if any); temporary
+##  files are normally created by the mkstemp(3) function that enforces a
+##  specific file mode on creation regardless of the process umask.  See
+##  umask(2) for more information.
+#
+UMask 0002
+
+##  UserID user[:group]
+##      default (none)
+##
+##  Attempts to become the specified userid before starting operations.
+##  The process will be assigned all of the groups and primary group ID of
+##  the named userid unless an alternate group is specified.
+#
+UserID opendmarc:opendmarc
+
+## The path to the Ignored Hosts list. This file should contain a list of
+## networks and hosts that you trust. Their mail will not be checked by
+## OpenDMARC.
+#
+IgnoreHosts /etc/opendmarc/ignore.hosts
+
+## The path under which the History file should be created.
+## This file is necessary if you want to be able to create aggregate
+## reports to send out to other organizations
+#
+HistoryFile /var/run/opendmarc/opendmarc.dat
+
+## Adds a “Dmarc-Filter” header with the opendmarc version in every processed mail.
+## This is good to have during testing.
+#
+SoftwareHeader true

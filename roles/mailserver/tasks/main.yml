@@ -1,8 +1,10 @@
 - include: postfix.yml tags=postfix
 - include: dovecot.yml tags=dovecot
 - include: opendkim.yml tags=opendkim
+- include: dmarc.yml tags=dmarc
 - include: dspam.yml tags=dspam
 - include: solr.yml tags=solr
 - include: checkrbl.yml tags=checkrbl
 - include: z-push.yml tags=zpush
 - include: autoconfig.yml tags=autoconfig
+

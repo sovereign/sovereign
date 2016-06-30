@@ -1,11 +1,20 @@
 ---
 # Defines tasks applicable across all machines in the infrastructure.
+- name: Set up closest mirror autoselect (ubuntu-only)
+  template: src=apt_sources.list.j2 dest=/etc/apt/sources.list
+  when: ansible_distribution == 'Ubuntu'
+  tags:
+    - dependencies
 
 - name: Update apt cache
   apt: update_cache=yes
+  tags:
+    - dependencies
 
 - name: Upgrade all safe packages
   apt: upgrade=safe
+  tags:
+    - dependencies
 
 - name: Install necessities and nice-to-haves
   apt: pkg={{ item }} state=installed
@@ -25,12 +34,29 @@
     - screen
     - sudo
     - update-notifier-common
+    - unattended-upgrades
+    - molly-guard
     - vim
     - zsh
+  tags:
+    - dependencies
 
-- name: Install unattended upgrades (Debian/Ubuntu only)
-  apt: pkg=unattended-upgrades state=installed
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+- name: timezone - configure /etc/timezone
+  copy:
+    content: "{{ common_timezone | regex_replace('$', '\n') }}"
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: 0644
+  register: common_timezone_config
+
+- name: timezone - Set localtime to UTC
+  file: src=/usr/share/zoneinfo/Etc/UTC dest=/etc/localtime
+  when: common_timezone_config.changed
+
+- name: timezone - reconfigure tzdata
+  command: dpkg-reconfigure --frontend noninteractive tzdata
+  when: common_timezone_config.changed
 
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
@@ -56,6 +82,12 @@
   command: a2enconf fqdn creates=/etc/apache2/conf-enabled/fqdn.conf
   notify: restart apache
   when: ansible_distribution_release == 'trusty'
+
+- name: Create decrypted directory (even if encfs isn't used)
+  file: state=directory path=/decrypted
+
+- name: Set decrypted directory permissions
+  file: state=directory path=/decrypted group=mail mode=775
 
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
