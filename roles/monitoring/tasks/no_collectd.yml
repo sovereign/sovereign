@@ -1,0 +1,16 @@
+---
+# Removes collectd
+
+- name: Stop collectd service
+  service: name=collectd state=stopped
+
+- name: Remove collectd package
+  file: path={{ item }} state=absent
+  with_items:
+    - /opt/collectd
+    - /etc/init.d/collectd
+    - /root/collectd-{{ collectd_version }}
+    - /root/collectd-{{ collectd_version }}.tar.gz
+    - /root/collectd-librato-{{ collectd_librato_version }}
+    - /root/collectd-librato-{{ collectd_librato_version }}.tar.gz
+

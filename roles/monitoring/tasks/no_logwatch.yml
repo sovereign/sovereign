@@ -1,0 +1,12 @@
+---
+# Removes logwatch configuration
+
+- name: Remove logwatch cronjob
+  cron: name=logwatch state=absent
+
+- name: Remove logwatch package
+  apt: pkg=logwatch state=absent
+
+- name: Remove logwatch config directory
+  file: path=/etc/logwatch state=absent
+
