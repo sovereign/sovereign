@@ -13,12 +13,13 @@ smtp       inet  n       -       -       -       1       postscreen
 smtpd      pass  -       -       -       -       -       smtpd
 dnsblog    unix  -       -       -       -       0       dnsblog
 tlsproxy   unix  -       -       -       -       0       tlsproxy
-#submission inet  n       -       -       -       -       smtpd
-#  -o syslog_name=postfix/submission
-#  -o smtpd_tls_security_level=encrypt
-#  -o smtpd_etrn_restrictions=reject
-#  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
-#  -o milter_macro_daemon_name=ORIGINATING
+submission inet  n       -       -       -       -       smtpd
+  -o syslog_name=postfix/submission
+  -o smtpd_tls_security_level=encrypt
+  -o smtpd_etrn_restrictions=reject
+  -o smtpd_client_restrictions=permit_sasl_authenticated,reject_unauth_destination,reject
+  -o smtpd_sasl_security_options=noanonymous,noplaintext
+  -o smtpd_sasl_tls_security_options=noanonymous
 
 # SMTP over SSL/TLS on port 465.
 smtps     inet  n       -       -       -       -       smtpd

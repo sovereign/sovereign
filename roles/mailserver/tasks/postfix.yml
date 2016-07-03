@@ -63,4 +63,5 @@
   with_items:
     - smtp
     - ssmtp
+    - submission
   tags: ufw
