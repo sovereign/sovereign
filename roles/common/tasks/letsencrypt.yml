@@ -71,6 +71,7 @@
   copy: src=wildcard_private.key
     dest=/etc/letsencrypt/live/{{ domain }}/privkey.pem
     owner=root group=ssl-cert mode=0640
+  register: private_key
   when: ansible_ssh_user == "vagrant"
 
 - name: Copy SSL public certificate into place for testing
