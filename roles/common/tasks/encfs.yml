@@ -34,4 +34,4 @@
   when: encfs_check.rc == 0
 
 - name: Set decrypted directory permissions
-  file: state=directory path=/decrypted group=mail mode=775
+  file: state=directory path=/decrypted group=mail mode=0775

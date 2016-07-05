@@ -55,12 +55,12 @@
   user: name=vmail group=vmail state=present uid=5000 home=/decrypted shell=/usr/sbin/nologin
 
 - name: Ensure mail domain directories are in place
-  file: state=directory path=/decrypted/{{ item.name }} owner=vmail group=dovecot mode=770
-  with_items: mail_virtual_domains
+  file: state=directory path=/decrypted/{{ item.name }} owner=vmail group=dovecot mode=0770
+  with_items: "{{ mail_virtual_domains }}"
 
 - name: Ensure mail directories are in place
   file: state=directory path=/decrypted/{{ item.domain }}/{{ item.account }} owner=vmail group=dovecot
-  with_items: mail_virtual_users
+  with_items: "{{ mail_virtual_users }}"
 
 - name: Copy dovecot.conf into place
   copy: src=etc_dovecot_dovecot.conf dest=/etc/dovecot/dovecot.conf
@@ -85,7 +85,7 @@
 
 - name: Ensure correct permissions on Dovecot config directory
   file: state=directory path=/etc/dovecot
-          group=dovecot owner=vmail mode=770 recurse=yes
+          group=dovecot owner=vmail mode=0770 recurse=yes
   notify: restart dovecot
 
 - name: Set firewall rules for dovecot

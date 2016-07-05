@@ -21,13 +21,13 @@
 
 - name: Create directories for clients
   file: path={{ openvpn_path}}/{{ item }} state=directory
-  with_items: openvpn_clients
+  with_items: "{{ openvpn_clients }}"
 
 - name: Generate RSA keys for the clients
   command: openssl genrsa -out client.key {{ openvpn_key_size }}
            chdir={{ openvpn_path }}/{{ item }}
            creates=client.key
-  with_items: openvpn_clients
+  with_items: "{{ openvpn_clients }}"
 
 - name: Set the proper permissions on all RSA keys
   file: path={{ openvpn_path }}
@@ -35,7 +35,7 @@
         state=directory
         owner=root
         group=root
-        mode=600
+        mode=0600
 
 - name: Generate CA certificate
   command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=ca-certificate"
@@ -73,13 +73,13 @@
   command: openssl req -new -key client.key -out client.csr -subj "{{ openssl_request_subject }}/CN={{ item }}"
            chdir={{ openvpn_path }}/{{ item }}
            creates=client.csr
-  with_items: openvpn_clients
+  with_items: "{{ openvpn_clients }}"
 
 - name: Generate certificates for the clients
   command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in client.csr -out client.crt
            chdir={{ openvpn_path }}/{{ item }}
            creates=client.crt
-  with_items: openvpn_clients
+  with_items: "{{ openvpn_clients }}"
 
 - name: Generate HMAC firewall key
   command: openvpn --genkey --secret {{ openvpn_hmac_firewall }}
@@ -93,13 +93,13 @@
 - name: Register client certificate contents
   command: cat client.crt
            chdir={{ openvpn_path }}/{{ item }}
-  with_items: openvpn_clients
+  with_items: "{{ openvpn_clients }}"
   register: openvpn_client_certificates
 
 - name: Register client key contents
   command: cat client.key
            chdir={{ openvpn_path }}/{{ item }}
-  with_items: openvpn_clients
+  with_items: "{{ openvpn_clients }}"
   register: openvpn_client_keys
 
 - name: Register HMAC firewall contents
@@ -120,10 +120,10 @@
            creates={{ openvpn_dhparam }}
 
 - name: Add empty rc.local if it doesn't exist
-  copy: src=rc.local dest=/etc/rc.local mode=700 owner=root group=root force=no
+  copy: src=rc.local dest=/etc/rc.local mode=0700 owner=root group=root force=no
 
 - name: custom rc.local file with iptables rules
-  template: src=rc.local_ansible_openvpn dest=/etc/rc.local_ansible_openvpn mode=700 owner=root group=root
+  template: src=rc.local_ansible_openvpn dest=/etc/rc.local_ansible_openvpn mode=0700 owner=root group=root
 
 - name: Ensure custom rc.local file is included in rc.local
   lineinfile: dest=/etc/rc.local line='bash /etc/rc.local_ansible_openvpn' insertbefore='exit 0'
@@ -145,7 +145,8 @@
 
 # OpenVPN must restart first so the 10.8.0.0 interface is available
 # to dnsmasq
-- meta: flush_handlers
+- name: Restart OpenVPN to create interface
+  meta: flush_handlers
 
 - name: Copy dnsmasq configuration file into place
   copy: src=etc_dnsmasq.conf dest=/etc/dnsmasq.conf
@@ -170,5 +171,6 @@
     - openvpn_clients
     - ["client.crt", "client.key", "ca.crt", "ta.key", "{{ openvpn_server }}.ovpn"]
 
-- pause: seconds=5
+- name: Pause to inform user
+  pause: seconds=5
          prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."

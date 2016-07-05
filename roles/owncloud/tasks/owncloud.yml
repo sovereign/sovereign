@@ -78,7 +78,9 @@
 
 - name: Store ownCloud data securely
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
-- file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
+
+- name: Symlink ownCloud data dir to our secure location
+  file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
 - name: Enable Apache rewrite module
   command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
