@@ -32,7 +32,7 @@
     - skip_ansible_lint
 
 - name: Ensure z-push state and log directories are in place
-  file: state=directory path={{ item }} owner=www-data group=www-data mode=755
+  file: state=directory path={{ item }} owner=www-data group=www-data mode=0755
   with_items:
     - /decrypted/zpush-state
     - /var/log/z-push
