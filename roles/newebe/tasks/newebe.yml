@@ -52,14 +52,19 @@
             group=newebe
 
 - name: Set Supervisor config file
-  copy: src=newebe.conf dest=/etc/supervisor/conf.d/newebe.conf
+  copy: src=supervisor.conf dest=/etc/supervisor/supervisor.conf
 
 - name: Set Newebe Supervisor config file
-  copy: src=supervisor.conf dest=/etc/supervisor/supervisor.conf
+  copy: src=newebe.conf dest=/etc/supervisor/conf.d/newebe.conf
   notify: restart supervisor
 
 - name: Ensure Supervisor is running
   service: name=supervisor state=running
+  register: supervisor_running
+
+- name: Flush handlers in case we need to bounce supervisor
+  meta: flush_handlers
+  when: not supervisor_running.changed
 
 - name: Ensure that newebe is started
   supervisorctl: name=newebe state=started
