@@ -111,9 +111,9 @@
   template: src=client.cnf.j2
             dest={{ openvpn_path }}/{{ item[0] }}/{{ openvpn_server }}.ovpn
   with_together:
-    - openvpn_clients
-    - openvpn_client_certificates.results
-    - openvpn_client_keys.results
+    - "{{openvpn_clients}}"
+    - "{{openvpn_client_certificates.results}}"
+    - "{{openvpn_client_keys.results}}"
 
 - name: Generate Diffie-Hellman parameters (this will take a while)
   command: openssl dhparam -out {{ openvpn_dhparam }} {{ openvpn_key_size }}
