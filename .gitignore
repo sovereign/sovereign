@@ -1,3 +1,4 @@
 .vagrant
 vagrant_ansible_inventory_default
-tests.pyc
+*.pyc
+*.sublime-*

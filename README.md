@@ -65,15 +65,17 @@ Installation
 
 Generate a private key and a certificate signing request (CSR):
 
-    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -sha256 -out mycert.csr
+    openssl req -nodes -newkey rsa:2048 -keyout /tmp/wildcard_private.key -sha256 -out mycert.csr
 
-Purchase a wildcard cert from a certificate authority, such as [Positive SSL](https://positivessl.com) or [AlphaSSL](https://www.alphassl.com). You will provide them with the contents of your CSR, and in return they will give you your signed public certificate. Place the certificate in `roles/common/files/wildcard_public_cert.crt`.
+Purchase a wildcard cert from a certificate authority, such as [Positive SSL](https://positivessl.com) or [AlphaSSL](https://www.alphassl.com). You will provide them with the contents of your CSR, and in return they will give you your signed public certificate.
 
-Download your certificate authority’s combined cert to `roles/common/files/wildcard_ca.pem`. You can also download the intermediate and root certificates separately and concatenate them together in that order.
+Place the certificate in `/tmp/wildcard_public_cert.crt`.
+
+Download your certificate authority’s combined cert to `/tmp/wildcard_ca.pem`.
 
 Lastly, test your certificate:
 
-    openssl verify -verbose -CAfile roles/common/files/wildcard_ca.pem roles/common/files/wildcard_public_cert.crt
+    openssl verify -verbose -CAfile /tmp/wildcard_ca.pem /tmp/wildcard_public_cert.crt
 
 #### Self-signed SSL certificate
 
@@ -81,9 +83,9 @@ Purchasing SSL certs, and wildcard certs specifically, can be a significant fina
 
 To create a self-signed SSL cert, run the following commands:
 
-    openssl req -nodes -newkey rsa:2048 -keyout roles/common/files/wildcard_private.key -sha256 -out mycert.csr
-    openssl x509 -req -days 365 -in mycert.csr -signkey roles/common/files/wildcard_private.key -out roles/common/files/wildcard_public_cert.crt
-    cp roles/common/files/wildcard_public_cert.crt roles/common/files/wildcard_ca.pem
+    openssl req -nodes -newkey rsa:2048 -keyout /tmp/wildcard_private.key -sha256 -out mycert.csr
+    openssl x509 -req -days 365 -in mycert.csr -signkey /tmp/wildcard_private.key -out /tmp/wildcard_public_cert.crt
+    cp /tmp/wildcard_public_cert.crt /tmp/wildcard_ca.pem
 
 ### 2. Get a Tarsnap machine key
 
@@ -118,7 +120,15 @@ Your new account will be automatically set up for passwordless `sudo`.
 
 ### 4. Configure your installation
 
-Modify the settings in `vars/user.yml` to your liking. If you want to see how they’re used in context, just search for the corresponding string.
+This fork of Sovereign takes advantage of the [secure vault](http://docs.ansible.com/ansible/playbooks_vault.html) provided by Ansible. Sensitive variables have been moved out of `user.yml` and into `private.yml`. This includes SSL certificates, passwords (hashed and unhashed), and anything else that shouldn't be left laying around in a plaintext file. Doing this means that you can safely put your copy of Sovereign into a repository and benefit from source code control without having to worry about passwords being exposed to the world.
+
+Most of the variables have been moved over verbatim, so if something used to be in `user.yml`, you'll find it now in `private.yml` in the same format. Defaults are all still contained in `defaults.yml` for reference. The vault is loaded _after_ `user.yml`, so even if you put something in there, variable values will be updated when `private.yml` is loaded.
+
+See the [README](vars/README.md) in `vars` for specific information about using Ansible Vault.
+
+Modify the settings in `vars/user.yml` and `vars/private.yml` to your liking. If you want to see how they’re used in context, just search for the corresponding string in the playbooks.
+
+For your SSL certificate, copy the key, certificate, and concatenated CA certificates to the corresponding sections in `private.yml`. When pasting the information, maintain indentation, and keep the lines that say 'BEGIN' and 'END' for each piece.
 
 Setting `password_hash` for your mail users is a bit tricky. You can generate one using [doveadm-pw](http://wiki2.dovecot.org/Tools/Doveadm/Pw).
 
@@ -170,7 +180,7 @@ Finally, replace the TODOs in the file `hosts`. If your SSH daemon listens on a 
 
 ### 5. Run the Ansible Playbooks
 
-First, make sure you’ve [got Ansible 1.6+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
+First, make sure you’ve [got Ansible 2.0+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
 
 To run the whole dang thing:
 
@@ -183,6 +193,16 @@ To run just one or more piece, use tags. I try to tag all my includes for easy i
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there’s no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I’ve tried to add comments where manual intervention is necessary.
 
 The `dependencies` tag just installs dependencies, performing no other operations. The tasks associated with the `dependencies` tag do not rely on the user-provided settings that live in `vars/user.yml`. Running the playbook with the `dependencies` tag is particularly convenient for working with Docker images.
+
+#### Undoing Or Excluding Items
+
+If you find that you no longer wish to be running a particular component, or if you know up front that you don't need it, edit `main.yml` for that role and change the include line to reference the yml file that starts with `no_`:
+
+    - include: no_znc.yml tags=znc
+
+Not everything can be excluded. For example, nothing from `mailserver` or `common` can be excluded - these are core components of the system. If there is no `no_X.yml` version of X, it can't safely be excluded.
+
+The tasks that perform exclusion will actually _undo_ any installation of those components or entirely prevent them from being installed. The nice thing about Ansible is that if you decide to use them later, you can just change it back, and all of the configuration for them is contained within these files.
 
 ### 6. Set up DNS
 
