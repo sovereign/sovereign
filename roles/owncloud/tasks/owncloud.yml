@@ -24,7 +24,8 @@
     - dependencies
 
 - name: Set postgres password
-  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+  command: psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+  become_user: "{{ db_admin_username }}"
 
 - name: Create database user for ownCloud
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" state=present
