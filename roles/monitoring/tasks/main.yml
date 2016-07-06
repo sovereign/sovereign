@@ -1,3 +1,6 @@
-- include: monit.yml tags=monit
-- include: logwatch.yml tags=logwatch
-- include: collectd.yml tags=collectd
+- include: monit.yml
+  tags: monit
+- include: logwatch.yml
+  tags: logwatch
+- include: collectd.yml
+  tags: collectd

@@ -89,13 +89,21 @@
 - name: Set decrypted directory permissions
   file: state=directory path=/decrypted group=mail mode=0775
 
-- include: encfs.yml tags=encfs
-- include: users.yml tags=users
-- include: ssl.yml tags=ssl
-- include: ufw.yml tags=ufw
-- include: security.yml tags=security
-- include: ntp.yml tags=ntp
-- include: google_auth.yml tags=google_auth
+- include: encfs.yml
+  tags: encfs
+- include: users.yml
+  tags: users
+- include: ssl.yml
+  tags: ssl
+- include: ufw.yml
+  tags: ufw
+- include: security.yml
+  tags: security
+- include: ntp.yml
+  tags: ntp
+- include: google_auth.yml
+  tags: google_auth
   when: ansible_distribution_release != 'trusty'
-- include: google_auth_mod.yml tags=google_auth
+- include: google_auth_mod.yml
+  tags: google_auth
   when: ansible_distribution_release == 'trusty'

@@ -1,1 +1,2 @@
-- include: openvpn.yml tags=openvpn
+- include: openvpn.yml
+  tags: openvpn
