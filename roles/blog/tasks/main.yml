@@ -1,1 +1,2 @@
-- include: blog.yml tags=blog
+- include: blog.yml
+  tags: blog

@@ -1,1 +1,2 @@
-- include: roundcube.yml tags=roundcube
+- include: roundcube.yml
+  tags: roundcube
