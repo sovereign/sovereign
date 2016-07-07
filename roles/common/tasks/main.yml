@@ -41,6 +41,16 @@
   tags:
     - dependencies
 
+- name: install python modules to allow SNI on HTTPS requests
+  pip: name={{item}}
+  with_items:
+    - pyasn1
+    - ndg-httpsclient
+    - pyopenssl
+    - urllib3
+  tags:
+    - dependencies
+
 - name: timezone - configure /etc/timezone
   copy:
     content: "{{ common_timezone | regex_replace('$', '\n') }}"
