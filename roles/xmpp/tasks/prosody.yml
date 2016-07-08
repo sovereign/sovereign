@@ -47,3 +47,7 @@
     - 5222  # xmpp c2s
     - 5269  # xmpp s2s
   tags: ufw
+
+- name: Make sure prosody is running
+  service: name=prosody state=started enabled=yes
+
