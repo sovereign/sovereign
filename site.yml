@@ -11,17 +11,17 @@
     - vars/{{ 'testing' if testing is defined else 'user' }}.yml
 
   roles:
-    - common
-    - mailserver
-    - webmail
-    - blog
-    - ircbouncer
-    - xmpp
-    - owncloud
-    - vpn
-    - tarsnap
-    - news
-    - git
-    - newebe
-    - readlater
-    - monitoring  # Monitoring role should be last. See roles/monitoring/README.md
+    - { role: common, tags: common }
+    - { role: mailserver, tags: mailserver }
+    - { role: webmail, tags: webmail }
+    - { role: blog, tags: blog }
+    - { role: ircbouncer, tags: ircbouncer }
+    - { role: xmpp, tags: xmpp }
+    - { role: owncloud, tags: owncloud }
+    - { role: vpn, tags: vpn }
+    - { role: tarsnap, tags: tarsnap }
+    - { role: news, tags: news }
+    - { role: git, tags: git }
+    - { role: newebe, tags: newebe }
+    - { role: readlater, tags: readlater }
+    - { role: monitoring, tags: monitoring }  # Monitoring role should be last. See roles/monitoring/README.md
