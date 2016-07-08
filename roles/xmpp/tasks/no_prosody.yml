@@ -1,6 +1,9 @@
 ---
 # Removes prosody
 
+- name: Stop prosody
+  service: name=prosody state=stopped enabled=no pattern=/usr/bin/prosody
+
 - name: Delete Prosody content
   file: state=absent path={{ item }}
   with_items:
