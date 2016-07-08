@@ -2,16 +2,16 @@
 # Remove wallabag config and content
 
 - name: Disable wallabag site
-  commmand: a2dissite wallabag.conf removes=/etc/apache2/sites-enabled/wallabag.conf
+  command: a2dissite wallabag.conf removes=/etc/apache2/sites-enabled/wallabag.conf
   notify: restart apache
 
 - name: Remove wallabag
   file: path=/var/www/wallabag state=absent
 
 - name: Remove wallabag db
-  postgresql_db: login_host=localhost 
-                 login_user={{ db_admin_username }} 
-                 login_password="{{ db_admin_password }}" 
+  postgresql_db: login_host=localhost
+                 login_user={{ db_admin_username }}
+                 login_password="{{ db_admin_password }}"
                  name={{ wallabag_db_database }} state=absent
 
 - name: Remove wallabag db user
