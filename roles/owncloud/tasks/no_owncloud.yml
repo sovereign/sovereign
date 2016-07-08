@@ -3,13 +3,13 @@
 #
 
 - name: Remove ownCloud cron job
-  cron: name="ownCloud" state=absent
+  cron: name="ownCloud" user=www-data state=absent
 
 - name: Disable ownCloud website
   command: a2dissite owncloud.conf removes=/etc/apache2/sites-enabled/owncloud.conf
   notify: restart apache
 
-- name: Remove ownCloud contewnt
+- name: Remove ownCloud content
   file: path={{ item }} state=absent
   with_items:
     - /decrypted/owncloud-data
