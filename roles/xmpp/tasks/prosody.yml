@@ -8,6 +8,11 @@
   apt_repository: repo="deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
   tags:
     - dependencies
+  register: prosody_repo
+
+- name: Update apt cache if repo changed
+  apt: update_cache=yes
+  when: prosody_repo.changed
 
 - name: Install Prosody from official repository
   apt: pkg=prosody update_cache=yes
