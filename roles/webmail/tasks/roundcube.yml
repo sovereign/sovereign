@@ -3,11 +3,13 @@
   when: ansible_distribution_release == 'wheezy'
   tags:
     - dependencies
+  register: backports
 
 - name: Update apt cache for backports
   apt: update_cache=yes
   tags:
     - dependencies
+  when: backports.changed
 
 - name: Install Roundcube from wheezy-backports
   apt: pkg={{ item }} state=latest default_release=wheezy-backports
