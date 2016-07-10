@@ -1,3 +1,8 @@
+# Github needs diffie-hellman-group-exchange-sha1 some of the time but not always.
+Host github.com
+    KexAlgorithms {{ kex_algorithms }},diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
+Host *
     Ciphers {{ ciphers }}
     KexAlgorithms {{ kex_algorithms }}
     SendEnv LANG LC_*
