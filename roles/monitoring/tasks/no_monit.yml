@@ -10,10 +10,11 @@
 
 - name: Stop monit
   service: name=monit state=stopped
+  ignore_errors: true
 
 - name: Remove monit config
   file: path=/etc/monit state=absent
 
 - name: Remove monit package
   apt: pkg=monit state=absent
-  
+

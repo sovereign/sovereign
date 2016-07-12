@@ -3,6 +3,7 @@
 
 - name: Stop newebe
   supervisorctl: name=newebe state=stopped
+  ignore_errors: true
 
 - name: Disable newebe
   command: a2dissite newebe.conf removes=/etc/apache2/sites-enabled/newebe.conf

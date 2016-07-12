@@ -3,6 +3,7 @@
 
 - name: Stop collectd service
   service: name=collectd state=stopped
+  ignore_errors: true
 
 - name: Remove collectd package
   file: path={{ item }} state=absent
