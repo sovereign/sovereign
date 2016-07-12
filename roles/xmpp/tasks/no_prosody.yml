@@ -1,20 +1,29 @@
 ---
 # Removes prosody
 
+- name: Check if prosody is installed
+  command: ls /usr/bin/prosody
+  ignore_errors: True
+  register: prosody_installed
+
 - name: Stop prosody
   service: name=prosody state=stopped enabled=no pattern=/usr/bin/prosody
+  when: prosody_installed|success
 
 - name: Delete Prosody content
   file: state=absent path={{ item }}
   with_items:
     - /decrypted/prosody
     - /etc/prosody
+  when: prosody_installed|success
 
 - name: Remove prosody user
   user: name=prosody state=absent remove=yes
+  when: prosody_installed|success
 
 - name: Uninstall prosody
   apt: pkg=prosody state=absent purge=yes
+  when: prosody_installed|success
 
 - name: Remove firewall rules for Prosody
   ufw: rule=allow port={{ item }} proto=tcp delete=yes
