@@ -41,6 +41,28 @@
   postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_database }} state=present owner={{ mail_db_username }}
   notify: import sql postfix
 
+- name: Copy sql file to generate current states
+  copy: src={{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0600
+  with_items:
+    - usercheck.sql
+    - domaincheck.sql
+    - aliascheck.sql
+
+- name: Run the user check
+  shell: PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/usercheck.sql --set ON_ERROR_STOP=1
+  register: mail_users
+  ignore_errors: true
+
+- name: Run the domain check
+  shell: PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/domaincheck.sql --set ON_ERROR_STOP=1
+  register: mail_domains
+  ignore_errors: true
+
+- name: Run the alias check
+  shell: PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/aliascheck.sql --set ON_ERROR_STOP=1 | tail -n +3 | head -n -2 | awk '{ print $1 "," $3 "," $5 }'
+  register: mail_aliases
+  ignore_errors: true
+
 - name: Copy import.sql
   template: src=mailserver.sql.j2 dest=/etc/postfix/import.sql owner=root group=root mode=0600
   notify: import sql postfix
