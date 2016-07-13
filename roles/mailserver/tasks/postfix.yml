@@ -41,6 +41,10 @@
   postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_database }} state=present owner={{ mail_db_username }}
   notify: import sql postfix
 
+- name: Get Postgres minor version
+  shell: psql --version | grep 9. | awk '{ print $3 }' | awk -F. '{ print $2 }'
+  register: postgres_minor
+
 - name: Copy sql file to generate current states
   copy: src={{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0600
   with_items:
