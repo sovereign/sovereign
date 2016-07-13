@@ -53,7 +53,15 @@ DELETE FROM "virtual_domains" WHERE
 {% endif %}
 {% endfor %}
 
+{# set up a place to store deleted users #}
+{% set deleted_users = [] %}
+
+{# set up a place to store active users #}
+{% set active_users = [] %}
+
 {% for virtual_user in mail_virtual_users %}
+{# store this user for later checking #}
+{% do active_users.append(virtual_user.account + '@' + virtual_user.domain) %}
 {% if mail_users.stdout.find(virtual_user.account + '@' + virtual_user.domain) == -1 and
 virtual_user.active|default(True) and
 virtual_user.domain not in deleted_domains and
@@ -65,12 +73,25 @@ INSERT INTO "virtual_users"  ("domain_id", "password" , "email")
 		'{{ virtual_user.password_hash }}',
 		'{{ virtual_user.account }}@{{ virtual_user.domain }}'
 	);
+
 {% elif mail_users.stdout.find(virtual_user.account + '@' + virtual_user.domain) != -1 and
 not virtual_user.active|default(True) %}
 {# inactive user, in database - remove it #}
 DELETE FROM "virtual_users" WHERE
     domain_id = '{{ virtual_user.domain_pk_id }}' AND
     email = '{{ virtual_user.account }}@{{ virtual_user.domain }}';
+
+{# store this user for later checking #}
+{% do deleted_users.append(virtual_user.account + '@' + virtual_user.domain) %}
+
+{% endif %}
+{% endfor %}
+
+{# do the check in reverse - delete anything that is in the db and not in config #}
+{% for email in mail_users.stdout_lines %}
+{% if email not in active_users and email not in deleted_users %}
+DELETE FROM "virtual_users" WHERE
+    email = '{{ email }}';
 {% endif %}
 {% endfor %}
 

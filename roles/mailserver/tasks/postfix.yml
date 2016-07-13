@@ -49,7 +49,8 @@
     - aliascheck.sql
 
 - name: Run the user check
-  shell: PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/usercheck.sql --set ON_ERROR_STOP=1
+  shell: PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/usercheck.sql --set ON_ERROR_STOP=1 | tail -n +3 | head -n -2 | awk '{ print $1 }'
+
   register: mail_users
   ignore_errors: true
 
