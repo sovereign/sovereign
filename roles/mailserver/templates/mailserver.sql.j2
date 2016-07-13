@@ -92,6 +92,8 @@ DELETE FROM "virtual_users" WHERE
 {% if email not in active_users and email not in deleted_users %}
 DELETE FROM "virtual_users" WHERE
     email = '{{ email }}';
+{# remove the email to indicate that we deleted this user - used for aliases below #}
+{% do mail_users.stdout_lines.remove(email) %}
 {% endif %}
 {% endfor %}
 
@@ -104,14 +106,16 @@ DELETE FROM "virtual_users" WHERE
 virtual_alias.active|default(True) and
 source_domain not in deleted_domains and
 dest_domain not in deleted_domains and
-virtual_alias.domain_pk_id in active_domains %}
+virtual_alias.domain_pk_id in active_domains and
+virtual_alias.destination in mail_users.stdout_lines %}
 {# active alias, active domains, not in database - add it #}
 INSERT INTO "virtual_aliases" ("domain_id", "source", "destination")
     VALUES ('{{ virtual_alias.domain_pk_id }}', '{{ virtual_alias.source }}', '{{virtual_alias.destination }}');
 {% elif mail_aliases.stdout.find(search_string) != -1 and
 (not virtual_alias.active|default(True) or
 source_domain in deleted_domains or
-dest_domain in deleted_domains) %}
+dest_domain in deleted_domains) or
+virtual_alias.destination not in mail_users.stdout_lines %}
 {# inactive alias or domains deleted, but is in database - remove it #}
 DELETE FROM "virtual_aliases" WHERE
     domain_id = '{{ virtual_alias.domain_pk_id }}' AND
