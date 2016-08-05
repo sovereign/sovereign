@@ -38,7 +38,7 @@
         mode=0600
 
 - name: Generate CA certificate
-  command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=ca-certificate"
+  command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=sovereign-ca-certificate"
            creates={{ openvpn_ca }}.crt
 
 - name: Generate the OpenSSL configuration that will be used for the Server certificate's req and ca commands
