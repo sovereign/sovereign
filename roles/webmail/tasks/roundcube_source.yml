@@ -1,0 +1,114 @@
+---
+- name: install roundcube dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - aspell
+    - php5-gd
+    - php5-mcrypt
+    - php5-pgsql
+    - php5-pspell
+
+- name: fetch roundcube source
+  shell: curl -OL https://github.com/roundcube/roundcubemail/releases/download/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz
+         chdir=/root
+         creates=roundcubemail-{{ roundcube_version }}-complete.tar.gz
+
+- name: extract roundcube source to web root
+  unarchive: src=/root/roundcubemail-{{ roundcube_version }}-complete.tar.gz
+             dest=/var/lib/
+             copy=no
+             creates=/var/lib/roundcubemail-{{ roundcube_version }}/robots.txt
+  when: ansible_distribution_release == 'trusty'
+
+- name: Create symlink to roundcube content
+  file: src=/var/lib/roundcubemail-{{ roundcube_version }} dest=/var/lib/roundcube state=link
+
+- name: set permissions on web-writable directories
+  file: path=/var/lib/roundcube/{{ item }} owner=www-data group=www-data mode=0755 recurse=true
+  with_items:
+    - temp
+    - logs
+
+- name: create roundcube database user
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ webmail_db_username }} password="{{ webmail_db_password }}" state=present
+
+- name: Create database for roundcube
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ webmail_db_database }} state=present owner={{ webmail_db_username }}
+
+- name: copy roundcube db initialization file
+  template: src=roundcube_postgres_initial.sql.j2 dest=/var/lib/roundcube/SQL/postgres.initial.sql owner={{ db_admin_username }} group=www-data mode=0640 force=yes
+  notify: init roundcube database
+
+- name: pause to init database
+  meta: flush_handlers
+
+- name: copy roundcube skins source files
+  copy: src=roundcube_plus_skin_{{ item }}.tar.gz dest=/var/tmp force=yes
+  with_items: "{{ roundcube_skins|default([]) }}"
+  register: skins
+
+- name: extract roundcube skins if we copied them
+  unarchive: src=/var/tmp/roundcube_plus_skin_{{ item.item }}.tar.gz dest=/var/lib/roundcube/ copy=no
+  when: item|changed
+  with_items: "{{ skins.results }}"
+
+- name: extract roundcube skins if they're missing
+  unarchive: src=/var/tmp/roundcube_plus_skin_{{ item }}.tar.gz dest=/var/lib/roundcube/ copy=no creates=/var/lib/roundcube/skins/{{ item }}
+  when: not skins|changed
+  with_items: "{{ roundcube_skins|default([]) }}"
+
+- name: remove extra skins files from roundcube directory
+  file: dest=/var/lib/roundcube/{{ item }} state=absent
+  with_items:
+    - README
+    - VERSIONS
+
+- name: Download carddav plugin release
+  command: wget https://github.com/blind-coder/rcmcarddav/archive/carddav_{{ carddav_version }}.tar.gz chdir=/root creates=carddav_{{ carddav_version }}.tar.gz
+
+- name: Decompress carddav plugin source
+  unarchive: src=/root/carddav_{{ carddav_version }}.tar.gz
+             dest=/root copy=no
+             creates=/root/rcmcarddav-carddav_{{ carddav_version }}
+
+- name: Move carddav plugin files to /var/lib/roundcube/plugins/carddav
+  command: mv rcmcarddav-carddav_{{ carddav_version }} /var/lib/roundcube/plugins/carddav chdir=/root creates=/var/lib/roundcube/plugins/carddav
+
+- name: Download Google Authenticator roundcube plugin
+  git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
+       dest=/var/lib/roundcube/plugins/twofactor_gauthenticator
+       accept_hostkey=yes
+       version=master
+
+- name: Install password plugin configuration
+  template: src=roundcube_password_config.inc.php.j2 dest=/var/lib/roundcube/plugins/password/config.inc.php group=www-data mode=0640 force=yes
+
+- name: Install sql password function
+  copy: src=update_passwd.sql dest=/etc/postfix/update_passwd.sql owner=root group=root mode=0644
+  notify: install passwd function
+
+- name: Configure the Apache HTTP server for roundcube
+  template: src=roundcube_source.conf.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes
+  notify: restart apache
+
+- name: Enable php5-mcrypt
+  file: src=/etc/php5/mods-available/mcrypt.ini dest=/etc/php5/apache2/conf.d/20-mcrypt.ini owner=root group=root state=link
+
+- name: Configure roundcube (files)
+  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=0640 force=yes
+  with_items:
+    - { src: 'etc_roundcube_global.sieve',                                          dest: '/var/lib/roundcube/config/global.sieve' }
+    - { src: 'usr_share_roundcube_plugins_carddav_config.inc.php',                  dest: '/var/lib/roundcube/plugins/carddav/config.inc.php' }
+    - { src: 'roundcube_plugins_managesieve_config.inc.php',                        dest: '/var/lib/roundcube/plugins/managesieve/config.inc.php' }
+    - { src: 'usr_share_roundcube_plugins_twofactor_gauthenticator_config.inc.php', dest: '/var/lib/roundcube/plugins/twofactor_gauthenticator/config.inc.php' }
+  notify:
+    - import sql carddav
+
+- name: Configure roundcube (templates)
+  template: src={{ item.src }}.j2 dest={{ item.dest }} group=www-data owner=root mode=0640 force=yes
+  with_items:
+    - { src: 'roundcube_config.inc.php',                                          dest: '/var/lib/roundcube/config/config.inc.php' }
+
+- name: Enable roundcube site
+  command: a2ensite roundcube.conf creates=/etc/apache2/sites-enabled/roundcube.conf
+  notify: restart apache

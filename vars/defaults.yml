@@ -108,6 +108,11 @@ openvpn_tls_cipher: "" # "tls-cipher TLS-ECDHE-RSA-WITH-AES-128-GCM-SHA256:TLS-E
 # openvpn_clients: (required)
 
 # webmail
+roundcube_version: 1.2.1
+roundcube_plugins:
+  - managesieve
+  - carddav
+  - twofactor_gauthenticator
 webmail_domain: "{{ mail_server_hostname }}"
 webmail_db_username: "roundcube"
 # webmail_db_password: (required)
