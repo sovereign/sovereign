@@ -1,0 +1,16 @@
+{#
+ # This template is used by the z-push playbook to
+ # determine a name for our distribution that we
+ # can use for the apt repo and key. It prevents us from
+ # having 6 duplicate plays for the same thing when only
+ # the name portion of the path changes.
+#}
+{% if ansible_distribution_release == 'trusty' %}
+Ubuntu_14.04
+{% elif ansible_distribution_release == 'wheezy' %}
+Debian_7.0
+{% elif ansible_distribution_release == 'jessie' %}
+Debian_8.0
+{% else %}
+UNKNOWN
+{% endif %}

@@ -8,28 +8,49 @@
   tags:
     - dependencies
 
-- name: Download z-push release
-  get_url:
-    url=http://download.z-push.org/final/2.1/z-push-{{ zpush_version }}.tar.gz
-    dest=/root/z-push-{{ zpush_version }}.tar.gz
+- name: Enable imap module on Trusty
+  command: php5enmod imap
+  when: ansible_distribution_release == 'trusty'
 
-- name: Decompress z-push source
-  unarchive: src=/root/z-push-{{ zpush_version }}.tar.gz
-             dest=/root copy=no
-             creates=/root/z-push-{{ zpush_version }}
+- name: Convert variable into something we can use for z-push repository
+  shell: echo {{ lookup('template', 'z-push_lookup.j2') }}
+  register: zpush_distro
+  changed_when: False
 
-- name: Create /usr/share/z-push
-  file: state=directory path=/usr/share/z-push
+- name: Add z-push repository ({{ zpush_distro.stdout }})
+  apt_repository: repo='deb http://repo.z-hub.io/z-push:/final/{{ zpush_distro.stdout }}/ /' state=present
+  register: zpush_repo
 
-- name: Copy z-push source files to /usr/share/z-push
-  shell: cp -R z-push-{{ zpush_version }}/* /usr/share/z-push/ chdir=/root
-  tags:
-    - skip_ansible_lint
+- name: Add z-push apt key ({{ zpush_distro.stdout }})
+  apt_key: url=http://repo.z-hub.io/z-push:/final/{{ zpush_distro.stdout }}/Release.key
+  register: zpush_key
 
-- name: Remove downloaded, temporary z-push source files
-  shell: rm -rf z-push* chdir=/root
-  tags:
-    - skip_ansible_lint
+- name: Update apt cache if necessary
+  apt: update_cache=yes
+  when: zpush_repo|changed or zpush_key|changed
+
+# If we just added the repo, we might be installed from source. If so, remove our existing z-push content
+- name: Remove z-push if installed from source
+  file: path={{ item }} state=absent
+  when: zpush_repo|changed
+  with_items:
+    - /usr/share/z-push
+    - /etc/apache2/conf-available/z-push.conf
+    - /etc/apache2/conf-enabled/z-push.conf
+
+- name: Install z-push
+  apt: name={{ item }} state=installed
+  with_items:
+    - z-push-common
+    - z-push-config-apache
+    - z-push-backend-imap
+    - z-push-ipc-sharedmemory
+  register: zpush_installed
+
+# This is from [here](https://wiki.z-hub.io/display/ZP/Upgrade+to+Z-Push+2.3)
+- name: Update states
+  command: z-push-admin -a fixstates
+  when: zpush_installed|changed
 
 - name: Ensure z-push state and log directories are in place
   file: state=directory path={{ item }} owner=www-data group=www-data mode=755
@@ -38,8 +59,11 @@
     - /var/log/z-push
   notify: restart apache
 
-- name: Copy z-push's config.php into place
-  template: src=usr_share_z-push_config.php.j2 dest=/usr/share/z-push/config.php
+- name: Copy z-push's configs into place
+  template: src={{ item.src }} dest={{ item.dest }} owner=www-data group=www-data mode=0640
+  with_items:
+    - { src: "usr_share_z-push_config.php.j2", dest: "/usr/share/z-push/config.php"}
+    - { src: "usr_share_z-push_backend_imap_config.php.j2", dest: "/usr/share/z-push/backend/imap/config.php" }
 
 - name: Configure z-push apache alias and php settings
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf.d/z-push.conf
@@ -48,6 +72,7 @@
 
 - name: Create z-push apache alias and php configuration file for Ubuntu Trusty
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf-available/z-push.conf
+  notify: restart apache
   when: ansible_distribution_release == 'trusty'
 
 - name: Enable z-push Apache alias and PHP configuration file for Ubuntu Trusty
@@ -55,5 +80,8 @@
   notify: restart apache
   when: ansible_distribution_release == 'trusty'
 
+- name: Remove old z-push logrotate
+  file: path=/etc/logrotate.d/z-push state=absent
+
 - name: Configure z-push logrotate
-  copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push owner=root group=root mode=0644
+  copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push.lr owner=root group=root mode=0644
