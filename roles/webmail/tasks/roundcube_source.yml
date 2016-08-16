@@ -8,6 +8,21 @@
     - php5-pgsql
     - php5-pspell
 
+- name: Uninstall Roundcube packages
+  apt: pkg={{ item }} state=absent
+  with_items:
+    - roundcube
+    - roundcube-pgsql
+    - roundcube-plugins
+
+- name: determine if /var/lib/roundcube stayed behind
+  command: test -d /var/lib/roundcube
+  register: roundcube_dir_exists
+
+- name: Clean up krufty /var/lib/roundcube so we can symlink it
+  file: path=/var/lib/roundcube state=absent
+  when: roundcube_dir_exists|success
+
 - name: fetch roundcube source
   shell: curl -OL https://github.com/roundcube/roundcubemail/releases/download/{{ roundcube_version }}/roundcubemail-{{ roundcube_version }}-complete.tar.gz
          chdir=/root
