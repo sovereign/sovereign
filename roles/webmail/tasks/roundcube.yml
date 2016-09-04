@@ -1,0 +1,94 @@
+- name: Add Debian backports for Roundcube
+  apt_repository: repo='deb http://http.debian.net/debian jessie-backports main'
+  tags:
+    - dependencies
+
+- name: Update apt cache for backports
+  apt: update_cache=yes
+  tags:
+    - dependencies
+
+- name: Configure roundcube-core package to install using postgres
+  debconf: name=roundcube-core question='roundcube/database-type' vtype=select value='pgsql'
+
+- name: Configure roundcube-core package who the admin user is...
+  debconf: name=roundcube-core question='roundcube/pgsql/admin-user' vtype=text value='{{ db_admin_username }}'
+
+- name: ...and the admin password
+  debconf: name=roundcube-core question='roundcube/pgsql/admin-pass' vtype=password value='{{ db_admin_password }}'
+  changed_when: False
+
+- name: Configure roundcube-core package who the app user is...
+  debconf: name=roundcube-core question='roundcube/db/app-user' vtype=text value='{{ webmail_db_username }}'
+
+- name: ...and the app user password
+  debconf: name=roundcube-core question='roundcube/pgsql/app-pass' vtype=password value='{{ webmail_db_password }}'
+  changed_when: False
+
+- name: Install Roundcube from jessie-backports
+  apt: pkg={{ item }} state=latest default_release=jessie-backports
+  with_items:
+  - postgresql
+  - roundcube-pgsql
+  - roundcube-plugins
+  - roundcube
+  tags:
+    - dependencies
+
+- name: Download carddav plugin release
+  get_url:
+    url: https://github.com/blind-coder/rcmcarddav/archive/carddav_{{ carddav_version }}.tar.gz
+    dest: /root/carddav_{{ carddav_version }}.tar.gz
+
+- name: Decompress carddav plugin source
+  unarchive:
+    src: /root/carddav_{{ carddav_version }}.tar.gz
+    dest: /root
+    copy: no
+    creates: /root/rcmcarddav-carddav_{{ carddav_version }}
+
+- name: Move carddav plugin files to /usr/share/roundcube/plugins/carddav
+  command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav
+  args:
+    chdir: /root
+    creates: /usr/share/roundcube/plugins/carddav
+
+- name: Configure carddav database
+  action: shell PGPASSWORD='{{ webmail_db_password }}' psql -h localhost -d {{ webmail_db_database }} -U {{ webmail_db_username }} -f /usr/share/roundcube/plugins/carddav/dbinit/postgres.sql
+
+- name: Download Google Authenticator roundcube plugin
+  git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
+       dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
+       accept_hostkey=yes
+       version=master
+
+- name: Link plugins into /var/lib/roundcube/plugins
+  file: state=link src=/usr/share/roundcube/plugins/{{ item }} dest=/var/lib/roundcube/plugins/{{ item }} force=yes
+  with_items:
+    - carddav
+    - twofactor_gauthenticator
+
+- name: Configure roundcube
+  template: src=etc_roundcube_config.inc.php.j2 dest=/etc/roundcube/config.inc.php
+    group=www-data
+    owner=root
+    mode=0640
+    force=yes
+
+- name: Configure roundcube plugins
+  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=0640 force=yes
+  with_items:
+  - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
+  - { src: 'usr_share_roundcube_plugins_carddav_config.inc.php',                  dest: '/usr/share/roundcube/plugins/carddav/config.inc.php' }
+  - { src: 'usr_share_roundcube_plugins_managesieve_config.inc.php',              dest: '/usr/share/roundcube/plugins/managesieve/config.inc.php' }
+  - { src: 'usr_share_roundcube_plugins_twofactor_gauthenticator_config.inc.php', dest: '/usr/share/roundcube/plugins/twofactor_gauthenticator/config.inc.php' }
+
+- name: Disable Apache roundcube configuration
+  command: a2disconf roundcube
+
+- name: Configure the Apache HTTP server for roundcube
+  template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes
+
+- name: Enable roundcube site
+  command: a2ensite roundcube.conf creates=/etc/apache2/sites-enabled/roundcube.conf
+  notify: restart apache
