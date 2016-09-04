@@ -23,14 +23,14 @@
 - name: Configure rmilter
   copy: src=etc_rmilter.conf.common dest=/etc/rmilter.conf.common
 
-- name: Configure rmilter socket service
+- name: Configure rmilter service
   copy: src=lib_systemd_system_rmilter.socket dest=/lib/systemd/system/rmilter.socket
 
 - name: Start redis
   service: name=redis-server state=started
 
-- name: Start rspamd systemd socket listener
+- name: Start rspamd systemd listener
   service: name=rspamd state=started
 
-- name: Start rmilter systemd socket listener
-  service: name=rmilter.socket state=started
+- name: Start rmilter systemd listener
+  service: name=rmilter state=started
