@@ -30,7 +30,7 @@
   service: name=redis-server state=started
 
 - name: Start rspamd systemd socket listener
-  service: name=rspamd.socket state=started
+  service: name=rspamd state=started
 
 - name: Start rmilter systemd socket listener
   service: name=rmilter.socket state=started
