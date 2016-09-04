@@ -1,0 +1,38 @@
+<VirtualHost *:80>
+    ServerName {{ webmail_domain }}
+
+    Redirect permanent / https://{{ webmail_domain }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ webmail_domain }}
+    SSLEngine On
+
+    DocumentRoot            /var/www/roundcube
+    Options                 -Indexes
+
+    <Directory /var/www/roundcube>
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
+    </Directory>
+
+    <Directory /opt/roundcube/config>
+        AllowOverride None
+	Require all denied
+    </Directory>
+
+    <Directory /opt/roundcube/temp>
+        AllowOverride None
+	Require all denied
+    </Directory>
+
+    <Directory /opt/roundcube/logs>
+        AllowOverride None
+	Require all denied
+    </Directory>
+
+    LogLevel		    warn
+    ErrorLog                /var/log/apache2/roundcube.info-error_log
+    CustomLog               /var/log/apache2/roundcube.info-access_log common
+</VirtualHost>
