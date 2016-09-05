@@ -41,7 +41,7 @@ $config['managesieve_usetls'] = false;
 $config['managesieve_conn_options'] = null;
 
 // default contents of filters script (eg. default spam filter)
-$config['managesieve_default'] = '/etc/dovecot/sieve/global';
+$config['managesieve_default'] = '/var/www/roundcube/config/global.sieve';
 
 // The name of the script which will be used when there's no user script
 $config['managesieve_script_name'] = 'managesieve';
