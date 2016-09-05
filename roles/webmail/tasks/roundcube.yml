@@ -28,9 +28,12 @@
   get_url: url=https://getcomposer.org/installer
            dest=/tmp/composer-installer
 
-- name: Copy compose configuration
-  command: creates="/var/www/roundcube/composer.json" mv /var/www/roundcube/composer.json-dist /var/www/roundcube/composer.json
-  
+- name: Copy composer configuration
+  copy: src=var_www_roundcube_composer.json dest=/var/www/roundcube/composer.json
+    owner=root
+    group=www-data
+    mode=0644
+
 - name: Install Composer
   command: php /tmp/composer-installer
            chdir=/root
@@ -58,6 +61,27 @@
 
 - name: Make roundcube directory accessible to web server
   file: path=/var/www/roundcube group=www-data recurse=yes state=directory
+
+- name: Install sieve plugin configuration
+  copy: src=var_www_roundcube_plugins_managesieve_config.inc.php
+    dest=/var/www/roundcube/plugins/managesieve/config.inc.php
+    owner=root
+    group=www-data
+    mode=0644
+
+- name: Install carddav plugin configuration
+  copy: src=var_www_roundcube_plugins_carddav_config.inc.php
+    dest=/var/www/roundcube/plugins/carddav/config.inc.php
+    owner=root
+    group=www-data
+    mode=0644
+
+- name: Install Google 2-factor authentication plugin configuration
+  copy: src=var_www_roundcube_plugins_twofactor_gauthenticator_config.inc.php
+    dest=/var/www/roundcube/plugins/twofactor_gauthenticator/config.inc.php
+    owner=root
+    group=www-data
+    mode=0644
 
 - name: Configure Apache for Roundcube
   template: src=etc_apache2_sites-available_roundcube.j2
