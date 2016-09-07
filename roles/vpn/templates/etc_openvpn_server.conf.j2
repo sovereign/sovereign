@@ -309,7 +309,8 @@ verb {{ openvpn_verb }}
 # algorithms. This can be used for fingerprinting.
 # Mask your settings by using a lower mtu.
 # Check your settings here: witch.valdikss.org.ru
-tun-mtu {{ openvpn_mtu }}
+# WARNING: incompatible with ios clients
+{{ openvpn_mtu }}
 
 # Set TLS settings
 # Only for openvpn 2.3.3 and >2.3.4

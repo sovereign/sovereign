@@ -3,3 +3,6 @@
 
 - name: restart openvpn
   service: name=openvpn state=restarted
+
+- name: reload systemd
+  command: systemctl daemon-reload
