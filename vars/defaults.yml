@@ -11,6 +11,7 @@ common_timezone: 'Etc/UTC'
 admin_email: "{{ main_user_name }}@{{ domain }}"
 main_user_shell: "/bin/bash"
 # encfs_password: (required)
+http_add_hsts_header: true
 friendly_networks:
   - ""
 
