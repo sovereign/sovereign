@@ -39,13 +39,8 @@
 - name: Copy znc init file into place
   copy: src=etc_init.d_znc dest=/etc/init.d/znc mode=0755
 
-- name: Create a combined version of the private key with public cert and intermediate + root CAs
-  shell: cat /etc/ssl/private/wildcard_private.key /etc/ssl/certs/wildcard_combined.pem >
-    /var/lib/znc/znc.pem creates=/var/lib/znc/znc.pem
-  notify: restart znc
-
-- name: Ensure znc user and group can read cert
-  file: path=/var/lib/znc/znc.pem group=znc owner=znc mode=640
+- name: Link full certificate chain
+  file: src=/etc/letsencrypt/live/{{ domain }}/fullchain.pem dest=/var/lib/znc/znc.pem owner=znc group=znc state=link
   notify: restart znc
 
 - name: Check for existing config file
