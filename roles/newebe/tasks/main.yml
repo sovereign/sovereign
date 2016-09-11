@@ -1,1 +1,2 @@
-- include: newebe.yml tags=newebe
+- include: newebe.yml
+  tags: newebe

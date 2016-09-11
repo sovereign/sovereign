@@ -8,6 +8,11 @@
   apt_repository: repo="deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
   tags:
     - dependencies
+  register: prosody_repo
+
+- name: Update apt cache if repo changed
+  apt: update_cache=yes
+  when: prosody_repo.changed
 
 - name: Install Prosody from official repository
   apt: pkg=prosody update_cache=yes
@@ -39,7 +44,7 @@
 
 - name: Create Prosody accounts
   command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
-  with_items: prosody_accounts
+  with_items: "{{ prosody_accounts }}"
 
 - name: Set firewall rules for Prosody
   ufw: rule=allow port={{ item }} proto=tcp
@@ -47,3 +52,7 @@
     - 5222  # xmpp c2s
     - 5269  # xmpp s2s
   tags: ufw
+
+- name: Make sure prosody is running
+  service: name=prosody state=started enabled=yes
+

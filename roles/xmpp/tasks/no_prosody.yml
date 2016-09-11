@@ -1,0 +1,24 @@
+---
+# Removes prosody
+
+- name: Stop prosody
+  service: name=prosody state=stopped enabled=no pattern=/usr/bin/prosody
+  ignore_errors: True
+
+- name: Delete Prosody content
+  file: state=absent path={{ item }}
+  with_items:
+    - /decrypted/prosody
+    - /etc/prosody
+
+- name: Remove prosody user
+  user: name=prosody state=absent remove=yes
+
+- name: Uninstall prosody
+  apt: pkg=prosody state=absent purge=yes
+
+- name: Remove firewall rules for Prosody
+  ufw: rule=allow port={{ item }} proto=tcp delete=yes
+  with_items:
+    - 5222  # xmpp c2s
+    - 5269  # xmpp s2s

@@ -1,1 +1,2 @@
-- include: znc.yml tags=znc
+- include: znc.yml
+  tags: znc

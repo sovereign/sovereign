@@ -1,5 +1,6 @@
 - name: set roundcube password
-  command: sudo -u {{ db_admin_username }} psql -d {{ webmail_db_database }} -c "ALTER USER {{ webmail_db_username }} with password '{{ webmail_db_password }}';"
+  command: psql -d {{ webmail_db_database }} -c "ALTER USER {{ webmail_db_username }} with password '{{ webmail_db_password }}';"
+  become_user: "{{ db_admin_username }}"
   notify: import sql carddav
 
 - name: import sql carddav

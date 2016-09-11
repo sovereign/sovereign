@@ -1,0 +1,25 @@
+---
+# Removes ownCloud configuration and content
+#
+
+- name: Remove ownCloud cron job
+  cron: name="ownCloud" user=www-data state=absent
+
+- name: Disable ownCloud website
+  command: a2dissite owncloud.conf removes=/etc/apache2/sites-enabled/owncloud.conf
+  notify: restart apache
+
+- name: Remove ownCloud content
+  file: path={{ item }} state=absent
+  with_items:
+    - /decrypted/owncloud-data
+    - /var/www/owncloud
+
+- name: Remove ownCloud
+  apt: pkg=owncloud state=absent
+
+- name: Remove ownCloud db
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=absent
+
+- name: Remove ownCloud db user
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" state=absent

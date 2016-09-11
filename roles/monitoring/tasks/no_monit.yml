@@ -1,0 +1,20 @@
+---
+# remove config for monit
+
+- name: Disable status vhost
+  command: a2dissite 00-status.conf removes=/etc/apache2/sites-enabled/00-status.conf
+  notify: restart apache
+
+- name: Remove status vhost config
+  file: path=/etc/apache2/sites-available/00-status.conf state=absent
+
+- name: Stop monit
+  service: name=monit state=stopped
+  ignore_errors: true
+
+- name: Remove monit config
+  file: path=/etc/monit state=absent
+
+- name: Remove monit package
+  apt: pkg=monit state=absent
+

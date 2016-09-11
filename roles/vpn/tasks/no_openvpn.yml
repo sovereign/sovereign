@@ -1,0 +1,32 @@
+---
+# Removes OpenVPN config
+
+- name: Stop dnsmasq and OpenVPN
+  service: name={{ item }} state=stopped enabled=no
+  with_items:
+    - openvpn
+    - dnsmasq
+  ignore_errors: true
+
+- name: Remove OpenVPN pam configuration
+  file: dest=/etc/pam.d/openvpn state=absent
+
+- name: Remove OpenVPN and dnsmasq
+  apt: pkg={{ item }} state=absent purge=yes
+  with_items:
+    - dnsmasq
+    - openvpn
+
+- name: Remove rc.local with firewall and dnsmasq rules 
+  file: src=no_etc_rc.local dest=/etc/rc.local
+
+- name: Remove extra OpenVPN configuration
+  file: dest=/etc/openvpn state=absent
+
+- name: Disable IPv4 traffic forwarding
+  sysctl: name=net.ipv4.ip_forward value=0
+
+- name: Remove OpenVPN rule from ufw
+  ufw: rule=allow port={{ openvpn_port }} proto={{ openvpn_protocol }} delete=yes
+
+

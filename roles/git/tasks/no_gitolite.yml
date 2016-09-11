@@ -1,0 +1,14 @@
+---
+# Removes gitolite and content
+
+- name: Remove gitolite
+  file: dest=/usr/local/bin/gitolite state=absent
+
+- name: Remove gitolite user
+  user: name=git state=absent remove=yes
+
+- name: Remove gitolite group
+  group: name=git state=absent
+
+- name: Remove git directory
+  file: path=/home/git state=absent

@@ -1,0 +1,20 @@
+---
+# Remove tarsnap config and content
+
+- name: Remove tarsnap cron jobs
+  cron: name="Tarsnap backup" state=absent
+
+- name: Remove tarsnap files
+  file: path={{ item }} state=absent
+  with_items:
+    - /root/.tarsnaprc
+    - /root/tarsnap.sh
+    - /usr/tarsnap-cache
+    - /decrypted/tarsnap.key
+    - /root/tarsnap-autoconf-{{ tarsnap_version }}
+    - /root/tarsnap-autoconf-{{ tarsnap_version }}.tgz
+    - /root/getSha.sh
+    - /root/tarsnap-sigs-{{ tarsnap_version }}.asc
+    - /root/tarsnap-signing-key.asc
+
+

@@ -1,1 +1,2 @@
-- include: tarsnap.yml tags=tarsnap
+- include: tarsnap.yml
+  tags: tarsnap

@@ -1,0 +1,22 @@
+---
+# Removes selfoss and content
+
+- name: Remove selfoss logrotate
+  file: path=/etc/logrotate.d/selfoss state=absent
+
+- name: Remove selfoss cron job
+  cron: name=selfoss user=www-data state=absent
+
+- name: Disable selfoss site
+  command: a2dissite selfoss.conf removes=/etc/apache2/sites-enabled/selfoss.conf
+  notify: restart apache
+
+- name: Remove selfoss database
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_database }} state=absent
+
+- name: Remove selfoss db user
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_username }} password="{{ selfoss_db_password }}" state=absent
+
+- name: Remove selfoss content
+  file: path=/var/www/selfoss state=absent
+

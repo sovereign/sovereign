@@ -1,0 +1,22 @@
+---
+# Removes znc and content
+
+- name: Stop znc service
+  service: name=znc state=stopped enabled=false
+  ignore_errors: true
+
+- name: Remove firewall rule for znc
+  ufw: rule=allow port=6697 proto=tcp delete=yes
+
+- name: Remove znc lib
+  file: dest=/var/lib/znc state=absent
+
+- name: Remove znc init files
+  file: dest=/etc/init.d/znc state=absent
+
+- name: Remove znc user
+  user: name=znc state=absent remove=yes
+
+- name: Remove znc group
+  group: name=znc state=absent
+

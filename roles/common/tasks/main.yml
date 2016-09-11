@@ -7,7 +7,7 @@
     - dependencies
 
 - name: Update apt cache
-  apt: update_cache=yes
+  apt: update_cache=yes cache_valid_time=3600
   tags:
     - dependencies
 
@@ -38,6 +38,16 @@
     - molly-guard
     - vim
     - zsh
+  tags:
+    - dependencies
+
+- name: install python modules to allow SNI on HTTPS requests
+  pip: name={{item}}
+  with_items:
+    - pyasn1
+    - ndg-httpsclient
+    - pyopenssl
+    - urllib3
   tags:
     - dependencies
 
@@ -87,15 +97,23 @@
   file: state=directory path=/decrypted
 
 - name: Set decrypted directory permissions
-  file: state=directory path=/decrypted group=mail mode=775
+  file: state=directory path=/decrypted group=mail mode=0775
 
-- include: encfs.yml tags=encfs
-- include: users.yml tags=users
-- include: ssl.yml tags=ssl
-- include: ufw.yml tags=ufw
-- include: security.yml tags=security
-- include: ntp.yml tags=ntp
-- include: google_auth.yml tags=google_auth
+- include: encfs.yml
+  tags: encfs
+- include: users.yml
+  tags: users
+- include: ssl.yml
+  tags: ssl
+- include: ufw.yml
+  tags: ufw
+- include: security.yml
+  tags: security
+- include: ntp.yml
+  tags: ntp
+- include: google_auth.yml
+  tags: google_auth
   when: ansible_distribution_release != 'trusty'
-- include: google_auth_mod.yml tags=google_auth
+- include: google_auth_mod.yml
+  tags: google_auth
   when: ansible_distribution_release == 'trusty'
