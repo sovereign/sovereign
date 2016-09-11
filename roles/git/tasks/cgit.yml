@@ -46,7 +46,7 @@
             group=root
             owner=root
 
-- name: Enable Apache cgi module
+- name: Enable Apache CGI module
   command: a2enmod cgi creates=/etc/apache2/mods-enabled/cgi.load
   notify: restart apache
 

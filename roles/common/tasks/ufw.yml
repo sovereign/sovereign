@@ -1,7 +1,7 @@
 ---
-# Installs and configures ufw, which in turn uses iptables for firewall management
+# Installs and configures ufw, which in turn uses iptables for firewall management.
+# ufw includes sensible ICMP defaults.
 
-# ufw includes sensible icmp defaults
 - name: Install ufw
   apt: pkg=ufw state=present
   tags:
@@ -36,9 +36,4 @@
   command: cat /etc/ufw/ufw.conf
   register: ufw_config
   changed_when: False  # never report as "changed"
-  tags: ufw
-
-- name: Disable logging (workaround for known bug in Debian 7)
-  ufw: logging=off
-  when: "ansible_lsb['codename'] == 'wheezy' and 'LOGLEVEL=off' not in ufw_config.stdout"
   tags: ufw

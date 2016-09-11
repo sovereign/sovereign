@@ -1,4 +1,4 @@
-<VirtualHost *:80> 
+<VirtualHost *:80>
     ServerName {{ webmail_domain }}
 
     Redirect permanent / https://{{ webmail_domain }}/
@@ -6,53 +6,33 @@
 
 <VirtualHost *:443>
     ServerName {{ webmail_domain }}
+    SSLEngine On
 
-    Include /etc/apache2/ssl.conf
+    DocumentRoot            /var/www/roundcube
+    Options                 -Indexes
 
-    # Those aliases do not work properly with several hosts on your apache server
-    # Uncomment them to use it or adapt them to your configuration
-    #    Alias /roundcube/program/js/tiny_mce/ /usr/share/tinymce/www/
-    #    Alias /roundcube /var/lib/roundcube
-
-    # Access to tinymce files
-    DocumentRoot /var/lib/roundcube 
-    <Directory "/usr/share/tinymce/www/">
-          Options Indexes MultiViews FollowSymLinks
-          AllowOverride None
-          Order allow,deny
-          allow from all
+    <Directory /var/www/roundcube>
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
     </Directory>
 
-    <Directory /var/lib/roundcube/>
-      Options +FollowSymLinks
-      # This is needed to parse /var/lib/roundcube/.htaccess. See its
-      # content before setting AllowOverride to None.
-      AllowOverride All
-      order allow,deny
-      allow from all
+    <Directory /opt/roundcube/config>
+        AllowOverride None
+	Require all denied
     </Directory>
 
-    # Protecting basic directories:
-    <Directory /var/lib/roundcube/config>
-            Options -FollowSymLinks
-            AllowOverride None
+    <Directory /opt/roundcube/temp>
+        AllowOverride None
+	Require all denied
     </Directory>
 
-    <Directory /var/lib/roundcube/temp>
-            Options -FollowSymLinks
-            AllowOverride None
-        Order allow,deny
-        Deny from all
+    <Directory /opt/roundcube/logs>
+        AllowOverride None
+	Require all denied
     </Directory>
 
-    <Directory /var/lib/roundcube/logs>
-            Options -FollowSymLinks
-            AllowOverride None
-        Order allow,deny
-        Deny from all
-    </Directory>
-
-    CustomLog /var/log/apache2/webmail_access.log combined 
-    ErrorLog /var/log/apache2/webmail_error.log 
+    LogLevel		    warn
+    ErrorLog                /var/log/apache2/roundcube.info-error_log
+    CustomLog               /var/log/apache2/roundcube.info-access_log common
 </VirtualHost>
-

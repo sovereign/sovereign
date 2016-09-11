@@ -1,0 +1,8 @@
+#!/bin/bash
+set -o errexit
+# Renew all live certificates with LetsEncrypt.  This needs to run at least
+# once every three months, but recommended frequency is once a day.
+
+/root/letsencrypt/letsencrypt-auto renew -q -c /etc/letsencrypt/cli.conf \
+--pre-hook="find /etc/letsencrypt/prerenew/ -maxdepth 1 -type f -executable -exec {} \;" \
+--post-hook="find /etc/letsencrypt/postrenew/ -maxdepth 1 -type f -executable -exec {} \;"

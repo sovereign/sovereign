@@ -1,0 +1,57 @@
+---
+################################################################################
+# Set your variables here.
+################################################################################
+
+# common
+domain: (required)
+main_user_name: (required)
+
+# admin email
+# fail2ban reports will be sent to this address
+admin_email: "{{ main_user_name }}@{{ domain }}"
+
+# mail
+mail_virtual_domains:
+  - name: "{{ domain }}"
+    pk_id: 1
+mail_virtual_users:
+  - account: "{{ main_user_name }}"
+    domain: "{{ domain }}"
+    password_hash: TODO
+    domain_pk_id: 1
+mail_virtual_aliases:
+  - source: "root@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+  - source: "postmaster@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+  - source: "webmaster@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
+
+# timezone
+# common_timezone will be used in the common and mailserver roles
+common_timezone: 'Etc/UTC'
+
+# znc
+irc_nick: (required)
+irc_ident: (required)
+irc_realname: (required)
+irc_quitmsg: (required)
+irc_password_hash: (required)
+irc_password_salt: (required)
+
+# xmpp
+prosody_admin: "{{ admin_email }}"
+prosody_virtual_domain: "{{ domain }}"
+prosody_accounts:
+  - name: "{{ main_user_name }}"
+    password: TODO
+
+# openvpn
+openvpn_clients:
+  - laptop
+  - phone
+  - tablet

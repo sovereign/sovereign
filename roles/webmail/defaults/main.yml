@@ -1,0 +1,5 @@
+webmail_version: 1.2.1
+
+# Keep in sync with mail_server_hostname in mailserver role
+webmail_domain: "mail.{{ domain }}"
+

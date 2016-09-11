@@ -28,11 +28,7 @@ maxretry = 1
 enabled = true
 filter = dovecot-pop3imap
 action = iptables-multiport[name=dovecot-pop3imap, port="pop3,imap,993,995", protocol=tcp]
-{% if ansible_distribution == 'Ubuntu' %}
 logpath = /var/log/mail.log
-{% else %}
-logpath = /var/log/maillog
-{% endif %}
 maxretry = 20
 findtime = 1200
 bantime = 1200

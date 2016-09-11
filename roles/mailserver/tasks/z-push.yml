@@ -8,10 +8,6 @@
   tags:
     - dependencies
 
-- name: Enable imap module on Trusty
-  command: php5enmod imap
-  when: ansible_distribution_release == 'trusty'
-
 - name: Download z-push release
   get_url:
     url=http://download.z-push.org/final/2.1/z-push-{{ zpush_version }}.tar.gz
@@ -36,7 +32,7 @@
     - skip_ansible_lint
 
 - name: Ensure z-push state and log directories are in place
-  file: state=directory path={{ item }} owner=www-data group=www-data mode=755
+  file: state=directory path={{ item }} owner=www-data group=www-data mode=0755
   with_items:
     - /decrypted/zpush-state
     - /var/log/z-push
@@ -45,19 +41,12 @@
 - name: Copy z-push's config.php into place
   template: src=usr_share_z-push_config.php.j2 dest=/usr/share/z-push/config.php
 
-- name: Configure z-push apache alias and php settings
-  copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf.d/z-push.conf
-  notify: restart apache
-  when: ansible_distribution_release != 'trusty'
-
-- name: Create z-push apache alias and php configuration file for Ubuntu Trusty
+- name: Create z-push apache alias and php configuration file
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf-available/z-push.conf
-  when: ansible_distribution_release == 'trusty'
 
-- name: Enable z-push Apache alias and PHP configuration file for Ubuntu Trusty
+- name: Enable z-push Apache alias and PHP configuration file
   command: a2enconf z-push creates=/etc/apache2/conf-enabled/z-push.conf
   notify: restart apache
-  when: ansible_distribution_release == 'trusty'
 
 - name: Configure z-push logrotate
   copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push owner=root group=root mode=0644

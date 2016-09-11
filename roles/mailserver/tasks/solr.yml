@@ -1,18 +1,8 @@
-- name: Install Solr and related packages on wheezy from backports
-  apt: pkg={{ item }} state=installed default_release=wheezy-backports
-  with_items:
-    - dovecot-solr
-    - solr-tomcat
-  when: ansible_distribution_release == 'wheezy'
-  tags:
-    - dependencies
-
-- name: Install Solr and related packages on distributions other than wheezy
+- name: Install Solr and related packages
   apt: pkg={{ item }} state=installed
   with_items:
     - dovecot-solr
     - solr-tomcat
-  when: ansible_distribution_release != 'wheezy'
   tags:
     - dependencies
 
@@ -20,7 +10,7 @@
   copy: src=solr-schema.xml dest=/etc/solr/conf/schema.xml group=root owner=root
 
 - name: Copy tweaked Tomcat config file into place
-  copy: src=etc_tomcat6_server.xml dest=/etc/tomcat6/server.xml group=tomcat6 owner=root
+  copy: src=etc_tomcat7_server.xml dest=/etc/tomcat7/server.xml group=tomcat7 owner=root
   notify: restart solr
 
 - name: Copy tweaked Solr config file into place
@@ -28,5 +18,5 @@
   notify: restart solr
 
 - name: Create Solr index directory
-  file: state=directory path=/decrypted/solr group=tomcat6 owner=tomcat6
+  file: state=directory path=/decrypted/solr group=tomcat7 owner=tomcat7
   notify: restart solr

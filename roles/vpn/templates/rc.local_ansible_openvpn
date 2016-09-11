@@ -13,6 +13,6 @@ iptables -A FORWARD -j REJECT
 iptables -t nat -C POSTROUTING -s 10.8.0.0/24 -o {{ ansible_default_ipv4.interface }} -j MASQUERADE || \
 iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
 
-/etc/init.d/dnsmasq restart
+systemctl restart dnsmasq
 
 exit 0

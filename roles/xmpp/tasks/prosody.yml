@@ -3,32 +3,21 @@
   tags:
     - dependencies
 
-# Prosody supplies repo for sid, squeeze, wheezy, jessie, trusty, saucy, raring, quantal, precise and lucid
-- name: Add Prosody Debian/Ubuntu repository
+- name: Add Prosody repository
   apt_repository: repo="deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
   tags:
     - dependencies
 
-- name: Install Prosody from official repository
-  apt: pkg=prosody update_cache=yes
-  tags:
-    - dependencies
-
-- name: Install lua-sec-prosody on Debian Wheezy and Ubuntu Precise
-  apt: pkg=lua-sec-prosody update_cache=yes
-  when: ansible_distribution_release == 'wheezy' or ansible_distribution_release == 'precise'
-  tags:
-    - dependencies
-
-
-- name: Install lua-sec 0.5+
-  apt: pkg=lua-sec update_cache=yes
-  when: ansible_distribution_release == 'trusty' or ansible_distribution_release == 'jessie'
+- name: Install Prosody and dependencies from official repository
+  apt: pkg={{ item }} update_cache=yes
+  with_items:
+    - prosody
+    - lua-sec
   tags:
     - dependencies
 
 - name: Add prosody user to ssl-cert group
-  user: name=prosody groups=ssl-cert append=yes
+  user: name=prosody group=ssl-cert
 
 - name: Create Prosody data directory
   file: state=directory path=/decrypted/prosody owner=prosody group=prosody

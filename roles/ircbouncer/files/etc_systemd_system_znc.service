@@ -1,0 +1,11 @@
+[Unit]
+Description=ZNC, an IRC bouncer
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/znc --datadir=/usr/lib/znc
+PIDFile=/var/run/znc/znc.pid
+User=znc
+
+[Install]
+WantedBy=multi-user.target

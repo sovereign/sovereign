@@ -1,0 +1,12 @@
+spamd {
+	servers = r:localhost:11333;
+	whitelist = 127.0.0.1/32, 192.168.0.0/16, [::1]/128;
+};
+
+redis {
+	servers_id = localhost;
+	id_prefix = "message_id.";
+};
+
+tempdir = /tmp;
+max_size = 10M;

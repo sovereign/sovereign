@@ -1,28 +1,14 @@
 ---
-# Defines tasks applicable for Google Authenticator
+# Defines tasks applicable for Google Authenticator.
 
 - name: Ensure required packages are installed
   apt: pkg={{ item }} state=present
   with_items:
-    #- libpam-google-authenticator    wasn't available in wheezy
+    - libpam-google-authenticator
     - libpam0g-dev
     - libqrencode3
   tags:
     - dependencies
-
-- name: Download Google authenticator pam module
-  get_url: url=https://google-authenticator.googlecode.com/files/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
-           dest=/root/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
-
-- name: Extract Google authenticator
-  unarchive: src=/root/libpam-google-authenticator-{{ google_auth_version }}-source.tar.bz2
-             creates=/root/libpam-google-authenticator-{{ google_auth_version }}
-             dest=/root copy=no
-
-- name: Install Google authenticator
-  command: make install
-           chdir=/root/libpam-google-authenticator-{{ google_auth_version }}
-           creates=/usr/local/bin/google-authenticator
 
 - name: Update sshd config to enable challenge responses
   lineinfile: dest=/etc/ssh/sshd_config
@@ -38,10 +24,10 @@
               state=present
 
 - name: Generate a timed-based, no reuse, rate-limited (3 logins per 30 seconds) with one concurrently valid code for default user
-  command: /usr/local/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=ANSI -r 3 -R 30 -w 1 --secret=/home/{{ main_user_name }}/.google_authenticator
+  command: /usr/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=ANSI -r 3 -R 30 -w 1 --secret=/home/{{ main_user_name }}/.google_authenticator
            creates=/home/{{ main_user_name }}/.google_authenticator
-  sudo: yes
-  sudo_user: "{{ main_user_name }}"
+  become: yes
+  become_user: "{{ main_user_name }}"
   when: ansible_ssh_user != "vagrant"
 
 - name: Retrieve generated keys from server

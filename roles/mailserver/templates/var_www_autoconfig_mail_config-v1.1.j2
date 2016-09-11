@@ -20,8 +20,8 @@
         </incomingServer>
         <outgoingServer type="smtp">
             <hostname>{{ mail_server_hostname }}</hostname>
-            <port>465</port>
-            <socketType>SSL</socketType>
+            <port>587</port>
+            <socketType>STARTTLS</socketType>
             <authentication>password-cleartext</authentication>
             <username>%EMAILADDRESS%</username>
         </outgoingServer>

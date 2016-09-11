@@ -13,20 +13,21 @@ smtp       inet  n       -       -       -       1       postscreen
 smtpd      pass  -       -       -       -       -       smtpd
 dnsblog    unix  -       -       -       -       0       dnsblog
 tlsproxy   unix  -       -       -       -       0       tlsproxy
-#submission inet  n       -       -       -       -       smtpd
-#  -o syslog_name=postfix/submission
-#  -o smtpd_tls_security_level=encrypt
-#  -o smtpd_etrn_restrictions=reject
-#  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
-#  -o milter_macro_daemon_name=ORIGINATING
-
-# SMTP over SSL/TLS on port 465.
-smtps     inet  n       -       -       -       -       smtpd
-  -o syslog_name=postfix/smtps
-  -o smtpd_tls_wrappermode=yes
+submission inet  n       -       -       -       -       smtpd
+  -o syslog_name=postfix/submission
+  -o smtpd_tls_security_level=encrypt
+  -o smtpd_etrn_restrictions=reject
   -o smtpd_client_restrictions=permit_sasl_authenticated,reject_unauth_destination,reject
   -o smtpd_sasl_security_options=noanonymous,noplaintext
   -o smtpd_sasl_tls_security_options=noanonymous
+
+# SMTP over SSL/TLS on port 465.
+#smtps     inet  n       -       -       -       -       smtpd
+#  -o syslog_name=postfix/smtps
+#  -o smtpd_tls_wrappermode=yes
+#  -o smtpd_client_restrictions=permit_sasl_authenticated,reject_unauth_destination,reject
+#  -o smtpd_sasl_security_options=noanonymous,noplaintext
+#  -o smtpd_sasl_tls_security_options=noanonymous
 
 #628       inet  n       -       -       -       -       qmqpd
 pickup    fifo  n       -       -       60      1       pickup
@@ -113,8 +114,5 @@ scalemail-backend unix	-	n	n	-	2	pipe
 mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
-# spam protection
-dspam     unix  -       n       n       -       10      pipe
-  flags=Ru user=dspam argv=/usr/bin/dspam --deliver=innocent,spam --user ${user}@${domain} -i -f $sender -- $recipient
 dovecot   unix  -       n       n       -       -       pipe
   flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/lmtp -f ${sender} -d ${user}@${nexthop}

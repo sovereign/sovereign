@@ -1,108 +1,46 @@
 ---
-# Installs the ownCloud personal cloud software
-# as per http://www.debiantutorials.com/how-to-install-owncloud-on-wheezy/
-
-- name: Install Postgres 9.1 on distributions other than Ubuntu Trusty
-  apt: pkg=postgresql-9.1 state=present
-  when: ansible_distribution_release != 'trusty'
-  tags:
-    - dependencies
-
-- name: Install Postgres 9.3 on Ubuntu Trusty
-  apt: pkg=postgresql-9.3 state=present
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
+# Installs the ownCloud personal cloud software.
 
 - name: Install ownCloud dependencies
   apt: pkg={{ item }} state=present
   with_items:
-    - libapache2-mod-php5
-    - php-apc
+    - postgresql
     - python-psycopg2
   tags:
     - dependencies
 
-- name: Set postgres password
-  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+- name: Set password for PostgreSQL admin user
+  become: true
+  become_user: postgres
+  postgresql_user: name={{ db_admin_username }} password={{ db_admin_password }} encrypted=yes
 
 - name: Create database user for ownCloud
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" state=present
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" role_attr_flags=CREATEDB state=present
 
-- name: Create database for ownCloud
-  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_database }} state=present owner={{ owncloud_db_username }}
-
-- name: Ensure repository key for ownCloud is in place for Debian 7
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/Release.key state=present
-  when: ansible_distribution_release == 'wheezy'
+- name: Ensure repository key for ownCloud is in place
+  apt_key: url=https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key state=present
   tags:
     - dependencies
 
-- name: Add ownCloud OpenSuSE repository for Debian 7
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/Debian_7.0/ /'
-  when: ansible_distribution_release == 'wheezy'
+- name: Add ownCloud repository
+  apt_repository: repo='deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /'
   tags:
     - dependencies
 
-- name: Ensure repository key for ownCloud is in place for Ubuntu 14.04
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key state=present
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Add ownCloud OpenSuSE repository for Ubuntu 14.04
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/ /'
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Ensure repository key for ownCloud is in place for Ubuntu 12.04
-  apt_key: url=http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/Release.key state=present
-  when: ansible_distribution_release == 'precise'
-  tags:
-    - dependencies
-
-- name: Add ownCloud OpenSuSE repository for Ubuntu 12.04
-  apt_repository: repo='deb http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_12.04/ /'
-  when: ansible_distribution_release == 'precise'
-  tags:
-    - dependencies
-
-- name: Install ownCloud (possibly from OpenSuSE repository)
+- name: Install ownCloud
   apt: pkg=owncloud update_cache=yes
   tags:
     - dependencies
 
-- name: Owncloud www directory
+- name: Ensure ownCloud directory is in place
   file: state=directory path=/var/www/owncloud
 
-- name: Store ownCloud data securely
+- name: Move ownCloud data to encrypted filesystem
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
 - file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
-- name: Enable Apache rewrite module
-  command: a2enmod rewrite creates=/etc/apache2/mods-enabled/rewrite.load
-  notify: restart apache
-
-- name: Enable Apache headers module
-  command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
-  notify: restart apache
-
-- name: Enable Apache expires module
-  command: a2enmod expires creates=/etc/apache2/mods-enabled/expires.load
-  notify: restart apache
-
-- name: Rename existing Apache owncloud virtualhost
-  command: mv /etc/apache2/sites-available/owncloud /etc/apache2/sites-available/owncloud.conf removes=/etc/apache2/sites-available/owncloud
-
-- name: Remove old sites-enabled/owncloud symlink (new one will be created by a2ensite)
-  file: path=/etc/apache2/sites-enabled/owncloud state=absent
-
-- name: Configure the Apache HTTP server for ownCloud
-  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root owner=root
-
-- name: Enable the owncloud site
-  command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
+- name: Configure Apache for ownCloud
+  template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root
   notify: restart apache
 
 - name: Install ownCloud cronjob

@@ -6,8 +6,7 @@
 
 <VirtualHost *:443>
     ServerName {{ wallabag_domain }}
-
-    Include /etc/apache2/ssl.conf
+    SSLEngine On
 
     DocumentRoot            /var/www/wallabag
     Options                 -Indexes
@@ -17,8 +16,7 @@
 
     <Directory /var/www/wallabag>
         AllowOverride All
-        Order allow,deny
-        allow from all
+        Require all granted
         DirectoryIndex index.php
     </Directory>
 </VirtualHost>
