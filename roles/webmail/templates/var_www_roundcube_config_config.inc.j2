@@ -49,11 +49,11 @@ $config['default_host'] = 'ssl://{{ webmail_domain }}:993';
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = 'localhost';
+$config['smtp_server'] = 'tls://{{ webmail_domain }}';
 
 // SMTP port (default is 25; use 587 for STARTTLS or 465 for the
 // deprecated SSL over SMTP (aka SMTPS))
-$config['smtp_port'] = 465;
+$config['smtp_port'] = 587;
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
