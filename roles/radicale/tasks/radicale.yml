@@ -1,0 +1,56 @@
+- name: Install radicale dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - apache2-utils
+    - python-pip
+  tags:
+    - dependencies
+
+- name: Install radicale
+  pip: name=Radicale
+
+- name: Add radicale user to ssl-cert group
+  user: name=radicale groups=ssl-cert append=yes
+
+- name: Set postgres password
+  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+
+- name: Create database user for radicale
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ radicale_db_username }} password="{{ radicale_db_password }}" state=present
+
+- name: Create database for radicale
+  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ radicale_db_database }} state=present owner={{ radicale_db_username }}
+
+- name: Create the radicale configuration directory
+  file: path=/etc/radicale/
+        owner=root
+        group=root
+        mode=755
+        state=directory
+
+- name: Copy radicale default file into place
+  copy: src=etc_default_radicale dest=/etc/default/radicale mode=0644
+
+- name: Copy radicale logging file into place
+  copy: src=etc_radicale_logging dest=/etc/radicale/logging mode=0644
+
+- name: Copy radicale logrotate file into place
+  copy: src=etc_logrotate_radicale dest=/etc/logrotate.d/radicale owner=root group=root mode=0644
+
+- name: Copy radicale config file into place
+  template: src=config.j2 dest=/etc/radicale/config mode=0644
+
+- name: Copy radicale init file into place
+  copy: src=etc_init.d_radicale dest=/etc/init.d/radicale mode=0755
+  notify: restart radicale
+
+- name: Create radicale accounts
+  htpasswd: path=/etc/radicale/users name={{ item.name }} password={{ item.password }} crypt_scheme=ldap_sha1 create=yes state=present
+  with_items: radicale_accounts
+
+- name: Set firewall rules for radicale
+  ufw: rule=allow port={{ radicale_port }} proto=tcp
+  tags: ufw
+
+- name: Ensure radicale is a system service
+  service: name=radicale state=started enabled=true

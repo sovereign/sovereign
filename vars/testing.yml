@@ -82,3 +82,9 @@ selfoss_password_hash: "f7fbba6e0636f890e56fbbf3283e524c6fa3204ae298382d624741d0
 # wallabag
 wallabag_salt: testing
 wallabag_db_password: testPassword
+
+# radicale
+radicale_db_password: postgres
+radicale_accounts:    
+  - name: "{{ main_user_name }}"
+    password: foo

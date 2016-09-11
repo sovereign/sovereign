@@ -77,6 +77,14 @@ owncloud_db_username: owncloud
 # owncloud_db_password: (required)
 owncloud_db_database: owncloud
 
+# radicale
+radicale_domain: "dav.{{ domain }}"
+radicale_port: "5232"
+# radicale_accounts: (required)
+radicale_db_username: radicale
+# radicale_db_password: (required)
+radicale_db_database: radicale
+
 # tarsnap
 tarsnap_version: 1.0.35
 
