@@ -61,6 +61,13 @@
     - carddav
     - twofactor_gauthenticator
 
+- name: Install password plugin configuration
+  template: src=etc_roundcube_plugins_password_config.inc.php.j2 dest=/etc/roundcube/plugins/password/config.inc.php group=www-data mode=0640 force=yes
+
+- name: Install sql password function
+  copy: src=update_passwd.sql dest=/etc/postfix/update_passwd.sql owner=root group=root mode=0644
+  notify: install passwd function
+
 - name: Rename existing Apache roundcube virtualhost
   command: mv /etc/apache2/sites-available/roundcube /etc/apache2/sites-available/roundcube.conf removes=/etc/apache2/sites-available/roundcube
 

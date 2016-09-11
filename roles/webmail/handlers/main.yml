@@ -4,3 +4,7 @@
 
 - name: import sql carddav
   action: shell PGPASSWORD='{{ webmail_db_password }}' psql -h localhost -d {{ webmail_db_database }} -U {{ webmail_db_username }} -f /usr/share/roundcube/plugins/carddav/dbinit/postgres.sql
+
+- name: install passwd function
+  command: psql -d {{ mail_db_database }} -f /etc/postfix/update_passwd.sql
+  become_user: "{{ db_admin_username }}"

@@ -28,7 +28,7 @@ $rcmail_config['debug_level'] = 1;
 $rcmail_config['log_driver'] = 'file';
 
 // date format for log entries
-// (read http://php.net/manual/en/function.date.php for all format characters)  
+// (read http://php.net/manual/en/function.date.php for all format characters)
 $rcmail_config['log_date_format'] = 'd-M-Y H:i:s O';
 
 // Syslog ident string to use, if using the 'syslog' log driver.
@@ -167,10 +167,10 @@ $rcmail_config['smtp_auth_cid'] = null;
 // Optional SMTP authentication password to be used for smtp_auth_cid
 $rcmail_config['smtp_auth_pw'] = null;
 
-// SMTP HELO host 
-// Hostname to give to the remote server for SMTP 'HELO' or 'EHLO' messages 
-// Leave this blank and you will get the server variable 'server_name' or 
-// localhost if that isn't defined. 
+// SMTP HELO host
+// Hostname to give to the remote server for SMTP 'HELO' or 'EHLO' messages
+// Leave this blank and you will get the server variable 'server_name' or
+// localhost if that isn't defined.
 $rcmail_config['smtp_helo_host'] = '';
 
 // SMTP connection timeout, in seconds. Default: 0 (no limit)
@@ -314,11 +314,11 @@ $rcmail_config['password_charset'] = 'ISO-8859-1';
 $rcmail_config['sendmail_delay'] = 0;
 
 // Maximum number of recipients per message. Default: 0 (no limit)
-$rcmail_config['max_recipients'] = 0; 
+$rcmail_config['max_recipients'] = 0;
 
 // Maximum allowednumber of members of an address group. Default: 0 (no limit)
 // If 'max_recipients' is set this value should be less or equal
-$rcmail_config['max_group_members'] = 0; 
+$rcmail_config['max_group_members'] = 0;
 
 // add this user-agent to message headers when sending
 $rcmail_config['useragent'] = 'Roundcube Webmail/'.RCMAIL_VERSION;
@@ -411,13 +411,13 @@ $rcmail_config['no_save_sent_messages'] = false;
 // ----------------------------------
 
 // List of active plugins (in plugins/ directory)
-$rcmail_config['plugins'] = array('managesieve', 'carddav', 'twofactor_gauthenticator');
+$rcmail_config['plugins'] = array('managesieve', 'carddav', 'twofactor_gauthenticator', 'password');
 
 // ----------------------------------
 // USER INTERFACE
 // ----------------------------------
 
-// default messages sort column. Use empty value for default server's sorting, 
+// default messages sort column. Use empty value for default server's sorting,
 // or 'arrival', 'date', 'subject', 'from', 'to', 'fromto', 'size', 'cc'
 $rcmail_config['message_sort_col'] = '';
 
@@ -481,7 +481,7 @@ $rcmail_config['create_default_folders'] = true;
 // protect the default folders from renames, deletes, and subscription changes
 $rcmail_config['protect_default_folders'] = true;
 
-// if in your system 0 quota means no limit set this option to true 
+// if in your system 0 quota means no limit set this option to true
 $rcmail_config['quota_zero_as_unlimited'] = false;
 
 // Make use of the built-in spell checker. It is based on GoogieSpell.
@@ -554,7 +554,7 @@ $rcmail_config['address_book_type'] = 'sql';
 // Array key must contain only safe characters, ie. a-zA-Z0-9_
 $rcmail_config['ldap_public'] = array();
 
-// If you are going to use LDAP for individual address books, you will need to 
+// If you are going to use LDAP for individual address books, you will need to
 // set 'user_specific' to true and use the variables to generate the appropriate DNs to access it.
 //
 // The recommended directory structure for LDAP is to store all the address book entries
@@ -662,7 +662,7 @@ $rcmail_config['ldap_public']['Verisign'] = array(
 'sub_fields' => array(),
 // Generate values for the following LDAP attributes automatically when creating a new record
 'autovalues' => array(
-// 'uid'  => 'md5(microtime())',               // You may specify PHP code snippets which are then eval'ed 
+// 'uid'  => 'md5(microtime())',               // You may specify PHP code snippets which are then eval'ed
 // 'mail' => '{givenname}.{sn}@mydomain.com',  // or composite strings with placeholders for existing attributes
 ),
 'sort'          => 'cn',    // The field to sort the listing by.
@@ -678,7 +678,7 @@ $rcmail_config['ldap_public']['Verisign'] = array(
 // definition for contact groups (uncomment if no groups are supported)
 // for the groups base_dn, the user replacements %fu, %u, $d and %dc work as for base_dn (see above)
 // if the groups base_dn is empty, the contact base_dn is used for the groups as well
-// -> in this case, assure that groups and contacts are separated due to the concernig filters! 
+// -> in this case, assure that groups and contacts are separated due to the concernig filters!
 'groups'        => array(
 'base_dn'     => '',
 'scope'       => 'sub',   // search mode: sub|base|list
@@ -788,7 +788,7 @@ $rcmail_config['logout_purge'] = false;
 // Compact INBOX on logout
 $rcmail_config['logout_expunge'] = false;
 
-// Display attached images below the message body 
+// Display attached images below the message body
 $rcmail_config['inline_images'] = true;
 
 // Encoding of long/non-ascii attachment names:
@@ -820,9 +820,9 @@ $rcmail_config['check_all_folders'] = false;
 // If true, after message delete/move, the next message will be displayed
 $rcmail_config['display_next'] = true;
 
-// 0 - Do not expand threads 
-// 1 - Expand all threads automatically 
-// 2 - Expand only threads with unread messages 
+// 0 - Do not expand threads
+// 1 - Expand all threads automatically
+// 2 - Expand only threads with unread messages
 $rcmail_config['autoexpand_threads'] = 0;
 
 // When replying:
