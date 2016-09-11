@@ -1,5 +1,5 @@
 - name: Install OpenDMARC milter and related packages
-  apt: pkg={{ item }} state=installed update_cache=yes cache_valid_time=3600
+  apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
     - mysql-server
     - python-mysqldb
