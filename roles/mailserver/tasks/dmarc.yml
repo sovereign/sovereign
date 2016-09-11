@@ -1,9 +1,22 @@
 - name: Install OpenDMARC milter and related packages
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=installed update_cache=yes cache_valid_time=3600
   with_items:
       - mysql-server
       - python-mysqldb
       - opendmarc
+
+- name: Patch opendmarc scripts (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=742447)
+  lineinfile: dest=/usr/sbin/{{ item }} regexp='^require DBD::' line='require DBD::mysql;'
+  with_items:
+    - opendmarc-import
+    - opendmarc-reports
+    - opendmarc-params
+
+- name: Patch opendmarc scripts part deux (https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=742447)
+  lineinfile: dest=/usr/sbin/{{ item }} regexp='^my \$dbscheme' line='my $dbscheme     = "mysql";'
+  with_items:
+    - opendmarc-reports
+    - opendmarc-import
 
 - name: Copy OpenDMARC configuration file into place
   template: src=etc_opendmarc.conf.j2 dest=/etc/opendmarc.conf owner=root group=root
