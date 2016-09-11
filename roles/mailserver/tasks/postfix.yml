@@ -30,7 +30,8 @@
     - dependencies
 
 - name: Set postgres password
-  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+  command: psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+  become_user: "{{ db_admin_username }}"
   notify: import sql postfix
 
 - name: Create database user for mail server

@@ -112,9 +112,15 @@ Authorize your ssh key if you want passwordless ssh login (optional):
     nano /home/deploy/.ssh/authorized_keys
     chmod 400 /home/deploy/.ssh/authorized_keys
     chown deploy:deploy /home/deploy -R
-    echo 'deploy ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/deploy
+
+Create the file `/etc/sudoers.d/deploy` with the following content:
+
+    Defaults:deploy   !requiretty
+    deploy ALL=(ALL) NOPASSWD: ALL
 
 Your new account will be automatically set up for passwordless `sudo`.
+
+*NOTE:* The option `!requiretty` is necessary to enable [pipelining](https://docs.ansible.com/ansible/intro_configuration.html#pipelining), which is, in turn, required by portions of the configuration that use `become` to become another unprivileged user (such as the Google Authenticator component). Pipelining will dramatically speed up Ansible if run remotely over SSH.
 
 ### 4. Configure your installation
 

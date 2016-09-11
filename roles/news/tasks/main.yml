@@ -1,1 +1,2 @@
-- include: selfoss.yml tags=selfoss
+- include: selfoss.yml
+  tags: selfoss

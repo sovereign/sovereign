@@ -74,7 +74,7 @@
   file: src=/etc/php5/mods-available/mcrypt.ini dest=/etc/php5/apache2/conf.d/20-mcrypt.ini owner=root group=root state=link
 
 - name: Configure roundcube
-  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
+  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=0640 force=yes
   with_items:
   - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
   - { src: 'etc_roundcube_main.inc.php',                                          dest: '/etc/roundcube/main.inc.php' }
