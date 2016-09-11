@@ -14,6 +14,15 @@
   copy: src=etc_monit_monitrc dest=/etc/monit/monitrc
   notify: restart monit
 
+- name: Determine if ZNC is installed
+  stat: path=/usr/lib/znc/configs/znc.conf
+  register: znc_config_file
+
+- name: Copy ZNC monit service config files into place
+  copy: src=etc_monit_conf.d_znc dest=/etc/monit/conf.d/znc
+  notify: restart monit
+  when: znc_config_file.stat.exists == True
+
 - name: Copy monit service config files into place
   copy: src=etc_monit_conf.d_{{ item }} dest=/etc/monit/conf.d/{{ item }}
   with_items:
@@ -25,11 +34,3 @@
     - tomcat
   notify: restart monit
 
-- name: Determine if ZNC is installed
-  stat: path=/var/lib/znc/configs/znc.conf
-  register: znc_config_file
-
-- name: Copy ZNC monit service config files into place
-  copy: src=etc_monit_conf.d_znc dest=/etc/monit/conf.d/znc
-  notify: restart monit
-  when: znc_config_file.stat.exists == True

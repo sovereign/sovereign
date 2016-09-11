@@ -3,11 +3,8 @@
 
 - hosts: all
   user: deploy
-  sudo: True
+  become: True
   gather_facts: True
-  vars_files:
-    - vars/defaults.yml
-    - vars/{{ 'testing' if testing is defined else 'user' }}.yml
 
   roles:
     - common
@@ -21,6 +18,5 @@
     - tarsnap
     - news
     - git
-    - newebe
     - readlater
     - monitoring  # Monitoring role should be last. See roles/monitoring/README.md

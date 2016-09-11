@@ -1,0 +1,13 @@
+#!/bin/bash
+d="$1"
+for i in www mail autoconfig read news cloud git; do
+  if (getent hosts $i.$1 > /dev/null); then
+    d="$d,$i.$1";
+  fi
+done
+# We are using the "standalone" letsencrypt plugin, which runs its own
+# webserver, so we need to temporarily free up the HTTP(S) ports by stopping
+# our own Apache.
+service apache2 stop
+/root/letsencrypt/letsencrypt-auto certonly -c /etc/letsencrypt/cli.conf --domains $d
+service apache2 start

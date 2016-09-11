@@ -1,6 +1,6 @@
-check process postgres with pidfile /var/run/postgresql/9.1-main.pid
+check process postgres with pidfile /var/run/postgresql/9.4-main.pid
   group database
-  start program = "/etc/init.d/postgresql start"
-  stop program = "/etc/init.d/postgresql stop"
+  start program = "systemctl start postgresql"
+  stop program = "systemctl stop postgresql"
   if failed host localhost port 5432 protocol pgsql then restart
   if 5 restarts within 5 cycles then timeout

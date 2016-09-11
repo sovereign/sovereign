@@ -10,10 +10,8 @@ TEST_ADDRESS = 'sovereign@sovereign.local'
 TEST_PASSWORD = 'foo'
 CA_BUNDLE = 'roles/common/files/wildcard_ca.pem'
 
-
 socket.setdefaulttimeout(5)
 os.environ['REQUESTS_CA_BUNDLE'] = CA_BUNDLE
-
 
 class SSHTests(unittest.TestCase):
     def test_ssh_banner(self):
@@ -136,21 +134,6 @@ class WebTests(unittest.TestCase):
         self.assertEquals(r.status_code, 200)
         self.assertIn(
             'git repository',
-            r.content
-        )
-
-    def test_newebe_http(self):
-        """Newebe is displaying home page"""
-        r = requests.get('http://newebe.' + TEST_SERVER, verify=False)
-
-        # We should be redirected to https
-        self.assertEquals(r.history[0].status_code, 301)
-        self.assertEquals(r.url, 'https://newebe.' + TEST_SERVER + '/')
-
-        # 200 - We should be at the repository page
-        self.assertEquals(r.status_code, 200)
-        self.assertIn(
-            'Newebe, Freedom to Share',
             r.content
         )
 
@@ -335,7 +318,7 @@ class MailTests(unittest.TestCase):
         m.logout()
 
     def test_smtp_headers(self):
-        """Email sent from an MTA via SMTP+TLS has X-DSPAM and TLS headers"""
+        """Email sent from an MTA via SMTP+TLS has TLS headers"""
         import smtplib
         import imaplib
 
@@ -354,11 +337,6 @@ class MailTests(unittest.TestCase):
         m.select()
         _, res = m.search(None, '(SUBJECT \"{}\")'.format(subject))
         _, data = m.fetch(res[0], '(RFC822)')
-
-        self.assertIn(
-            'X-DSPAM-Result: ',
-            data[0][1]
-        )
 
         self.assertIn(
             'ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)',

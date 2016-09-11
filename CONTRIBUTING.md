@@ -4,6 +4,8 @@
 
 Make sure you agree with the license (GPLv3). See [LICENSE.md](./LICENSE.md) for details.
 
+Code that is committed to the master branch should work with both Debian 8 "Jessie" (and Ubuntu 16.04 LTS "Xenial" once it is available).
+
 ## Development environment
 
 You'll want to set up a [local development environment](https://github.com/sovereign/sovereign/wiki/Development-Environment) so that you don't have to test on a remote server.
@@ -11,6 +13,10 @@ You'll want to set up a [local development environment](https://github.com/sover
 ## Module design principles
 
 Sovereign is an Ansible playbook that uses the modules in this repository to configure a server. Modules should conform to the following design principles.
+
+### Naming
+
+Modules should be named after the software they add (as opposed to the functionality they provide). Soverign is currently inconsistent on this. For example, there are the `ircbouncer` and `blog` modules, but there are also the `owncloud` and `tarsnap` modules. Please name modules after the software used, though, so that it is possible to provide alternatives for functionality.
 
 ### Making decisions
 
@@ -51,6 +57,7 @@ The design description should be succinct and to the point. Assume the reader is
 Consider the following checklist when reviewing a module's design.
 
 - Does the role create data on the server that is impossible or difficult to reproduce, e.g., private keys? If so, update the tarsnap role to include precious data in backups.
+- Does the role need an SSL certificate for a new subdomain?  If so, update the letsencrypt tasklist in the common role.
 - Does the role add an Apache virtual site?  If so, has somebody knowledgable in Apache configuration and security reviewed the configuration?
 - Does README.md need to be updated based on new or changed finalization instructions?
 

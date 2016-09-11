@@ -1,6 +1,6 @@
-check process tomcat with pidfile "/var/run/tomcat6.pid"
+check process tomcat with pidfile "/var/run/tomcat7.pid"
   group mail
-  start program = "/etc/init.d/tomcat6 start"
-  stop program = "/etc/init.d/tomcat6 stop"
+  start program = "systemctl start tomcat7"
+  stop program = "systemctl stop tomcat7"
   if failed port 8080 then alert
   if failed port 8080 for 5 cycles then restart

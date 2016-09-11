@@ -40,8 +40,8 @@ smtpd_tls_mandatory_protocols=!SSLv2,!SSLv3
 smtp_tls_mandatory_protocols=!SSLv2,!SSLv3
 smtp_tls_protocols = !SSLv2,!SSLv3
 smtpd_tls_protocols = !SSLv2,!SSLv3
-smtpd_tls_cert_file=/etc/ssl/certs/wildcard_combined.pem
-smtpd_tls_key_file=/etc/ssl/private/wildcard_private.key
+smtpd_tls_cert_file=/etc/letsencrypt/live/{{ domain }}/fullchain.pem
+smtpd_tls_key_file=/etc/letsencrypt/live/{{ domain }}/privkey.pem
 smtpd_use_tls=yes
 smtpd_tls_auth_only = yes
 smtp_tls_security_level = may
@@ -100,16 +100,14 @@ virtual_mailbox_maps = pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 virtual_alias_maps = pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf
 local_recipient_maps = $virtual_mailbox_maps
 
-# OpenDKIM and OpenDMARC
-smtpd_milters = inet:127.0.0.1:8891,inet:127.0.0.1:54321
+# Milters: OpenDKIM, OpenDMARC, Rspamd
+smtpd_milters = inet:127.0.0.1:8891,inet:127.0.0.1:54321,inet:127.0.0.1:9900
 non_smtpd_milters = $smtpd_milters
+milter_protocol = 6
+milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen} {auth_type}
 milter_default_action = accept
 
-# new settings for dspam: only scan one mail at a time, localhost doesn't get scanned, everything else does
-dspam_destination_recipient_limit = 1
-smtpd_client_restrictions =
-  permit_sasl_authenticated
-  check_client_access pcre:/etc/postfix/dspam_filter_access
+smtpd_client_restrictions = permit_sasl_authenticated
 
 # Postscreen
 postscreen_access_list = permit_mynetworks

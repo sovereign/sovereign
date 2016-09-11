@@ -1,0 +1,17 @@
+---
+# Configures the Apache HTTP server with sane defaults.
+
+- name: Disable default Apache site
+  command: a2dissite 000-default removes=/etc/apache2/sites-enabled/000-default
+  notify: restart apache
+
+- name: Enable Apache headers module
+  command: a2enmod headers creates=/etc/apache2/mods-enabled/headers.load
+  notify: restart apache
+
+- name: Create ServerName configuration file for Apache
+  template: src=fqdn.j2 dest=/etc/apache2/conf-available/fqdn.conf
+
+- name: Set ServerName for Apache
+  command: a2enconf fqdn creates=/etc/apache2/conf-enabled/fqdn.conf
+  notify: restart apache

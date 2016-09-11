@@ -1,0 +1,104 @@
+- name: Download LetsEncrypt release
+  git: repo=https://github.com/letsencrypt/letsencrypt
+       dest=/root/letsencrypt
+       version=master
+       force=yes
+
+- name: Create directory for LetsEncrypt configuration and certificates
+  file: state=directory path=/etc/letsencrypt group=root owner=root
+
+- name: Configure LetsEncrypt
+  template:
+    src=etc_letsencrypt_cli.conf.j2
+    dest=/etc/letsencrypt/cli.conf
+    owner=root
+    group=root
+
+- name: Install LetsEncrypt package dependencies
+  command: /root/letsencrypt/letsencrypt-auto --help
+  register: le_deps_result
+  changed_when: "'Bootstrapping dependencies' in le_deps_result.stdout"
+
+- name: Create directory for pre-renewal scripts
+  file: state=directory path=/etc/letsencrypt/prerenew group=root owner=root
+
+- name: Create directory for post-renewal scripts
+  file: state=directory path=/etc/letsencrypt/postrenew group=root owner=root
+
+- name: Create pre-renew hook to stop apache
+  copy:
+    content: "#!/bin/bash\n\nservice apache2 stop\n"
+    dest: /etc/letsencrypt/prerenew/apache
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create post-renew hook to start apache
+  copy:
+    content: "#!/bin/bash\n\nservice apache2 start\n"
+    dest: /etc/letsencrypt/postrenew/apache
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install crontab entry for LetsEncrypt
+  copy:
+    src: etc_cron-daily_letsencrypt-renew
+    dest: /etc/cron.daily/letsencrypt-renew
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create live directory for LetsEncrypt cron job
+  file: state=directory path=/etc/letsencrypt/live group=root owner=root
+
+- name: Get an SSL certificate for {{ domain }} from Let's Encrypt
+  script: letsencrypt-gencert {{ domain }} creates=/etc/letsencrypt/live/{{ domain }}/privkey.pem
+  when: ansible_ssh_user != "vagrant"
+
+- name: Modify permissions to allow ssl-cert group access
+  file: path=/etc/letsencrypt/archive owner=root group=ssl-cert mode=0750
+  when: ansible_ssh_user != "vagrant"
+
+### Several steps to install a self-signed wildcard key to support offline testing
+
+- name: Create live directory for testing keys
+  file: dest=/etc/letsencrypt/live/{{ domain }} state=directory
+    owner=root group=root mode=0755
+  when: ansible_ssh_user == "vagrant"
+
+- name: Copy SSL wildcard private key for testing
+  copy: src=wildcard_private.key
+    dest=/etc/letsencrypt/live/{{ domain }}/privkey.pem
+    owner=root group=ssl-cert mode=0640
+  register: private_key
+  when: ansible_ssh_user == "vagrant"
+
+- name: Copy SSL public certificate into place for testing
+  copy: src=wildcard_public_cert.crt
+    dest=/etc/letsencrypt/live/{{ domain }}/cert.pem
+    group=root owner=root mode=0644
+  register: certificate
+  notify: restart apache
+  when: ansible_ssh_user == "vagrant"
+
+- name: Copy SSL CA combined certificate into place for testing
+  copy: src=wildcard_ca.pem
+    dest=/etc/letsencrypt/live/{{ domain }}/chain.pem
+    group=root owner=root mode=0644
+  register: ca_certificate
+  notify: restart apache
+  when: ansible_ssh_user == "vagrant"
+
+- name: Create a combined SSL cert for testing
+  shell: cat /etc/letsencrypt/live/{{ domain }}/cert.pem
+    /etc/letsencrypt/live/{{ domain }}/chain.pem >
+    /etc/letsencrypt/live/{{ domain }}/fullchain.pem
+  when: (private_key.changed or certificate.changed or ca_certificate.changed) and ansible_ssh_user == "vagrant"
+
+- name: Set permissions on combined SSL public cert
+  file: name=/etc/letsencrypt/live/{{ domain }}/fullchain.pem mode=0644
+  notify: restart apache
+  when: ansible_ssh_user == "vagrant"
+
+### Back to normal

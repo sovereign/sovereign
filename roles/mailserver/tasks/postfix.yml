@@ -1,18 +1,5 @@
-- name: Install Postgres 9.1 on older distributions
-  apt: pkg=postgresql-9.1 state=present
-  when: ansible_distribution_release != 'trusty' and ansible_distribution_release != 'jessie'
-  tags:
-    - dependencies
-
-- name: Install Postgres 9.3 on Ubuntu Trusty
-  apt: pkg=postgresql-9.3 state=present
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Install Postgres 9.4 on Debian Jessie
-  apt: pkg=postgresql-9.4 state=present
-  when: ansible_distribution_release == 'jessie'
+- name: Install Postgres
+  apt: pkg=postgresql state=present
   tags:
     - dependencies
 
@@ -29,12 +16,14 @@
   tags:
     - dependencies
 
-- name: Set postgres password
-  command: sudo -u {{ db_admin_username }} psql -d {{ db_admin_username }} -c "ALTER USER postgres with  password '{{ db_admin_password }}';"
+- name: Set password for PostgreSQL admin user
+  become: true
+  become_user: postgres
+  postgresql_user: name={{ db_admin_username }} password={{ db_admin_password }} encrypted=yes
   notify: import sql postfix
 
 - name: Create database user for mail server
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_username }} password="{{ mail_db_password }}" state=present
+  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_username }} password="{{ mail_db_password }}" encrypted=yes state=present
   notify: import sql postfix
 
 - name: Create database for mail server
@@ -74,4 +63,5 @@
   with_items:
     - smtp
     - ssmtp
+    - submission
   tags: ufw

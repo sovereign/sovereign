@@ -1,27 +1,3 @@
-- name: Copy SSL private key into place
-  copy: src=wildcard_private.key dest=/etc/ssl/private/wildcard_private.key group=ssl-cert owner=root mode=640
-  register: private_key
-  notify: restart apache
-
-- name: Copy SSL public certificate into place
-  copy: src=wildcard_public_cert.crt dest=/etc/ssl/certs/wildcard_public_cert.crt group=root owner=root mode=644
-  register: certificate
-  notify: restart apache
-
-- name: Copy CA combined certificate into place
-  copy: src=wildcard_ca.pem dest=/etc/ssl/certs/wildcard_ca.pem group=root owner=root mode=644
-  register: ca_certificate
-  notify: restart apache
-
-- name: Create a combined version of the public cert with intermediate and root CAs
-  shell: cat /etc/ssl/certs/wildcard_public_cert.crt /etc/ssl/certs/wildcard_ca.pem >
-    /etc/ssl/certs/wildcard_combined.pem
-  when: private_key.changed or certificate.changed or ca_certificate.changed
-
-- name: Set permissions on combined public cert
-  file: name=/etc/ssl/certs/wildcard_combined.pem mode=644
-  notify: restart apache
-
 - name: Create strong Diffie-Hellman group
   command: openssl dhparam -out /etc/ssl/private/dhparam2048.pem 2048
     creates=/etc/ssl/private/dhparam2048.pem
@@ -30,38 +6,18 @@
   command: a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.load
   notify: restart apache
 
-- name: Enable NameVirtualHost for HTTPS
-  lineinfile:
-    dest=/etc/apache2/ports.conf regexp='^    NameVirtualHost \*:443'
-    insertafter='^<IfModule mod_ssl.c>'
-    line='    NameVirtualHost *:443'
-  notify: restart apache
-
 - name: Enable Apache SOCACHE_SHMCB module for the SSL stapling cache
   command: a2enmod socache_shmcb
     creates=/etc/apache2/mods-enabled/socache_shmcb.load
   notify: restart apache
-  when: ansible_distribution_release != 'wheezy'
-
-- name: Add Apache SSL stapling cache configuration
-  copy:
-    src=etc_apache2_conf-available_ssl-stapling-cache.conf
-    dest=/etc/apache2/conf-available/ssl-stapling-cache.conf
-    owner=root
-    group=root
-  when: ansible_distribution_release != 'wheezy'
-  notify: restart apache
-
-- name: Enable Apache SSL stapling cache configuration
-  command: a2enconf ssl-stapling-cache
-    creates=/etc/apache2/conf-enabled/ssl-stapling-cache.conf
-  when: ansible_distribution_release != 'wheezy'
-  notify: restart apache
 
 - name: Add common Apache SSL config
-  template:
-    src=etc_apache2_ssl.conf.j2
-    dest=/etc/apache2/ssl.conf
+  template: src=etc_apache2_conf-available_ssl.conf.j2
+    dest=/etc/apache2/conf-available/ssl.conf
     owner=root
     group=root
+  notify: restart apache
+
+- name: Enable Apache SSL config
+  command: a2enconf ssl creates=/etc/apache2/conf-enabled/ssl.conf
   notify: restart apache

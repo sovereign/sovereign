@@ -1,2 +1,2 @@
 - name: restart prosody
-  command: /etc/init.d/prosody restart
+  command: systemctl restart prosody

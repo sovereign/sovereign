@@ -1,0 +1,29 @@
+secret_root: '{{ inventory_dir | realpath }}'
+secret_name: 'secret'
+secret: '{{ secret_root + "/" + secret_name }}'
+
+db_admin_username: 'postgres'
+db_admin_password: "{{ lookup('password', secret + '/' + 'db_admin_password', length=32) }}"
+
+mail_db_username: 'mailuser'
+mail_db_password: "{{ lookup('password', secret + '/' + 'mail_db_password', length=32) }}"
+mail_db_database: 'mailserver'
+
+mail_server_hostname: "mail.{{ domain }}"
+mail_server_autoconfig_hostname: "autoconfig.{{ domain }}"
+mail_header_privacy: 1
+
+# virtual domains
+mail_virtual_domains: []
+mail_virtual_users: []
+mail_virtual_aliases: []
+
+# opendmarc
+mail_db_opendmarc_username: opendmarc
+mail_db_opendmarc_database: opendmarc
+mail_db_opendmarc_password: "{{ lookup('password', secret + '/' + 'mail_db_opendmarc_password', length=32) }}"
+
+# zpush
+zpush_version: 2.1.1-1788
+# common_timezone is a sovereign variable
+zpush_timezone: "{{ common_timezone|default('Etc/UTC') }}"

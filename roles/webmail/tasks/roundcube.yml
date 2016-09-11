@@ -1,87 +1,100 @@
-- name: Add backports for Roundcube on Debian
-  lineinfile: dest=/etc/apt/sources.list line="deb http://http.debian.net/debian wheezy-backports main"
-  when: ansible_distribution_release == 'wheezy'
-  tags:
-    - dependencies
+- name: Determine whether roundcube is configured
+  stat: path=/var/www/roundcube/config.inc.php
+  register: roundcube_config
 
-- name: Update apt cache for backports
-  apt: update_cache=yes
-  tags:
-    - dependencies
-
-- name: Install Roundcube from wheezy-backports
-  apt: pkg={{ item }} state=latest default_release=wheezy-backports
+- name: Install roundcube dependencies
+  apt: pkg={{ item }} state=present
   with_items:
-  - roundcube
-  - roundcube-pgsql
-  - roundcube-plugins
-  when: ansible_distribution_release == 'wheezy'
+    - php5
+    - php5-sqlite
+    - php5-mcrypt
+    - php5-gd
+    - php5-pspell
+    - php5-intl
+    - php5-curl
+    - aspell
+    - aspell-en
   tags:
     - dependencies
 
-- name: Install Roundcube on Ubuntu 14.04 LTS
-  apt: pkg={{ item }} state=latest
-  with_items:
-  - roundcube
-  - roundcube-pgsql
-  - roundcube-plugins
-  when: ansible_distribution_release == 'trusty'
-  tags:
-    - dependencies
-
-- name: Configure Roundcube database
-  template: src={{ item.src }} dest={{ item.dest }} group={{ item.group }} mode={{ item.mode }} owner=root force=yes
-  with_items:
-  - { src: 'etc_dbconfig-common_roundcube.conf.j2', dest: '/etc/dbconfig-common/roundcube.conf', group: 'root',     mode: 600 }
-  - { src: 'etc_roundcube_debian-db.php.j2',        dest: '/etc/roundcube/debian-db.php',        group: 'www-data', mode: 640 }
-  notify: set roundcube password
-
-- name: Download carddav plugin release
-  get_url:
-    url=https://github.com/blind-coder/rcmcarddav/archive/carddav_{{ carddav_version }}.tar.gz
-    dest=/root/carddav_{{ carddav_version }}.tar.gz
-
-- name: Decompress carddav plugin source
-  unarchive: src=/root/carddav_{{ carddav_version }}.tar.gz
-             dest=/root copy=no
-             creates=/root/rcmcarddav-carddav_{{ carddav_version }}
-
-- name: Move carddav plugin files to /usr/share/roundcube/plugins/carddav
-  command: mv rcmcarddav-carddav_{{ carddav_version }} /usr/share/roundcube/plugins/carddav chdir=/root creates=/usr/share/roundcube/plugins/carddav
-
-- name: Download Google Authenticator roundcube plugin
-  git: repo=https://github.com/alexandregz/twofactor_gauthenticator.git
-       dest=/usr/share/roundcube/plugins/twofactor_gauthenticator
+- name: Clone roundcube
+  git: repo=https://github.com/roundcube/roundcubemail.git
+       dest=/var/www/roundcube
+       version={{ webmail_version }}
+       update=no
        accept_hostkey=yes
-       version=master
 
-- name: Link plugins into /var/lib/roundcube/plugins
-  file: state=link src=/usr/share/roundcube/plugins/{{ item }} dest=/var/lib/roundcube/plugins/{{ item }} force=yes
+- name: Get Composer installer
+  get_url: url=https://getcomposer.org/installer
+           dest=/tmp/composer-installer
+
+- name: Copy composer configuration
+  copy: src=var_www_roundcube_composer.json dest=/var/www/roundcube/composer.json
+    owner=root
+    group=www-data
+    mode=0644
+
+- name: Install Composer
+  command: php /tmp/composer-installer
+           chdir=/root
+           creates=/root/composer.phar
+
+- name: Initialize composer
+  command: php /root/composer.phar install --no-dev
+           chdir=/var/www/roundcube
+           creates=/var/www/roundcube/vendor/autoload.php
+
+- name: Remove installer directory
+  file: path=/var/www/roundcube/installer state=absent
+
+- name: Install Roundcube configuration
+  template: src=var_www_roundcube_config_config.inc.j2 dest=/var/www/roundcube/config/config.inc.php
+
+- name: Create db directory
+  file: path=/decrypted/roundcube mode=0775 state=directory
+
+- name: Make logs and temp directories writable by web server
+  file: path=/var/www/roundcube/{{ item }} mode=0775 state=directory
   with_items:
-    - carddav
-    - twofactor_gauthenticator
+    - temp
+    - logs
 
-- name: Rename existing Apache roundcube virtualhost
-  command: mv /etc/apache2/sites-available/roundcube /etc/apache2/sites-available/roundcube.conf removes=/etc/apache2/sites-available/roundcube
+- name: Make roundcube directory accessible to web server
+  file: path=/var/www/roundcube group=www-data recurse=yes state=directory
 
-- name: Remove old sites-enabled/roundcube symlink (new one will be created by a2ensite)
-  file: path=/etc/apache2/sites-enabled/roundcube state=absent
+- name: Install sieve plugin configuration
+  copy: src=var_www_roundcube_plugins_managesieve_config.inc.php
+    dest=/var/www/roundcube/plugins/managesieve/config.inc.php
+    owner=root
+    group=www-data
+    mode=0644
 
-- name: Configure the Apache HTTP server for roundcube
-  template: src=etc_apache2_sites-available_roundcube.j2 dest=/etc/apache2/sites-available/roundcube.conf group=root owner=root force=yes
+- name: Install global sieve
+  copy: src=var_www_roundcube_config_global.sieve
+    dest=/var/www/roundcube/config/global.sieve
+    owner=root
+    group=www-data
+    mode=0644
 
-- name: Enable php5-mcrypt
-  file: src=/etc/php5/mods-available/mcrypt.ini dest=/etc/php5/apache2/conf.d/20-mcrypt.ini owner=root group=root state=link
+- name: Install carddav plugin configuration
+  copy: src=var_www_roundcube_plugins_carddav_config.inc.php
+    dest=/var/www/roundcube/plugins/carddav/config.inc.php
+    owner=root
+    group=www-data
+    mode=0644
 
-- name: Configure roundcube
-  copy: src={{ item.src }} dest={{ item.dest }} group=www-data owner=root mode=640 force=yes
-  with_items:
-  - { src: 'etc_roundcube_global.sieve',                                          dest: '/etc/roundcube/global.sieve' }
-  - { src: 'etc_roundcube_main.inc.php',                                          dest: '/etc/roundcube/main.inc.php' }
-  - { src: 'usr_share_roundcube_plugins_carddav_config.inc.php',                  dest: '/usr/share/roundcube/plugins/carddav/config.inc.php' }
-  - { src: 'usr_share_roundcube_plugins_managesieve_config.inc.php',              dest: '/usr/share/roundcube/plugins/managesieve/config.inc.php' }
-  - { src: 'usr_share_roundcube_plugins_twofactor_gauthenticator_config.inc.php', dest: '/usr/share/roundcube/plugins/twofactor_gauthenticator/config.inc.php' }
+- name: Install Google 2-factor authentication plugin configuration
+  copy: src=var_www_roundcube_plugins_twofactor_gauthenticator_config.inc.php
+    dest=/var/www/roundcube/plugins/twofactor_gauthenticator/config.inc.php
+    owner=root
+    group=www-data
+    mode=0644
 
-- name: Enable roundcube site
+- name: Configure Apache for Roundcube
+  template: src=etc_apache2_sites-available_roundcube.j2
+    dest=/etc/apache2/sites-available/roundcube.conf
+    group=root owner=root force=yes
+
+- name: Enable Roundcube site
   command: a2ensite roundcube.conf creates=/etc/apache2/sites-enabled/roundcube.conf
   notify: restart apache

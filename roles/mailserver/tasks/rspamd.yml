@@ -1,0 +1,36 @@
+---
+# Installs and configures the Rspamd spam filtering system.
+
+- name: Ensure repository key for Rspamd is in place
+  apt_key: url=https://rspamd.com/apt-stable/gpg.key state=present
+  tags:
+    - dependencies
+
+- name: Add Rspamd repository
+  apt_repository: repo="deb https://rspamd.com/apt-stable/ {{ ansible_distribution_release }} main"
+  tags:
+    - dependencies
+
+- name: Install Rspamd, Rmilter, and Redis
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - rspamd
+    - rmilter
+    - redis-server
+  tags:
+    - dependencies
+
+- name: Configure rmilter
+  copy: src=etc_rmilter.conf.common dest=/etc/rmilter.conf.common
+
+- name: Configure rmilter service
+  copy: src=lib_systemd_system_rmilter.socket dest=/lib/systemd/system/rmilter.socket
+
+- name: Start redis
+  service: name=redis-server state=started
+
+- name: Start rspamd systemd listener
+  service: name=rspamd state=started
+
+- name: Start rmilter systemd listener
+  service: name=rmilter state=started

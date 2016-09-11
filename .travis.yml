@@ -4,8 +4,7 @@ cache:
   directories:
     - $HOME/.cache/pip
 install:
-  # TODO: use requirements.txt when ansible updated to >= 1.9
-  - pip install ansible
+  - pip install -r requirements.txt
   - pip install -r test-requirements.txt
 script:
   - ansible-playbook --syntax-check -i hosts site.yml

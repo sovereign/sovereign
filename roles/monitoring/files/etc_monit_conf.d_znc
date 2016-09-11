@@ -1,7 +1,7 @@
 check process znc with pidfile /var/run/znc/znc.pid
   group irc
-  start program = "/etc/init.d/znc start"
-  stop program = "/etc/init.d/znc stop"
+  start program = "systemctl start znc"
+  stop program = "systemctl stop znc"
   if failed host localhost port 6643 protocol http
     with timeout 10 seconds
     then restart

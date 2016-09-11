@@ -6,15 +6,13 @@
 
 <VirtualHost *:443>
     ServerName {{ cgit_domain }}
+    SSLEngine On
 
-    Include /etc/apache2/ssl.conf
     DocumentRoot /var/www/htdocs/cgit/
-
     <Directory "/var/www/htdocs/cgit/">
         AllowOverride None
         Options +ExecCGI
-        Order allow,deny
-        Allow from all
+        Require all granted
     </Directory>
 
     Alias /cgit.png         /var/www/htdocs/cgit/cgit.png

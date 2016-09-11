@@ -1,64 +1,59 @@
 # more or less as per http://wiki.znc.in/Running_ZNC_as_a_system_daemon
 
-- name: Install znc dependencies
+- name: Install znc
   apt: pkg={{ item }} state=installed
   with_items:
-    - automake
-    - build-essential
-    - checkinstall
-    - g++
-    - libperl-dev
-    - libsasl2-dev
-    - libssl-dev
-    - libtool
-    - openssl
-    - pkg-config
-    - python3-dev
-    - swig
-  tags:
-    - dependencies
-
-- name: Download znc release
-  get_url: url=http://znc.in/releases/archive/znc-{{ znc_version }}.tar.gz dest=/root/znc-{{ znc_version }}.tar.gz
-
-- name: Decompress znc source
-  unarchive: src=/root/znc-{{ znc_version }}.tar.gz
-             dest=/root copy=no
-             creates=/root/znc-{{ znc_version }}/configure
-
-- name: Build and install znc
-  shell: ./configure --enable-python && make && make install executable=/bin/bash chdir=/root/znc-{{ znc_version }} creates=/usr/local/bin/znc
-  notify: restart znc
+    - znc
 
 - name: Create znc group
   group: name=znc state=present
 
 - name: Create znc user
-  user: name=znc state=present home=/var/lib/znc system=yes group=znc shell=/usr/sbin/nologin
+  user: name=znc state=present home=/usr/lib/znc system=yes group=znc shell=/usr/sbin/nologin
 
-- name: Copy znc init file into place
-  copy: src=etc_init.d_znc dest=/etc/init.d/znc mode=0755
+- name: Ensure pid directory exists
+  file: state=directory path=/var/run/znc group=znc owner=znc
 
-- name: Create a combined version of the private key with public cert and intermediate + root CAs
-  shell: cat /etc/ssl/private/wildcard_private.key /etc/ssl/certs/wildcard_combined.pem >
-    /var/lib/znc/znc.pem creates=/var/lib/znc/znc.pem
+- name: Ensure configuration folders exist
+  file: state=directory path=/usr/lib/znc/{{ item }} group=znc owner=znc
+  with_items:
+    - moddata
+    - modules
+    - users
+
+- name: Copy znc service file into place
+  copy: src=etc_systemd_system_znc.service dest=/etc/systemd/system/znc.service mode=0644
+
+- name: Create a combined version of the SSL private key and full certificate chain
+  shell: cat /etc/letsencrypt/live/{{ domain }}/privkey.pem
+    /etc/letsencrypt/live/{{ domain }}/fullchain.pem >
+    /usr/lib/znc/znc.pem
+    creates=/usr/lib/znc/znc.pem
   notify: restart znc
 
+- name: Update post-certificate-renewal task
+  template:
+    src: etc_letsencrypt_postrenew_znc.sh.j2
+    dest: /etc/letsencrypt/postrenew/znc.sh
+    owner: root
+    group: root
+    mode: 0755
+
 - name: Ensure znc user and group can read cert
-  file: path=/var/lib/znc/znc.pem group=znc owner=znc mode=640
+  file: path=/usr/lib/znc/znc.pem group=znc owner=znc mode=0640
   notify: restart znc
 
 - name: Check for existing config file
-  command: cat /var/lib/znc/configs/znc.conf
+  command: cat /usr/lib/znc/configs/znc.conf
   register: znc_config
   ignore_errors: True
   changed_when: False  # never report as "changed"
 
 - name: Create znc config directory
-  file: state=directory path=/var/lib/znc/configs group=znc owner=znc
+  file: state=directory path=/usr/lib/znc/configs group=znc owner=znc
 
 - name: Copy znc configuration file into place
-  template: src=var_lib_znc_configs_znc.conf.j2 dest=/var/lib/znc/configs/znc.conf owner=znc group=znc
+  template: src=usr_lib_znc_configs_znc.conf.j2 dest=/usr/lib/znc/configs/znc.conf owner=znc group=znc
   when: znc_config.rc != 0
   notify: restart znc
 
@@ -67,4 +62,4 @@
   tags: ufw
 
 - name: Ensure znc is a system service
-  service: name=znc state=started enabled=true
+  service: name=znc state=restarted enabled=true

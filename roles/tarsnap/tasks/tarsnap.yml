@@ -1,4 +1,4 @@
-- name: Check if tarsnap {{ tarsnap_version }} is installed
+- name: Check if Tarsnap {{ tarsnap_version }} is installed
   shell: tarsnap --version | grep {{ tarsnap_version }} --color=never
   register: tarsnap_installed
   changed_when: "tarsnap_installed.stderr != ''"
@@ -34,14 +34,14 @@
     url="https://www.tarsnap.com/download/tarsnap-sigs-{{ tarsnap_version }}.asc"
     dest="/root/tarsnap-sigs-{{ tarsnap_version }}.asc"
 
-- name: Make the command that gets the current sha
+- name: Make the command that gets the current SHA
   when: tarsnap_installed|failed
   template:
     src=getSha.sh
     dest=/root/getSha.sh
     mode=0755
 
-- name: get the SHA256sum for this tarsnap release
+- name: Get the SHA256sum for this tarsnap release
   when: tarsnap_installed|failed
   command:
     ./getSha.sh

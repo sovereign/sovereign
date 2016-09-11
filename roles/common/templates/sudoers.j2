@@ -1,1 +1,4 @@
-+{{ main_user_name }} ALL=(ALL) NOPASSWD: ALL
+{{ main_user_name }} ALL=(ALL) NOPASSWD: ALL
+
+# Allow SSH agent forwarding when using sudo
+Defaults    env_keep+=SSH_AUTH_SOCK

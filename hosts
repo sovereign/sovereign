@@ -1,2 +1,4 @@
-[TODO]
-TODO # put your host's IP here
+[sovereign]
+# hosts in the `sovereign` group  use vars defined in `group_vars/sovereign`
+# put your host's IP address or domain name below
+host.example.net

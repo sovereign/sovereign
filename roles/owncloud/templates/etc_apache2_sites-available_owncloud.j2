@@ -6,8 +6,7 @@
 
 <VirtualHost *:443>
     ServerName {{ owncloud_domain }}
-
-    Include /etc/apache2/ssl.conf
+    SSLEngine On
 
     DocumentRoot            /var/www/owncloud
     Options                 -Indexes
@@ -17,24 +16,25 @@
 
     php_value session_cache_limiter "public"
 
-    <Directory /var/www/owncloud>
+    <Directory "/var/www/owncloud">
+        Options +FollowSymLinks
         AllowOverride All
-        Order allow,deny
-        allow from all
-        DirectoryIndex index.php
 
-        SetOutputFilter DEFLATE
+        <IfModule mod_dav.c>
+          Dav off
+        </IfModule>
 
-        ExpiresActive On
-        ExpiresDefault "access plus 2 weeks"
-        ExpiresByType text/css "access plus 2 weeks"
-        ExpiresByType image/svg+xml "access plus 2 weeks"
-        ExpiresByType image/png "access plus 2 weeks"
-        ExpiresByType text/javascript "access plus 2 weeks"
-        ExpiresByType application/x-javascript "access plus 2 weeks"
-        ExpiresByType application/javascript "access plus 2 weeks"
-        ExpiresByType application/x-icon "access plus 2 weeks"
-
-        Header set Cache-Control "public"
+        SetEnv HOME /var/www/owncloud
+        SetEnv HTTP_HOME /var/www/owncloud
     </Directory>
+
+    <Directory "/var/www/owncloud/data/">
+      # just in case if .htaccess gets disabled
+      Require all denied
+    </Directory>
+
+    ## Please enable this manually, if needed. See also
+    ## https://doc.owncloud.org/server/8.2/admin_manual/issues/index.html#apple-ios
+    # Redirect 301 /.well-known/carddav /owncloud/remote.php/carddav
+    # Redirect 301 /.well-known/caldav  /owncloud/remote.php/caldav
 </VirtualHost>

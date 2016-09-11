@@ -1,1 +1,1 @@
-ansible==1.6.6
+ansible>=1.9.3,<2
