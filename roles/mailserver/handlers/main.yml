@@ -19,6 +19,3 @@
 
 - name: restart rspamd
   service: name=rspamd state=restarted
-
-- name: import opendmarc schema
-  mysql_db: name={{ mail_db_opendmarc_database }} state=import target=/usr/share/doc/opendmarc/schema.mysql
