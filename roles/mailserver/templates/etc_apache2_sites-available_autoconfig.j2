@@ -1,18 +1,7 @@
-# NOTE: We don't permanently redirect clients to the HTTPS address because some clients, like
-# Thunderbird, dont't follow redirections to the HTTPS URL.
-#
-# Additionally, documentation doesn't say whether the XML file should be served over either HTTP,
-# HTTPS or both, even though only the former is mentioned. Still, we allow clients to choose
-# between HTTP and HTTPS transports.
-
 <VirtualHost *:80>
-
     ServerName {{ mail_server_autoconfig_hostname }}
 
-    DocumentRoot            "/var/www/autoconfig"
-    Options                 -Indexes
-
-    HostnameLookups         Off
+    Redirect permanent / https://{{ mail_server_autoconfig_hostname }}/
 </VirtualHost>
 
 <VirtualHost *:443>
