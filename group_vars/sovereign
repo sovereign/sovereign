@@ -30,6 +30,9 @@ mail_virtual_aliases:
   - source: "webmaster@{{ domain }}"
     destination: "{{ admin_email }}"
     domain_pk_id: 1
+  - source: "abuse@{{ domain }}"
+    destination: "{{ admin_email }}"
+    domain_pk_id: 1
 
 # timezone
 # common_timezone will be used in the common and mailserver roles
