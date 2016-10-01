@@ -70,3 +70,4 @@
 
 - name: Ensure radicale is a system service
   service: name=radicale state=started enabled=true
+  notify: restart radicale
