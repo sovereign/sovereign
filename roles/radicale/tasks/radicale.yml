@@ -2,12 +2,26 @@
   apt: pkg={{ item }} state=present
   with_items:
     - apache2-utils
-    - python-pip
+    - python-passlib
+    - python-sqlalchemy
   tags:
     - dependencies
 
+- name: Install radicale dependencies for Debian (or anything else other than Ubuntu 16.04)
+  apt: pkg={{ item }} state=present
+  with_items:
+    - python-pip
+  tags:
+    - dependencies
+  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version <= "16"
+
 - name: Install radicale
   pip: name=Radicale
+  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version < "16"
+
+- name: Install radicale
+  apt: pkg=radicale state=present
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version >= "16"
 
 - name: Add radicale user to ssl-cert group
   user: name=radicale groups=ssl-cert append=yes
@@ -45,7 +59,7 @@
   notify: restart radicale
 
 - name: Create radicale accounts
-  htpasswd: path=/etc/radicale/users name={{ item.name }} password={{ item.password }} crypt_scheme=ldap_sha1 create=yes state=present
+  htpasswd: path=/etc/radicale/users name={{ item.name }} password={{ item.password }} crypt_scheme=bcrypt create=yes state=present
   with_items: radicale_accounts
 
 - name: Set firewall rules for radicale

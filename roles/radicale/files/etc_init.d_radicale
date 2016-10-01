@@ -5,7 +5,7 @@
 # Required-Stop:	$remote_fs
 # Should-Start:		$syslog
 # Default-Start:	2 3 4 5
-# Default-Stop:
+# Default-Stop:		
 # Short-Description:	Radicale CalDAV and CardDAV server
 # Description:		Start/Stop the Radicale CalDAV and CardDAV
 #			server, configurable via /etc/default/radicale.
@@ -13,10 +13,10 @@
 
 # Author: Martin Stigge <martin@stigge.org>
 
-PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/sbin:/usr/local/bin
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Radicale CalDAV server"
 NAME=radicale
-DAEMON=/usr/local/bin/$NAME
+DAEMON=/usr/bin/$NAME
 DAEMON_UID=radicale
 DAEMON_GID=radicale
 RUNDIR=/var/run/$NAME
@@ -145,3 +145,4 @@ case "$1" in
 esac
 
 :
+
