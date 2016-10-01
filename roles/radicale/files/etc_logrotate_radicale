@@ -3,7 +3,7 @@
 	weekly
 	compress
 	missingok
-	create 640 radicale adm
+	create 666 radicale adm
 	postrotate
 		invoke-rc.d radicale restart > /dev/null
 	endscript

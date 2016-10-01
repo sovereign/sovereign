@@ -154,19 +154,19 @@ htpasswd_encryption = bcrypt
 #          OTHER BACKENDS ARE NOT READY FOR PRODUCTION.
 # -------
 # Value: filesystem | multifilesystem | database | custom
-type = database
+type = filesystem
 
 # Custom storage handler
 #custom_handler =
 
 # Folder for storing local collections, created if not present
-#filesystem_folder = ~/.config/radicale/collections
+filesystem_folder = /decrypted/radicale/
 
 # Database URL for SQLAlchemy
 # dialect+driver://user:password@host/dbname[?key=value..]
 # For example: sqlite:///var/db/radicale.db, postgresql://user:password@localhost/radicale
 # See http://docs.sqlalchemy.org/en/rel_0_8/core/engines.html#sqlalchemy.create_engine
-database_url = postgresql://{{ radicale_db_username }}:{{ radicale_db_password }}@localhost/{{ radicale_db_username }}
+#database_url = postgresql://{{ radicale_db_username }}:{{ radicale_db_password }}@localhost/{{ radicale_db_username }}
 
 
 [logging]
