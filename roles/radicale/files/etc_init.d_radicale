@@ -13,10 +13,10 @@
 
 # Author: Martin Stigge <martin@stigge.org>
 
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin/
 DESC="Radicale CalDAV server"
 NAME=radicale
-DAEMON=/usr/bin/$NAME
+DAEMON=/usr/local/bin/$NAME
 DAEMON_UID=radicale
 DAEMON_GID=radicale
 RUNDIR=/var/run/$NAME

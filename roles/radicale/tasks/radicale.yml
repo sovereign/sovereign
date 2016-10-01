@@ -58,6 +58,7 @@
 - name: Copy radicale init file into place
   copy: src=etc_init.d_radicale dest=/etc/init.d/radicale mode=0755
   notify: restart radicale
+  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version < "16"
 
 - name: Create radicale accounts
   htpasswd: path=/etc/radicale/users name={{ item.name }} password={{ item.password }} crypt_scheme=bcrypt create=yes state=present
