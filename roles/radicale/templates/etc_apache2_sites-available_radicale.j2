@@ -18,6 +18,7 @@
     <Directory /var/www/radicale>
         WSGIProcessGroup radicale
         WSGIApplicationGroup %{GLOBAL}
+        WSGIPassAuthorization On
         AllowOverride None
         Order allow,deny
         allow from all
