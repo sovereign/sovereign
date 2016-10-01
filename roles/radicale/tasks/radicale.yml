@@ -66,15 +66,15 @@
 - name: Set radicale ownership
   action: file owner=root group=www-data path=/var/www/radicale recurse=yes state=directory
 
+- name: Create radicale log directory
+  file: owner=root group=adm path=/var/log/radicale mode=0777 state=directory
+
 - name: Copy radicale WSGI file into place
-  copy: src=var_www_radicale dest=/var/www/radicale.wsgi mode=0750
+  copy: src=var_www_radicale dest=/var/www/radicale/radicale.wsgi mode=0750
 
 - name: Enable Apache WSGI module
   command: a2enmod wsgi creates=/etc/apache2/mods-enabled/wsgi.load
   notify: restart apache
-
-- name: Set radicale log permissions (www-data needs to write to them)
-  action: file owner=root group=adm path=/var/log/radicale mode=0666 recurse=yes state=directory
 
 - name: Configure the Apache HTTP server for radicale
   template: src=etc_apache2_sites-available_radicale.j2 dest=/etc/apache2/sites-available/radicale.conf group=root owner=root
