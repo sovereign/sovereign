@@ -137,13 +137,13 @@ htpasswd_encryption = bcrypt
 
 # Rights backend
 # Value: None | authenticated | owner_only | owner_write | from_file | custom
-#type = None
+type = owner_only
 
 # Custom rights handler
 #custom_handler =
 
 # File for rights management from_file
-#file = ~/.config/radicale/rights
+file = /etc/radicale/rights
 
 
 [storage]
@@ -160,7 +160,7 @@ type = filesystem
 #custom_handler =
 
 # Folder for storing local collections, created if not present
-filesystem_folder = /decrypted/radicale/
+filesystem_folder = {{ radicale_path }}
 
 # Database URL for SQLAlchemy
 # dialect+driver://user:password@host/dbname[?key=value..]

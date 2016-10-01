@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+    ServerName {{ selfoss_domain }}
+
+    Redirect permanent / https://{{ radicale_domain }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ radicale_domain }}
+
+    Include /etc/apache2/ssl.conf
+
+    WSGIDaemonProcess radicale user=www-data group=www-data threads=1
+    WSGIScriptAlias / /var/www/radicale/radicale.wsgi
+
+    ErrorLog                /var/log/apache2/selfoss.info-error_log
+    CustomLog               /var/log/apache2/selfoss.info-access_log common
+
+    <Directory /var/www/radicale>
+        WSGIProcessGroup radicale
+        WSGIApplicationGroup %{GLOBAL}
+        AllowOverride None
+        Order allow,deny
+        allow from all
+    </Directory>
+</VirtualHost>

@@ -84,6 +84,7 @@ radicale_port: "5232"
 radicale_db_username: radicale
 # radicale_db_password: (required)
 radicale_db_database: radicale
+radicale_path: /decrypted/radicale
 
 # tarsnap
 tarsnap_version: 1.0.35
