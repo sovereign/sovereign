@@ -1,8 +1,3 @@
-- name: Install Postgres
-  apt: pkg=postgresql state=present
-  tags:
-    - dependencies
-
 - name: Install Postfix and related packages
   apt: pkg={{ item }} state=installed
   with_items:
@@ -15,12 +10,6 @@
     - sasl2-bin
   tags:
     - dependencies
-
-- name: Set password for PostgreSQL admin user
-  become: true
-  become_user: postgres
-  postgresql_user: name={{ db_admin_username }} password={{ db_admin_password }} encrypted=yes
-  notify: import sql postfix
 
 - name: Create database user for mail server
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_username }} password="{{ mail_db_password }}" encrypted=yes state=present

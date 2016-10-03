@@ -68,3 +68,4 @@
 - include: security.yml tags=security
 - include: ntp.yml tags=ntp
 - include: google_auth.yml tags=google_auth
+- include: postgres.yml
