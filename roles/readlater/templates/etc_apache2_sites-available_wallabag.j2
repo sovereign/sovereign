@@ -4,19 +4,40 @@
     Redirect permanent / https://{{ wallabag_domain }}/
 </VirtualHost>
 
+
 <VirtualHost *:443>
     ServerName {{ wallabag_domain }}
     SSLEngine On
 
-    DocumentRoot            /var/www/wallabag
-    Options                 -Indexes
+    DocumentRoot /var/www/wallabag/web
+    <Directory /var/www/wallabag/web>
+        AllowOverride None
+        Order Allow,Deny
+        Allow from All
+
+        <IfModule mod_rewrite.c>
+            Options -MultiViews
+            RewriteEngine On
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteRule ^(.*)$ app.php [QSA,L]
+        </IfModule>
+    </Directory>
+
+    # uncomment the following lines if you install assets as symlinks
+    # or run into problems when compiling LESS/Sass/CoffeScript assets
+    # <Directory /var/www/wallabag>
+    #     Options FollowSymlinks
+    # </Directory>
+
+    # optionally disable the RewriteEngine for the asset directories
+    # which will allow apache to simply reply with a 404 when files are
+    # not found instead of passing the request into the full symfony stack
+    <Directory /var/www/wallabag/web/bundles>
+        <IfModule mod_rewrite.c>
+            RewriteEngine Off
+        </IfModule>
+    </Directory>
 
     ErrorLog                /var/log/apache2/wallabag.info-error_log
     CustomLog               /var/log/apache2/wallabag.info-access_log common
-
-    <Directory /var/www/wallabag>
-        AllowOverride All
-        Require all granted
-        DirectoryIndex index.php
-    </Directory>
 </VirtualHost>

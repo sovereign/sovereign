@@ -1,0 +1,29 @@
+parameters:
+    database_driver: pdo_pgsql
+    database_host: localhost
+    database_port: ~
+    database_name: {{ wallabag_db_database }}
+    database_user: {{ wallabag_db_username }}
+    database_password: "{{ wallabag_db_password }}"
+    database_table_prefix: wallabag_
+    database:location: 
+    
+    mailer_transport:  smtp
+    mailer_host:       localhost
+    mailer_user:       ~
+    mailer_password:   ~
+    
+    locale:            en
+    
+    # A secret key that's used to generate certain security-related tokens
+    secret:            {{ wallabag_salt }}
+    
+    # two factor stuff
+    twofactor_auth: true
+    twofactor_sender: twofactor_wallabag@{{ domain }}
+    
+    # fosuser stuff
+    fosuser_confirmation: true
+    
+    from_email: no-reply_wallabag@{{ domain }}
+    
