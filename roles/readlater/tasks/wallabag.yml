@@ -1,4 +1,3 @@
-
 - name: Install wallabag dependencies
   apt: pkg={{ item }} state=present
   with_items:
@@ -56,6 +55,7 @@
 - name: Install wallabag
   command: php bin/console wallabag:install --env=prod
            chdir=/var/www/wallabag
+           creates=/var/www/wallabag/bin/doctrine.php
 
 - name: Set wallabag ownership
   file: owner=root
@@ -78,7 +78,6 @@
     - data
     - app
     - var
-
 
 - name: Rename existing Apache wallabag virtualhost
   command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf removes=/etc/apache2/sites-available/wallabag
