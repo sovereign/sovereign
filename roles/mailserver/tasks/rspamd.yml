@@ -20,8 +20,11 @@
   tags:
     - dependencies
 
-- name: Configure rmilter
+- name: Configure rmilter.common
   copy: src=etc_rmilter.conf.common dest=/etc/rmilter.conf.common
+
+- name: Configure rmilter socket
+  lineinfile: dest=/etc/rmilter.conf regexp=^bind_socket line="bind_socket = inet:9900@localhost"
 
 - name: Configure rmilter service
   copy: src=lib_systemd_system_rmilter.socket dest=/lib/systemd/system/rmilter.socket
