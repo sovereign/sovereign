@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/sovereign/sovereign.svg?branch=master)](https://travis-ci.org/sovereign/sovereign)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/460/badge)](https://bestpractices.coreinfrastructure.org/projects/460)
 
 Introduction
 ============
