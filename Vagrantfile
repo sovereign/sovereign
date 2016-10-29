@@ -36,7 +36,7 @@ Vagrant.configure('2') do |config|
 
   # Debian 8 64-bit (officially supported)
   config.vm.define 'jessie', primary: true do |jessie|
-    jessie.vm.box = 'box-cutter/debian81'
+    jessie.vm.box = 'box-cutter/debian8'
   end
 
   # Ubuntu 16.04 (LTS) 64-bit (currently unavailable)
