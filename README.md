@@ -208,7 +208,12 @@ Similarly, to access the server monitoring page, use another SSH tunnel:
 
 Again proceeding to http://localhost:2812 in your web browser.
 
-Finally, sign into ownCloud with a new administrator account to set it up. You should select PostgreSQL as the configuration backend. Use `owncloud` as the database user and the database name. For the database password use the password you set for `owncloud_db_password` in `group_vars/sovereign`.
+Finally, sign into ownCloud with a new administrator account to set it
+up. You should select PostgreSQL as the configuration backend. Use
+`owncloud` as the database user and the database name. For the
+database password ansible has created a set of random passwords for
+each service and stores them in your local folder `secret`, use the
+one in the file `owncloud_db_password`.
 
 How To Use Your New Personal Cloud
 ----------------------------------
