@@ -51,7 +51,7 @@
   template: src=var_www_roundcube_config_config.inc.j2 dest=/var/www/roundcube/config/config.inc.php
 
 - name: Create db directory
-  file: path=/decrypted/roundcube mode=0775 state=directory
+  file: path=/decrypted/roundcube group=www-data mode=0775 state=directory
 
 - name: Make logs and temp directories writable by web server
   file: path=/var/www/roundcube/{{ item }} mode=0775 state=directory
