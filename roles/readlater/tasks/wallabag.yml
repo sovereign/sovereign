@@ -4,6 +4,7 @@
 
 - name: Clone wallabag
   git: repo=https://github.com/wallabag/wallabag.git
+       force=yes
        dest=/var/www/wallabag
        version={{ wallabag_version }}
        accept_hostkey=yes
