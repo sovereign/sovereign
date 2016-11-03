@@ -43,6 +43,7 @@ What do you get if you point Sovereign at a server? All kinds of good stuff!
 -   Nightly backups to [Tarsnap](https://www.tarsnap.com/).
 -   Git hosting via [cgit](http://git.zx2c4.com/cgit/about/) and [gitolite](https://github.com/sitaramc/gitolite).
 -   Read-it-later via [Wallabag](https://www.wallabag.org/)
+-   CardDAV and CalDAV server if you don't need a full ownCloud via [Baikal](http://baikal-server.com)
 -   A bunch of nice-to-have tools like [mosh](http://mosh.mit.edu) and [htop](http://htop.sourceforge.net) that make life with a server a little easier.
 
 Don’t want one or more of the above services? Comment out the relevant role in `site.yml`. Or get more granular and comment out the associated `include:` directive in one of the playbooks.

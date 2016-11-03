@@ -1,0 +1,9 @@
+secret_root: '{{ inventory_dir | realpath }}'
+secret_name: 'secret'
+secret: '{{ secret_root + "/" + secret_name }}'
+
+baikal_db: baikal
+baikal_db_user: baikal
+baikal_db_user_password: "{{ lookup('password', secret + '/' + 'baikal_db_user_password', length=32) }}"
+
+baikal_version: 0.4.6

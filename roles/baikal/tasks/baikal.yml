@@ -1,0 +1,34 @@
+- name: Install unzip
+  apt: pkg=unzip state=installed
+
+- name: Install PDO MySQL module
+  apt: pkg=php5-mysql state=installed
+
+- name: Set MySQL database
+  mysql_db: name={{ baikal_db }} state=present
+
+- name: Set MySQL user
+  mysql_user: name={{ baikal_db_user }} password={{ baikal_db_user_password }} priv={{ baikal_db }}.*:ALL host=localhost state=present
+
+- name: Download and extract
+  unarchive: src=https://github.com/fruux/Baikal/releases/download/{{ baikal_version }}/baikal-{{ baikal_version }}.zip
+             dest=/var/www copy=no
+             creates=/var/www/baikal
+             group=www-data
+             owner={{ main_user_name }}
+
+- name: Set permissions
+  file: path=/var/www/baikal/Specific
+        state=touch
+        group=www-data
+        owner=www-data
+
+- name: Configure Apache HTTP server
+  template: src=etc_apache2_sites-available_baikal.j2 dest=/etc/apache2/sites-available/baikal.conf group=root owner=root
+
+- name: Symlink Apache config
+  file: src=/etc/apache2/sites-available/baikal.conf dest=/etc/apache2/sites-enabled/baikal.conf state=link
+  notify: restart apache
+
+- name: Unlock web admin
+  file: path=/var/www/baikal/Specific/ENABLE_INSTALL state=touch
