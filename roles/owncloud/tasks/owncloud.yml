@@ -43,5 +43,9 @@
   template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root
   notify: restart apache
 
+- name: Enable ownCloud site
+  command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
+  notify: restart apache
+
 - name: Install ownCloud cronjob
   cron: name="ownCloud" user="www-data" minute="*/5" job="php -f /var/www/owncloud/cron.php > /dev/null"
