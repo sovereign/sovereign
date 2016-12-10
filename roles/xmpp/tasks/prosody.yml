@@ -28,7 +28,7 @@
 
 - name: Create Prosody accounts
   command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
-  with_items: prosody_accounts
+  with_items: "{{ prosody_accounts }}"
 
 - name: Set firewall rules for Prosody
   ufw: rule=allow port={{ item }} proto=tcp

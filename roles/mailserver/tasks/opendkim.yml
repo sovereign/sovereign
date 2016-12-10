@@ -14,11 +14,11 @@
 
 - name: Create OpenDKIM key directories
   file: state=directory path=/etc/opendkim/keys/{{ item.name }} group=opendkim owner=opendkim
-  with_items: mail_virtual_domains
+  with_items: "{{ mail_virtual_domains }}"
 
 - name: Generate OpenDKIM keys
   command: opendkim-genkey -r -d {{ item.name }} -D /etc/opendkim/keys/{{ item.name }}/ creates=/etc/opendkim/keys/{{ item.name }}/default.private
-  with_items: mail_virtual_domains
+  with_items: "{{ mail_virtual_domains }}"
 
 - name: Put opendkim.conf into place
   copy: src=etc_opendkim.conf dest=/etc/opendkim.conf owner=opendkim group=opendkim

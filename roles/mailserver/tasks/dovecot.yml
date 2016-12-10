@@ -43,6 +43,7 @@
     - 10-mail.conf
     - 10-master.conf
     - 90-sieve.conf
+    - 90-antispam.conf
     - auth-sql.conf.ext
   notify: restart dovecot
 
