@@ -186,7 +186,7 @@ To run the whole dang thing:
 
     ansible-playbook -i --ask-sudo-pass ./hosts site.yml
     
-If you chose to make a passwordless sudo deploy users, you can omit the `--ask-sudo-pass` argument.
+If you chose to make a passwordless sudo deploy user, you can omit the `--ask-sudo-pass` argument.
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
