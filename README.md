@@ -63,6 +63,10 @@ You do not need to acquire an SSL certificate.  The SSL certificates you need wi
 Installation
 ------------
 
+## On the remote server
+
+The following steps are done on the remote server by `ssh`ing into it and running these commands.
+
 ### 1. Install required packages
 
     apt-get install sudo
@@ -96,11 +100,19 @@ Authorize your ssh key if you want passwordless ssh login (optional):
     chown deploy:deploy /home/deploy -R
     echo 'deploy ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/deploy
 
-Your new account will be automatically set up for passwordless `sudo`.
+Your new account will be automatically set up for passwordless `sudo`. Or you can just add your `deploy` user to the sudo group.
+
+    adduser deploy sudo
+
+## On your local machine
+
+Ansible (the tool setting up your server) runs locally on your computer and sends commands to the remote server. Download this repository somewhere on your machine, either through `Clone or Download > Download ZIP` above, `wget`, or `git` as below
+    
+    git clone https://github.com/sovereign/sovereign.git
 
 ### 4. Configure your installation
 
-Modify the settings in `group_vars/sovereign` to your liking. If you want to see how they’re used in context, just search for the corresponding string.
+Modify the settings in the `group_vars/sovereign` folder to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 All of the variables in `group_vars/sovereign` must be set for sovereign to function.
 
 Setting `password_hash` for your mail users is a bit tricky. You can generate one using [doveadm-pw](http://wiki2.dovecot.org/Tools/Doveadm/Pw).
@@ -172,7 +184,9 @@ First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com
 
 To run the whole dang thing:
 
-    ansible-playbook -i ./hosts site.yml
+    ansible-playbook -i --ask-sudo-pass ./hosts site.yml
+    
+If you chose to make a passwordless sudo deploy user, you can omit the `--ask-sudo-pass` argument.
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
