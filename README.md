@@ -184,7 +184,7 @@ First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com
 
 To run the whole dang thing:
 
-    ansible-playbook -i --ask-sudo-pass ./hosts site.yml
+    ansible-playbook -i ./hosts --ask-sudo-pass site.yml
     
 If you chose to make a passwordless sudo deploy user, you can omit the `--ask-sudo-pass` argument.
 
