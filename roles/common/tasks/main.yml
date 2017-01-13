@@ -59,6 +59,9 @@
 - name: Set decrypted directory permissions
   file: state=directory path=/decrypted group=mail mode=0775
 
+- name: "Configure locales"
+  shell: export LANGUAGE="en_US.UTF-8" && echo 'LANGUAGE="en_US.UTF-8"' >> /etc/default/locale && echo 'LC_ALL="en_US.UTF-8"' >> /etc/default/locale
+
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: apache.yml tags=apache
