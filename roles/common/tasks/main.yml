@@ -4,6 +4,11 @@
   tags:
     - dependencies
 
+- name: Install aptitude
+  apt: pkg=aptitude
+  tags:
+    - dependencies
+
 - name: Upgrade all safe packages
   apt: upgrade=safe
   tags:
