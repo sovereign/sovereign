@@ -69,7 +69,7 @@ The following steps are done on the remote server by `ssh`ing into it and runnin
 
 ### 1. Install required packages
 
-    apt-get install sudo
+    apt-get install -y sudo python
 
 ### 2. Get a Tarsnap machine key
 
@@ -95,7 +95,7 @@ Authorize your ssh key if you want passwordless ssh login (optional):
 
     mkdir /home/deploy/.ssh
     chmod 700 /home/deploy/.ssh
-    nano /home/deploy/.ssh/authorized_keys
+    nano /home/deploy/.ssh/authorized_keys ;# copy this from local ~/.ssh/id_rsa.pub
     chmod 400 /home/deploy/.ssh/authorized_keys
     chown deploy:deploy /home/deploy -R
     echo 'deploy ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/deploy
@@ -107,10 +107,12 @@ Your new account will be automatically set up for passwordless `sudo`. Or you ca
 ## On your local machine
 
 Ansible (the tool setting up your server) runs locally on your computer and sends commands to the remote server. Download this repository somewhere on your machine, either through `Clone or Download > Download ZIP` above, `wget`, or `git` as below
-    
+
     git clone https://github.com/sovereign/sovereign.git
 
 ### 4. Configure your installation
+
+updateds
 
 Modify the settings in the `group_vars/sovereign` folder to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 All of the variables in `group_vars/sovereign` must be set for sovereign to function.
@@ -163,6 +165,13 @@ For Git hosting, copy your public key into place:
 
 Finally, replace the `host.example.net` in the file `hosts`. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address. In that case you also need to add your custom port to the task `Set firewall rules for web traffic and SSH` in the file `roles/common/tasks/ufw.yml`.
 
+If you want only certain roles, you can update that file:
+
+  [mailserver,owncloud]
+  example.com
+
+Rename `sovereign` in `group_vars` to `all`.
+
 ### 5. Set up DNS
 
 If you’ve just bought a new domain name, point it at [Linode’s DNS Manager](https://library.linode.com/dns-manager) or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you’re using an existing domain that’s already managed elsewhere, you can probably just modify a few records.
@@ -178,6 +187,8 @@ Create `A` or `CNAME` records which point to your server's IP address:
 * `cloud.example.com` (for ownCloud)
 * `git.example.com` (for cgit)
 
+Add all of these, even if you don't intend to use them. Otherwise Sovereign will be unable to generate your SSL keys correctly.
+
 ### 6. Run the Ansible Playbooks
 
 First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
@@ -185,12 +196,16 @@ First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com
 To run the whole dang thing:
 
     ansible-playbook -i ./hosts --ask-sudo-pass site.yml
-    
+
 If you chose to make a passwordless sudo deploy user, you can omit the `--ask-sudo-pass` argument.
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
     ansible-playbook -i ./hosts --tags=ufw site.yml
+
+If you want a minimal set-up with Email, OwnCloud for example:
+
+  ansible-playbook -i hosts --tags apache,dependencies,dovecot,letsencrypt,opendmarc,owncloud,postfix,rspamd,ssl,ufw site.yml
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there’s no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I’ve tried to add comments where manual intervention is necessary.
 
@@ -234,10 +249,36 @@ How To Use Your New Personal Cloud
 
 We’re collecting known-good client setups [on our wiki](https://github.com/sovereign/sovereign/wiki/Usage).
 
+How To Perform A Security Audit
+-------------------------------
+
+  cd openvas-vm
+  vargant up
+  vagrant ssh
+  openvas-setup
+
 Troubleshooting
 ---------------
 
 If you run into an errors, please check the [wiki page](https://github.com/sovereign/sovereign/wiki/Troubleshooting). If the problem you encountered, is not listed, please go ahead and [create an issue](https://github.com/sovereign/sovereign/issues/new). If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
+
+
+### Mail
+
+Ensure users are set-up (password in /etc/dovecot/dovecot-sql.conf.ext):
+
+  psql -h localhost -d mailserver -U mailuser -f /etc/postfix/import.sql
+
+Check IMAP:
+
+  openssl s_client -showcerts -connect mail.alexecollins.com:993
+  a login username@domain password
+
+Check SMTP:
+
+  openssl s_client -showcerts -connect mail.alexecollins.com:587
+  a login username@domain password
+
 
 ### Reboots
 
