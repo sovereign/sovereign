@@ -18,7 +18,9 @@
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" role_attr_flags=CREATEDB state=present
 
 - name: Ensure repository key for ownCloud is in place
-  apt_key: url=https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key state=present
+  shell: curl https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key | apt-key add - && touch added_ownCloud_key
+  args:
+    creates: added_ownCloud_key
   tags:
     - dependencies
 
