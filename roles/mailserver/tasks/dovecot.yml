@@ -10,11 +10,6 @@
   tags:
     - dependencies
 
-- name: Install Postgres for Dovecot
-  apt: pkg=postgresql state=present
-  tags:
-    - dependencies
-
 - name: Create vmail group
   group: name=vmail state=present gid=5000
 
