@@ -18,9 +18,9 @@
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" role_attr_flags=CREATEDB state=present
 
 - name: Get ownCloud GPG key
-  get_url:
-    url: https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key
-    file: ownCloud-Release.key
+  command: wget -O ownCloud-Release.key https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key
+  args:
+    creates: ownCloud-Release.key
   tags:
     - dependencies
 
