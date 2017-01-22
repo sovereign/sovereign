@@ -42,11 +42,7 @@
 
 - name: Create database for OpenDMARC reports
   mysql_db: name={{ mail_db_opendmarc_database }} state=present
-  register: db_created
-
-- name: Import opendmarc schema
-  mysql_db: name={{ mail_db_opendmarc_database }} state=import target=/usr/share/doc/opendmarc/schema.mysql
-  when: db_created.changed
+  notify: import opendmarc schema
 
 - name: Copy nightly OpenDMARC report generation script into place
   template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="755"

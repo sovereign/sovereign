@@ -35,6 +35,7 @@
          dest=/tmp/sovereign-google-auth-files
   when: ansible_ssh_user != "vagrant"
 
-- pause: seconds=5
+- name: Pause 5 seconds for keys
+  pause: seconds=5
          prompt="Your Google Authentication keys are in /tmp/sovereign-google-auth-files. Press any key to continue..."
   when: ansible_ssh_user != "vagrant"

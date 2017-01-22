@@ -1,10 +1,15 @@
 ---
 # Installs and configures the Rspamd spam filtering system.
 
+- name: Get Rspamd GPG key
+  get_url:
+    url: https://rspamd.com/apt-stable/gpg.key
+    dest: rspamd-gpg.key
+  tags:
+    - dependencies
+
 - name: Ensure repository key for Rspamd is in place
-  shell: curl https://rspamd.com/apt-stable/gpg.key | apt-key add - && touch added_rspamd_gpg_key
-  args:
-    creates: added_rspamd_gpg_key
+  apt_key: file=rspamd-gpg.key
   tags:
     - dependencies
 

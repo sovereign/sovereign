@@ -173,5 +173,6 @@
     - openvpn_clients
     - ["client.crt", "client.key", "ca.crt", "ta.key", "{{ openvpn_server }}.ovpn"]
 
-- pause: seconds=5
+- name: Pause 5s seconds for OpenVPN ready
+  pause: seconds=5
          prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."

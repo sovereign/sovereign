@@ -17,10 +17,15 @@
 - name: Create database user for ownCloud
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ owncloud_db_username }} password="{{ owncloud_db_password }}" role_attr_flags=CREATEDB state=present
 
+- name: Get ownCloud GPG key
+  get_url:
+    url: https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key
+    file: ownCloud-Release.key
+  tags:
+    - dependencies
+
 - name: Ensure repository key for ownCloud is in place
-  shell: curl https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key | apt-key add - && touch added_ownCloud_key
-  args:
-    creates: added_ownCloud_key
+  apt_key: file=ownCloud-Release.key
   tags:
     - dependencies
 
@@ -39,7 +44,9 @@
 
 - name: Move ownCloud data to encrypted filesystem
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
-- file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
+
+- name: Link to ownCloud data on encrypted filesystem
+  file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
 - name: Configure Apache for ownCloud
   template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root
