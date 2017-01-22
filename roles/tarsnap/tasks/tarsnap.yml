@@ -3,8 +3,6 @@
   register: tarsnap_installed
   changed_when: "tarsnap_installed.stderr != ''"
   ignore_errors: yes
-  tags:
-    - dependencies
 
 - name: Install dependencies for Tarsnap
   when: tarsnap_installed|failed
@@ -13,8 +11,6 @@
     - e2fslibs-dev
     - libssl-dev
     - zlib1g-dev
-  tags:
-    - dependencies
 
 - name: Download the current tarsnap code signing key
   when: tarsnap_installed|failed

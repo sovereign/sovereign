@@ -1,7 +1,21 @@
+- name: Determine if MySQL has been installed
+  stat: path=/etc/mysql/mysql.conf.d/mysqld.cnf
+  register: mysqld
+
+- name: Attempt to recover failed MySQL install from previous run
+  lineinfile:
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    line: innodb_buffer_pool_size=16M
+    regexp: innodb_buffer_pool_size=.*
+    insertafter: "[mysqld]"
+  when: mysqld.stat.exists == True
+
+- name: Install MySQL
+  apt: pkg=mysql-server update_cache=yes
+
 - name: Install OpenDMARC milter and related packages
   apt: pkg={{ item }} state=installed update_cache=yes
   with_items:
-    - mysql-server
     - python-mysqldb
     - opendmarc
 

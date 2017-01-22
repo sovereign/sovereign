@@ -6,8 +6,6 @@
   with_items:
     - postgresql
     - python-psycopg2
-  tags:
-    - dependencies
 
 - name: Set password for PostgreSQL admin user
   become: true
@@ -21,23 +19,15 @@
   command: wget -O ownCloud-Release.key https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key
   args:
     creates: ownCloud-Release.key
-  tags:
-    - dependencies
 
 - name: Ensure repository key for ownCloud is in place
   apt_key: file=ownCloud-Release.key
-  tags:
-    - dependencies
 
 - name: Add ownCloud repository
   apt_repository: repo='deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /'
-  tags:
-    - dependencies
 
 - name: Install ownCloud
   apt: pkg=owncloud update_cache=yes
-  tags:
-    - dependencies
 
 - name: Ensure ownCloud directory is in place
   file: state=directory path=/var/www/owncloud

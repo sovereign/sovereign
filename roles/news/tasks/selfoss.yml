@@ -24,8 +24,6 @@
     - php5
     - php5-pgsql
     - php5-gd
-  tags:
-    - dependencies
 
 - name: Create database user for selfoss
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_username }} password="{{ selfoss_db_password }}" state=present

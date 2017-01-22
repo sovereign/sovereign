@@ -14,8 +14,6 @@
     - php5-curl
     - aspell
     - aspell-en
-  tags:
-    - dependencies
 
 - name: Clone roundcube
   git: repo=https://github.com/roundcube/roundcubemail.git

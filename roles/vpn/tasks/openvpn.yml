@@ -8,8 +8,6 @@
     - dnsmasq
     - openvpn
     - udev
-  tags:
-    - dependencies
 
 - name: Generate RSA keys for the CA and Server
   command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
