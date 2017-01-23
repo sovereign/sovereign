@@ -6,38 +6,30 @@
     - php5-cli
     - php5-imap
   tags:
-    - z-push
+    - dependencies
 
 - name: Download z-push release
   get_url:
     url=http://download.z-push.org/final/2.1/z-push-{{ zpush_version }}.tar.gz
     dest=/root/z-push-{{ zpush_version }}.tar.gz
-  tags:
-    - z-push
 
 - name: Decompress z-push source
   unarchive: src=/root/z-push-{{ zpush_version }}.tar.gz
              dest=/root copy=no
              creates=/root/z-push-{{ zpush_version }}
-  tags:
-    - z-push
 
 - name: Create /usr/share/z-push
   file: state=directory path=/usr/share/z-push
-  tags:
-    - z-push
 
 - name: Copy z-push source files to /usr/share/z-push
   shell: cp -R z-push-{{ zpush_version }}/* /usr/share/z-push/ chdir=/root
   tags:
     - skip_ansible_lint
-    - z-push
 
 - name: Remove downloaded, temporary z-push source files
   shell: rm -rf z-push* chdir=/root
   tags:
     - skip_ansible_lint
-    - z-push
 
 - name: Ensure z-push state and log directories are in place
   file: state=directory path={{ item }} owner=www-data group=www-data mode=0755
@@ -45,26 +37,16 @@
     - /decrypted/zpush-state
     - /var/log/z-push
   notify: restart apache
-  tags:
-    - z-push
 
 - name: Copy z-push's config.php into place
   template: src=usr_share_z-push_config.php.j2 dest=/usr/share/z-push/config.php
-  tags:
-    - z-push
 
 - name: Create z-push apache alias and php configuration file
   copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf-available/z-push.conf
-  tags:
-    - z-push
 
 - name: Enable z-push Apache alias and PHP configuration file
   command: a2enconf z-push creates=/etc/apache2/conf-enabled/z-push.conf
   notify: restart apache
-  tags:
-    - z-push
 
 - name: Configure z-push logrotate
   copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push owner=root group=root mode=0644
-  tags:
-    - z-push
