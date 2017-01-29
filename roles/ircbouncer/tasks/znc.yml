@@ -57,9 +57,9 @@
   when: znc_config.rc != 0
   notify: restart znc
 
-- name: Set firewall rule for znc
-  ufw: rule=allow port=6697 proto=tcp
-  tags: ufw
+#- name: Set firewall rule for znc
+#  ufw: rule=allow port=6697 proto=tcp
+#  tags: ufw
 
 - name: Ensure znc is a system service
   service: name=znc state=restarted enabled=true
