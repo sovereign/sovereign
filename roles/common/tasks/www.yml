@@ -1,0 +1,7 @@
+- name: Configure Apache for WWW
+  template: src=etc_apache2_sites-available_000-default.j2 dest=/etc/apache2/sites-available/000-default.conf group=root
+  notify: restart apache
+
+- name: Enable WWWW site
+  command: a2ensite 000-default.conf creates=/etc/apache2/sites-enabled/000-default.conf
+  notify: restart apache
