@@ -43,7 +43,7 @@ What do you get if you point Sovereign at a server? All kinds of good stuff!
 -   Nightly backups to [Tarsnap](https://www.tarsnap.com/).
 -   Git hosting via [cgit](http://git.zx2c4.com/cgit/about/) and [gitolite](https://github.com/sitaramc/gitolite).
 -   Read-it-later via [Wallabag](https://www.wallabag.org/)
--   A bunch of nice-to-have tools like [mosh](http://mosh.mit.edu) and [htop](http://htop.sourceforge.net) that make life with a server a little easier.
+-   A bunch of nice-to-have tools like [htop](http://htop.sourceforge.net) that make life with a server a little easier.
 
 Don’t want one or more of the above services? Comment out the relevant role in `site.yml`. Or get more granular and comment out the associated `include:` directive in one of the playbooks.
 
@@ -210,7 +210,7 @@ For DMARC you'll also need to add a `txt` record. The name field should be `_dma
 
 Set up SPF and reverse DNS [as per this post](http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/). Make sure to validate that it’s all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
-### 8. Miscellaneous Configuration
+### 8. ZNC Configuration
 
 Sign in to the ZNC web interface and set things up to your liking. It isn’t exposed through the firewall, so you must first set up an SSH tunnel:
 
@@ -218,11 +218,15 @@ Sign in to the ZNC web interface and set things up to your liking. It isn’t ex
 
 Then proceed to http://localhost:6643 in your web browser.
 
+### 9. Monitoring Configuration
+
 Similarly, to access the server monitoring page, use another SSH tunnel:
 
     ssh deploy@example.com -L 2812:localhost:2812
 
 Again proceeding to http://localhost:2812 in your web browser.
+
+### 10. OwnCloud Configuration
 
 Finally, sign into ownCloud with a new administrator account to set it
 up. You should select PostgreSQL as the configuration backend. Use
@@ -248,14 +252,14 @@ Ensure users are set-up (password in /etc/dovecot/dovecot-sql.conf.ext):
 
     psql -h localhost -d mailserver -U mailuser -f /etc/postfix/import.sql
 
-Check IMAP:
+Check IMAP authorisation:
 
-    openssl s_client -showcerts -connect mail.alexecollins.com:993
+    openssl s_client -showcerts -connect mail.domain:993
     a login username@domain password
 
-Check SMTP:
+Check SMTP authorisation:
 
-    openssl s_client -showcerts -connect mail.alexecollins.com:587
+    openssl s_client -showcerts -connect mail.domain:587
     a login username@domain password
 
 ### Reboots
