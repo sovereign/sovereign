@@ -112,8 +112,6 @@ Ansible (the tool setting up your server) runs locally on your computer and send
 
 ### 4. Configure your installation
 
-updateds
-
 Modify the settings in the `group_vars/sovereign` folder to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 All of the variables in `group_vars/sovereign` must be set for sovereign to function.
 
@@ -165,13 +163,6 @@ For Git hosting, copy your public key into place:
 
 Finally, replace the `host.example.net` in the file `hosts`. If your SSH daemon listens on a non-standard port, add a colon and the port number after the IP address. In that case you also need to add your custom port to the task `Set firewall rules for web traffic and SSH` in the file `roles/common/tasks/ufw.yml`.
 
-If you want only certain roles, you can update that file:
-
-  [mailserver,owncloud]
-  example.com
-
-Rename `sovereign` in `group_vars` to `all`.
-
 ### 5. Set up DNS
 
 If you’ve just bought a new domain name, point it at [Linode’s DNS Manager](https://library.linode.com/dns-manager) or similar. Most VPS services (and even some domain registrars) offer a managed DNS service that you can use for this at no charge. If you’re using an existing domain that’s already managed elsewhere, you can probably just modify a few records.
@@ -202,10 +193,6 @@ If you chose to make a passwordless sudo deploy user, you can omit the `--ask-su
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
 
     ansible-playbook -i ./hosts --tags=ufw site.yml
-
-If you want a minimal set-up with Email, OwnCloud for example:
-
-  ansible-playbook -i hosts --tags apache,dependencies,dovecot,letsencrypt,opendmarc,owncloud,postfix,rspamd,ssl,ufw site.yml
 
 You might find that it fails at one point or another. This is probably because something needs to be done manually, usually because there’s no good way of automating it. Fortunately, all the tasks are clearly named so you should be able to find out where it stopped. I’ve tried to add comments where manual intervention is necessary.
 
@@ -249,14 +236,6 @@ How To Use Your New Personal Cloud
 
 We’re collecting known-good client setups [on our wiki](https://github.com/sovereign/sovereign/wiki/Usage).
 
-How To Perform A Security Audit
--------------------------------
-
-  cd openvas-vm
-  vargant up
-  vagrant ssh
-  openvas-setup
-
 Troubleshooting
 ---------------
 
@@ -267,18 +246,17 @@ If you run into an errors, please check the [wiki page](https://github.com/sover
 
 Ensure users are set-up (password in /etc/dovecot/dovecot-sql.conf.ext):
 
-  psql -h localhost -d mailserver -U mailuser -f /etc/postfix/import.sql
+    psql -h localhost -d mailserver -U mailuser -f /etc/postfix/import.sql
 
 Check IMAP:
 
-  openssl s_client -showcerts -connect mail.alexecollins.com:993
-  a login username@domain password
+    openssl s_client -showcerts -connect mail.alexecollins.com:993
+    a login username@domain password
 
 Check SMTP:
 
-  openssl s_client -showcerts -connect mail.alexecollins.com:587
-  a login username@domain password
-
+    openssl s_client -showcerts -connect mail.alexecollins.com:587
+    a login username@domain password
 
 ### Reboots
 
