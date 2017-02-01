@@ -7,6 +7,8 @@
     - dovecot-managesieved
     - dovecot-pgsql
     - dovecot-pop3d
+  tags:
+    - dependencies
 
 - name: Create vmail group
   group: name=vmail state=present gid=5000

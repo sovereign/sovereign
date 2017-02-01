@@ -2,15 +2,21 @@
 # Installs and configures the Rspamd spam filtering system.
 
 - name: Get Rspamd GPG key
-  command: wget -O rspamd-gpg.key https://rspamd.com/apt-stable/gpg.key
+  command: wget -O rspamd-gpg.key https://rspamd.com/apt-stable/gpg.key 
   args:
     creates: rspamd-gpg.key
+  tags:
+    - dependencies
 
 - name: Ensure repository key for Rspamd is in place
   apt_key: file=rspamd-gpg.key
+  tags:
+    - dependencies
 
 - name: Add Rspamd repository
   apt_repository: repo="deb https://rspamd.com/apt-stable/ {{ ansible_distribution_release }} main"
+  tags:
+    - dependencies
 
 - name: Install Rspamd, Rmilter, and Redis
   apt: pkg={{ item }} state=installed update_cache=yes
@@ -18,6 +24,8 @@
     - rspamd
     - rmilter
     - redis-server
+  tags:
+    - dependencies
 
 - name: Configure rmilter.common
   copy: src=etc_rmilter.conf.common dest=/etc/rmilter.conf.common

@@ -8,6 +8,8 @@
     - postgrey
     - python-psycopg2
     - sasl2-bin
+  tags:
+    - dependencies
 
 - name: Create database user for mail server
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_username }} password="{{ mail_db_password }}" encrypted=yes state=present
