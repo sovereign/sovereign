@@ -59,6 +59,11 @@
 - name: Set decrypted directory permissions
   file: state=directory path=/decrypted group=mail mode=0775
 
+- name: Ensure locale en_US.UTF-8 locale is present
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+
 - include: encfs.yml tags=encfs
 - include: users.yml tags=users
 - include: apache.yml tags=apache
