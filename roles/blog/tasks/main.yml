@@ -1,1 +1,3 @@
-- include: blog.yml tags=blog when=blog_enabled
+- include: blog.yml
+  tags: blog
+  when: blog_enabled

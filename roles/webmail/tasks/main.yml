@@ -1,1 +1,3 @@
-- include: roundcube.yml tags=roundcube when=roundcube_enabled
+- include: roundcube.yml
+  tags: roundcube
+  when: roundcube_enabled

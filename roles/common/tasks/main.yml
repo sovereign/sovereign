@@ -73,5 +73,7 @@
 - include: ufw.yml tags=ufw
 - include: security.yml tags=security
 - include: ntp.yml tags=ntp
-- include: google_auth.yml tags=google_auth when=google_auth_enabled
+- include: google_auth.yml
+  tags: google_auth
+  when: google_auth_enabled
 - include: postgres.yml
