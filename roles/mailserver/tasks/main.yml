@@ -5,5 +5,5 @@
 - include: rspamd.yml tags=rspamd
 - include: solr.yml tags=solr
 - include: checkrbl.yml tags=checkrbl
-#- include: z-push.yml tags=zpush
-#- include: autoconfig.yml tags=autoconfig
+- include: z-push.yml tags=zpush when=zpush_enabled
+- include: autoconfig.yml tags=autoconfig when=autoconfig_enabled

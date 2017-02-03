@@ -1,3 +1,6 @@
 - include: monit.yml tags=monit
+  when: monit_enabled
 - include: logwatch.yml tags=logwatch
+  when: logwatch_enabled
 - include: collectd.yml tags=collectd
+  when: collectd_enabled
