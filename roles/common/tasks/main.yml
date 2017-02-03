@@ -27,6 +27,7 @@
     - iftop
     - iotop
     - molly-guard
+    - mosh
     - python-software-properties
     - ruby
     - screen
