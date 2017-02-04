@@ -23,6 +23,7 @@
     creates: ownCloud-Release.key
   tags:
     - dependencies
+    - skip_ansible_lint
 
 - name: Ensure repository key for ownCloud is in place
   apt_key: file=ownCloud-Release.key
