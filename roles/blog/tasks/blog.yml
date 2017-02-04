@@ -13,4 +13,3 @@
 - name: Enable blog site
   command: a2ensite {{ domain }}.conf creates=/etc/apache2/sites-enabled/{{ domain }}.conf
   notify: restart apache
-
