@@ -86,7 +86,7 @@ key server.key  # This file should be kept secret
 # Generate your own with:
 #   openssl dhparam -out dh1024.pem 1024
 # Substitute 2048 for 1024 if you are using
-# 2048 bit keys. 
+# 2048 bit keys.
 dh dh{{ openvpn_key_size }}.pem
 
 # Configure server mode and supply a VPN subnet
@@ -278,7 +278,7 @@ persist-tun
 # Output a short status file showing
 # current connections, truncated
 # and rewritten every minute.
-status openvpn-status.log
+;status openvpn-status.log
 
 # By default, log messages will go to the syslog (or
 # on Windows, if running as a service, they will go to
