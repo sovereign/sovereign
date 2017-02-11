@@ -187,7 +187,7 @@ ifconfig-pool-persist ipp.txt
 # (The OpenVPN server machine may need to NAT
 # or bridge the TUN/TAP interface to the internet
 # in order for this to work properly).
-push "redirect-gateway def1"
+push "redirect-gateway def1 bypass-dhcp"
 push "dhcp-option DNS 10.8.0.1"
 
 # Certain Windows-specific network settings
@@ -278,7 +278,7 @@ persist-tun
 # Output a short status file showing
 # current connections, truncated
 # and rewritten every minute.
-status openvpn-status.log
+;status openvpn-status.log
 
 # By default, log messages will go to the syslog (or
 # on Windows, if running as a service, they will go to
