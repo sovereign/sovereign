@@ -4,7 +4,7 @@
 # `.vagrant/provisioners/ansible/inventory/secret.
 #
 # selfoss_password_hash is the SHA512 hash of `foo`
-# 
+#
 ###############################################################################
 
 # common
@@ -40,6 +40,9 @@ mail_virtual_aliases:
 # timezone
 # common_timezone will be used in the common and mailserver roles
 common_timezone: 'Etc/UTC'
+
+# blog
+blog_404_page: /404.html
 
 # znc
 irc_nick: sovereign
