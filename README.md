@@ -120,6 +120,8 @@ Setting `password_hash` for your mail users is a bit tricky. You can generate on
     # doveadm pw -p'YOUR_PASSWORD' -s SHA512-CRYPT | sed -e 's/{.*}//'
     $6$drlIN9fx7Aj7/iLu$XvjeuQh5tlzNpNfs4NwxN7.HGRLglTKism0hxs2C1OvD02d3x8OBN9KQTueTr53nTJwVShtCYiW80SGXAjSyM0
 
+`sed` is used here to truncate the hash type from the beginning of the `doveadm pw` output.
+
 Alternatively, if you don’t already have `doveadm` installed, Python 3.3 or higher on Linux will generate the appropriate string for you (assuming your password is `password`):
 
     python3 -c 'import crypt; print(crypt.crypt("password", salt=crypt.METHOD_SHA512))'
