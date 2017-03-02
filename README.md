@@ -117,12 +117,10 @@ All of the variables in `group_vars/sovereign` must be set for sovereign to func
 
 Setting `password_hash` for your mail users is a bit tricky. You can generate one using [doveadm-pw](http://wiki2.dovecot.org/Tools/Doveadm/Pw).
 
-    # doveadm pw -s SHA512-CRYPT
-    Enter new password: foo
-    Retype new password: foo
-    {SHA512-CRYPT}$6$drlIN9fx7Aj7/iLu$XvjeuQh5tlzNpNfs4NwxN7.HGRLglTKism0hxs2C1OvD02d3x8OBN9KQTueTr53nTJwVShtCYiW80SGXAjSyM0
+    # doveadm pw -p'YOUR_PASSWORD' -s SHA512-CRYPT | sed -e 's/{.*}//'
+    $6$drlIN9fx7Aj7/iLu$XvjeuQh5tlzNpNfs4NwxN7.HGRLglTKism0hxs2C1OvD02d3x8OBN9KQTueTr53nTJwVShtCYiW80SGXAjSyM0
 
-Remove `{SHA512-CRYPT}` and insert the rest as the `password_hash` value.
+`sed` is used here to truncate the hash type from the beginning of the `doveadm pw` output.
 
 Alternatively, if you don’t already have `doveadm` installed, Python 3.3 or higher on Linux will generate the appropriate string for you (assuming your password is `password`):
 
