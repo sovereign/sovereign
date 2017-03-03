@@ -1,2 +1,5 @@
 - include: gitolite.yml tags=gitolite
+  when: git_enabled
+
 - include: cgit.yml tags=cgit
+  when: git_enabled

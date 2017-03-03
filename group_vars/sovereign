@@ -3,6 +3,25 @@
 # Set your variables here.
 ################################################################################
 
+# enabled/disable features
+autoconfig_enabled: false
+blog_enabled: false
+collectd_enabled: false
+git_enabled: false
+google_auth_enabled: false
+logwatch_enabled: false
+monit_enabled: false
+mosh_enabled: false
+openvpn_enabled: false
+owncloud_enabled: false
+prosody_enabled: false
+roundcube_enabled: false
+selfoss_enabled: false
+tarsnap_enabled: false
+wallabag_enabled: false
+znc_enabled: false
+zpush_enabled: false
+
 # common
 domain: (required)
 main_user_name: (required)

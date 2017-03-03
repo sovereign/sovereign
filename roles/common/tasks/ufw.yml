@@ -18,6 +18,7 @@
 
 - name: Set firewall rule for mosh
   ufw: rule=allow port=60000:61000 proto=udp
+  when: mosh_enabled
   tags: ufw
 
 - name: Set firewall rules for web traffic and SSH

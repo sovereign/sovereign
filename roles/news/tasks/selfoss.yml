@@ -21,9 +21,9 @@
 - name: Install selfoss dependencies
   apt: pkg={{ item }} state=present
   with_items:
-    - php5
-    - php5-pgsql
-    - php5-gd
+    - php
+    - php-pgsql
+    - php-gd
   tags:
     - dependencies
 
@@ -62,7 +62,7 @@
   notify: restart apache
 
 - name: Install selfoss cronjob
-  cron: name="selfoss" user="www-data" minute="*/5" job="curl --silent --show-error -k 'https://{{ selfoss_domain }}/update' > /dev/null"
+  cron: name="selfoss" user="www-data" minute="*/5" job="php /var/www/selfoss/cliupdate.php"
 
 - name: Configure selfoss logrotate
   copy: src=etc_logrotate_selfoss dest=/etc/logrotate.d/selfoss owner=root group=root mode=0644

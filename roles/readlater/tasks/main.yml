@@ -1,1 +1,3 @@
-- include: wallabag.yml tags=wallabag
+- include: wallabag.yml
+  tags: wallabag
+  when: wallabag_enabled

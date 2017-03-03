@@ -4,6 +4,11 @@
   tags:
     - dependencies
 
+- name: Install aptitude
+  apt: pkg=aptitude
+  tags:
+    - dependencies
+
 - name: Upgrade all safe packages
   apt: upgrade=safe
   tags:
@@ -22,7 +27,6 @@
     - iftop
     - iotop
     - molly-guard
-    - mosh
     - python-software-properties
     - ruby
     - screen
@@ -30,6 +34,12 @@
     - unattended-upgrades
     - vim
     - zsh
+  tags:
+    - dependencies
+
+- name: Install mosh
+  apt: pkg=mosh
+  when: mosh_enabled
   tags:
     - dependencies
 
@@ -44,11 +54,7 @@
 
 - name: timezone - Set localtime to UTC
   file: src=/usr/share/zoneinfo/Etc/UTC dest=/etc/localtime
-  when: common_timezone_config.changed
-
-- name: timezone - reconfigure tzdata
-  command: dpkg-reconfigure --frontend noninteractive tzdata
-  when: common_timezone_config.changed
+  notify: timezone - reconfigure tzdata
 
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
@@ -72,5 +78,7 @@
 - include: ufw.yml tags=ufw
 - include: security.yml tags=security
 - include: ntp.yml tags=ntp
-- include: google_auth.yml tags=google_auth
+- include: google_auth.yml
+  tags: google_auth
+  when: google_auth_enabled
 - include: postgres.yml

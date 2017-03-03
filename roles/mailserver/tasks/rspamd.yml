@@ -1,8 +1,16 @@
 ---
 # Installs and configures the Rspamd spam filtering system.
 
+- name: Get Rspamd GPG key
+  command: wget -O rspamd-gpg.key https://rspamd.com/apt-stable/gpg.key
+  args:
+    creates: rspamd-gpg.key
+  tags:
+    - dependencies
+    - skip_ansible_lint
+
 - name: Ensure repository key for Rspamd is in place
-  apt_key: url=https://rspamd.com/apt-stable/gpg.key state=present
+  apt_key: file=rspamd-gpg.key
   tags:
     - dependencies
 

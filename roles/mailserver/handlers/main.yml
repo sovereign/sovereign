@@ -11,8 +11,11 @@
   service: name=tomcat7 state=restarted
 
 - name: import sql postfix
-  action: shell PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/import.sql --set ON_ERROR_STOP=1
+  command: env PGPASSWORD='{{ mail_db_password }}' psql -h localhost -d {{ mail_db_database }} -U {{ mail_db_username }} -f /etc/postfix/import.sql --set ON_ERROR_STOP=1
   notify: restart postfix
+
+- name: import opendmarc schema
+  mysql_db: name={{ mail_db_opendmarc_database }} state=import target=/usr/share/doc/opendmarc/schema.mysql
 
 - name: restart opendmarc
   service: name=opendmarc state=restarted

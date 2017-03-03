@@ -43,7 +43,7 @@ What do you get if you point Sovereign at a server? All kinds of good stuff!
 -   Nightly backups to [Tarsnap](https://www.tarsnap.com/).
 -   Git hosting via [cgit](http://git.zx2c4.com/cgit/about/) and [gitolite](https://github.com/sitaramc/gitolite).
 -   Read-it-later via [Wallabag](https://www.wallabag.org/)
--   A bunch of nice-to-have tools like [mosh](http://mosh.mit.edu) and [htop](http://htop.sourceforge.net) that make life with a server a little easier.
+-   A bunch of nice-to-have tools like [htop](http://htop.sourceforge.net) that make life with a server a little easier.
 
 Don’t want one or more of the above services? Comment out the relevant role in `site.yml`. Or get more granular and comment out the associated `include:` directive in one of the playbooks.
 
@@ -69,7 +69,7 @@ The following steps are done on the remote server by `ssh`ing into it and runnin
 
 ### 1. Install required packages
 
-    apt-get install sudo
+    apt-get install -y sudo python
 
 ### 2. Get a Tarsnap machine key
 
@@ -95,7 +95,7 @@ Authorize your ssh key if you want passwordless ssh login (optional):
 
     mkdir /home/deploy/.ssh
     chmod 700 /home/deploy/.ssh
-    nano /home/deploy/.ssh/authorized_keys
+    nano /home/deploy/.ssh/authorized_keys ;# copy this from local ~/.ssh/id_rsa.pub
     chmod 400 /home/deploy/.ssh/authorized_keys
     chown deploy:deploy /home/deploy -R
     echo 'deploy ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/deploy
@@ -107,7 +107,7 @@ Your new account will be automatically set up for passwordless `sudo`. Or you ca
 ## On your local machine
 
 Ansible (the tool setting up your server) runs locally on your computer and sends commands to the remote server. Download this repository somewhere on your machine, either through `Clone or Download > Download ZIP` above, `wget`, or `git` as below
-    
+
     git clone https://github.com/sovereign/sovereign.git
 
 ### 4. Configure your installation
@@ -176,6 +176,8 @@ Create `A` or `CNAME` records which point to your server's IP address:
 * `cloud.example.com` (for ownCloud)
 * `git.example.com` (for cgit)
 
+Add all of these, even if you don't intend to use them. Otherwise Sovereign will be unable to generate your SSL keys correctly.
+
 ### 6. Run the Ansible Playbooks
 
 First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com/intro_installation.html#getting-ansible).
@@ -183,7 +185,7 @@ First, make sure you’ve [got Ansible 1.9.3+ installed](http://docs.ansible.com
 To run the whole dang thing:
 
     ansible-playbook -i ./hosts --ask-sudo-pass site.yml
-    
+
 If you chose to make a passwordless sudo deploy user, you can omit the `--ask-sudo-pass` argument.
 
 To run just one or more piece, use tags. I try to tag all my includes for easy isolated development. For example, to focus in on your firewall setup:
@@ -206,7 +208,7 @@ For DMARC you'll also need to add a `txt` record. The name field should be `_dma
 
 Set up SPF and reverse DNS [as per this post](http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/). Make sure to validate that it’s all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
-### 8. Miscellaneous Configuration
+### 8. ZNC Configuration
 
 Sign in to the ZNC web interface and set things up to your liking. It isn’t exposed through the firewall, so you must first set up an SSH tunnel:
 
@@ -214,11 +216,15 @@ Sign in to the ZNC web interface and set things up to your liking. It isn’t ex
 
 Then proceed to http://localhost:6643 in your web browser.
 
+### 9. Monitoring Configuration
+
 Similarly, to access the server monitoring page, use another SSH tunnel:
 
     ssh deploy@example.com -L 2812:localhost:2812
 
 Again proceeding to http://localhost:2812 in your web browser.
+
+### 10. OwnCloud Configuration
 
 Finally, sign into ownCloud with a new administrator account to set it
 up. You should select PostgreSQL as the configuration backend. Use
@@ -236,6 +242,23 @@ Troubleshooting
 ---------------
 
 If you run into an errors, please check the [wiki page](https://github.com/sovereign/sovereign/wiki/Troubleshooting). If the problem you encountered, is not listed, please go ahead and [create an issue](https://github.com/sovereign/sovereign/issues/new). If you already have a bugfix and/or workaround, just put them in the issue and the wiki page.
+
+
+### Mail
+
+Ensure users are set-up (password in /etc/dovecot/dovecot-sql.conf.ext):
+
+    psql -h localhost -d mailserver -U mailuser -f /etc/postfix/import.sql
+
+Check IMAP authorisation:
+
+    openssl s_client -showcerts -connect mail.domain:993
+    a login username@domain password
+
+Check SMTP authorisation:
+
+    openssl s_client -showcerts -connect mail.domain:587
+    a login username@domain password
 
 ### Reboots
 

@@ -1,4 +1,6 @@
 ---
 # Provides the Prosody Jabber/XMPP server.
 
-- include: prosody.yml tags=prosody
+- include: prosody.yml
+  tags: prosody
+  when: prosody_enabled

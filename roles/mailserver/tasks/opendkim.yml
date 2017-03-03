@@ -36,6 +36,13 @@
     - restart opendkim
     - restart postfix
 
+- name: Copy OpenDKIM defaults file into place
+  copy: src=etc_default_opendkim dest=/etc/default/opendkim owner=root group=root
+  notify:
+    - restart opendkim
+    - restart postfix
+
+
 - name: Set OpenDKIM config directory permissions
   file: state=directory path=/etc/opendkim
           group=opendkim owner=opendkim mode=0700 recurse=yes

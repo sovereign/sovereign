@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eux
 d="$1"
 for i in www mail autoconfig read news cloud git; do
   if (getent hosts $i.$1 > /dev/null); then
