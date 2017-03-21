@@ -5,6 +5,7 @@
     - groff
     - libssl-dev
     - python-pip
+    - python3-pip
   tags:
     - dependencies
 
@@ -13,6 +14,16 @@
   with_items:
     - docutils
     - pygments
+    - markdown
+
+- name: Install cgit pip dependencies python 3
+  pip:
+    name: "{{ item }}"
+    executable: pip3
+  with_items:
+    - docutils
+    - pygments
+    - markdown
 
 - name: Download cgit release
   get_url: url=http://git.zx2c4.com/cgit/snapshot/cgit-{{ cgit_version }}.tar.xz
