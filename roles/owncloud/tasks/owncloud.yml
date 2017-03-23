@@ -43,6 +43,22 @@
   template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root
   notify: restart apache
 
+- name: Install ownCloud
+  become: true
+  become_user: www-data
+  command: /var/www/owncloud/occ maintenance:install -n
+    --database=pgsql --database-name="{{ owncloud_db_database }}" --database-user="{{ owncloud_db_username }}" --database-pass="{{ owncloud_db_password }}"
+    --admin-user="{{ main_user_name }}" --admin-pass="{{ owncloud_user_password }}" creates=/var/www/owncloud/config/config.php
+
+- name: Read generated owncloud config
+  command: php -r 'require "/var/www/owncloud/config/config.php"; echo json_encode(array_intersect_key($CONFIG, array_flip(["version", "passwordsalt", "secret"])));'
+  register: owncloud_config_str
+
+- name: Reconfigure owncloud
+  template: src=config.php.j2 dest=/var/www/owncloud/config/config.php group=www-data owner=www-data
+  vars:
+    gen_cfg: "{{ owncloud_config_str.stdout | from_json }}"
+
 - name: Enable ownCloud site
   command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
   notify: restart apache

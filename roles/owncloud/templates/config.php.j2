@@ -1,0 +1,21 @@
+<?php
+$CONFIG = array (
+  'passwordsalt' => '{{ gen_cfg.passwordsalt }}',
+  'secret' => '{{ gen_cfg.secret }}',
+  'updatechecker' => false,
+  'trusted_domains' =>
+  array (
+    0 => '{{ owncloud_domain }}',
+  ),
+  'datadirectory' => '/var/www/owncloud/data',
+  'overwrite.cli.url' => 'https://{{ owncloud_domain }}',
+  'dbtype' => 'pgsql',
+  'version' => '{{ gen_cfg.version }}',
+  'dbhost' => 'localhost',
+  'dbtableprefix' => 'oc_',
+  'dbname'        => '{{ owncloud_db_database }}',
+  'dbuser'        => '{{ owncloud_db_username }}',
+  'dbpassword'    => '{{ owncloud_db_password }}',
+  'logtimezone' => 'UTC',
+  'installed' => true,
+);
