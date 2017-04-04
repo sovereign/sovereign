@@ -61,13 +61,13 @@
   when: not owncloud_installed.stdout
 
 - name: add fqdn to owncloud trusted domains
-  sudo: yes
-  sudo_user: www-data
+  become: true
+  become_user: www-data
   command: chdir=/var/www/owncloud/ /usr/bin/php occ config:system:set trusted_domains 1 --value={{ owncloud_domain }}
 
 - name: set fqdn for owncloud cli-mode
-  sudo: yes
-  sudo_user: www-data
+  become: true
+  become_user: www-data
   command: chdir=/var/www/owncloud/ /usr/bin/php occ config:system:set overwrite.cli.url --value={{ owncloud_domain }}
 
 - name: Enable ownCloud site
