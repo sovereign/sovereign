@@ -1,0 +1,32 @@
+- name: Cleanup a VPN Directory
+  file: path=/var/www/vpn state=absent
+
+- name: Create a VPN Directory
+  file: path=/var/www/vpn state=directory
+
+
+- name: Create VPN Directory index
+  template: src=index.html.j2 dest=/var/www/vpn/index.html
+
+- name: Create VPN Directory client directories
+  file: dest=/var/www/vpn/{{ item }} state=directory
+  with_items: "{{ openvpn_clients }}"
+
+- name: Copy the VPN client files to the Directory
+  command: cp --no-preserve=mode,ownership "{{ openvpn_path }}/{{ item[0] }}/{{ item[1] }}" "/var/www/vpn/{{ item[0] }}/{{ item[1] }}"
+  with_nested:
+    - openvpn_clients
+    - ["client.crt", "client.key", "ca.crt", "ta.key", "{{ openvpn_server }}.ovpn"]
+
+
+- name: Setup Basic auth credentials for VPN
+  # requires passlib pymodule on target. Better replace with direct call since we have apache anyway
+  #htpasswd: state=present path=/var/www/vpn/.htpasswd name={{ vpn_username }} password={{ vpn_password }}
+  command: htpasswd -cb /var/www/vpn/.htpasswd {{ vpn_username }} {{ vpn_password }}
+
+- name: Configure Apache for vpn directory
+  template: src=etc_apache2_sites-available_vpn.j2 dest=/etc/apache2/sites-available/vpn.conf group=root
+
+- name: Enable vpn directory site
+  command: a2ensite vpn.conf creates=/etc/apache2/sites-enabled/vpn.conf
+  #notify: restart apache

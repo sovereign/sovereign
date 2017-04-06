@@ -56,6 +56,7 @@ prosody_accounts:
     password: foo
 
 # openvpn
+vpn_password: "foo"
 openvpn_key_country:  "US"
 openvpn_key_province: "California"
 openvpn_key_city: "Beverly Hills"
