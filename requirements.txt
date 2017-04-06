@@ -1,1 +1,2 @@
 ansible>=1.9.3,<2
+passlib

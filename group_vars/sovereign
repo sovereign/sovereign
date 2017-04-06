@@ -18,7 +18,7 @@ mail_virtual_domains:
 mail_virtual_users:
   - account: "{{ main_user_name }}"
     domain: "{{ domain }}"
-    password_hash: TODO
+    password: TODO
     domain_pk_id: 1
 mail_virtual_aliases:
   - source: "root@{{ domain }}"
@@ -43,8 +43,7 @@ irc_nick: (required)
 irc_ident: (required)
 irc_realname: (required)
 irc_quitmsg: (required)
-irc_password_hash: (required)
-irc_password_salt: (required)
+irc_password: TODO
 
 # xmpp
 prosody_admin: "{{ admin_email }}"

@@ -115,46 +115,6 @@ Ansible (the tool setting up your server) runs locally on your computer and send
 Modify the settings in the `group_vars/sovereign` folder to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 All of the variables in `group_vars/sovereign` must be set for sovereign to function.
 
-Setting `password_hash` for your mail users is a bit tricky. You can generate one using [doveadm-pw](http://wiki2.dovecot.org/Tools/Doveadm/Pw).
-
-    # doveadm pw -p'YOUR_PASSWORD' -s SHA512-CRYPT | sed -e 's/{.*}//'
-    $6$drlIN9fx7Aj7/iLu$XvjeuQh5tlzNpNfs4NwxN7.HGRLglTKism0hxs2C1OvD02d3x8OBN9KQTueTr53nTJwVShtCYiW80SGXAjSyM0
-
-`sed` is used here to truncate the hash type from the beginning of the `doveadm pw` output.
-
-Alternatively, if you don’t already have `doveadm` installed, Python 3.3 or higher on Linux will generate the appropriate string for you (assuming your password is `password`):
-
-    python3 -c 'import crypt; print(crypt.crypt("password", salt=crypt.METHOD_SHA512))'
-
-On OS X and other platforms the [passlib](https://pythonhosted.org/passlib/) package may be used to generate the required string:
-
-    python -c 'import passlib.hash; print(passlib.hash.sha512_crypt.encrypt("password", rounds=5000))'
-
-Same for the IRC password hash…
-
-    # znc --makepass
-    [ ** ] Type your new password.
-    [ ?? ] Enter Password: foo
-    [ ?? ] Confirm Password: foo
-    [ ** ] Kill ZNC process, if it's running.
-    [ ** ] Then replace password in the <User> section of your config with this:
-    <Pass password>
-            Method = sha256
-            Hash = 310c5f99825e80d5b1d663a0a993b8701255f16b2f6056f335ba6e3e720e57ed
-            Salt = YdlPM5yjBmc/;JO6cfL5
-    </Pass>
-    [ ** ] After that start ZNC again, and you should be able to login with the new password.
-
-Take the strings after `Hash =` and `Salt =` and insert them as the value for `irc_password_hash` and `irc_password_salt` respectively.
-
-Alternatively, if you don’t already have `znc` installed, Python 3.3 or higher on Linux will generate the appropriate string for you (assuming your password is `password`):
-
-    python3 -c 'import crypt; print("irc_password_salt: {}\nirc_password_hash: {}".format(*crypt.crypt("password", salt=crypt.METHOD_SHA256).split("$")[2:]))'
-
-On OS X and other platforms the passlib:https://pythonhosted.org/passlib/ package may be used to generate the required string:
-
-    python -c 'import passlib.hash; print("irc_password_salt: {}\nirc_password_hash: {}".format(*passlib.hash.sha256_crypt.encrypt("password", rounds=5000).split("$")[2:]))'
-
 For Git hosting, copy your public key into place:
 
 	cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub
