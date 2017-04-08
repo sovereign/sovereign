@@ -4,17 +4,9 @@
   with_items:
     - groff
     - libssl-dev
-    - python-pip
     - python3-pip
   tags:
     - dependencies
-
-- name: Install cgit pip dependencies
-  pip: name={{ item }}
-  with_items:
-    - docutils
-    - pygments
-    - markdown
 
 - name: Install cgit pip dependencies python 3
   pip:

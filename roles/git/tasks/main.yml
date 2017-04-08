@@ -1,2 +1,4 @@
-- include: gitolite.yml tags=gitolite
-- include: cgit.yml tags=cgit
+- include: gitolite.yml
+  tags: gitolite
+- include: cgit.yml
+  tags: cgit
