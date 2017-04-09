@@ -19,6 +19,9 @@
 - name: Add prosody user to ssl-cert group
   user: name=prosody group=ssl-cert
 
+- name: Add cert postrenew task
+  copy: src=etc_letsencrypt_postrenew_prosody.sh dest=/etc/letsencrypt/postrenew/prosody.sh mode=0755
+
 - name: Create Prosody data directory
   file: state=directory path=/decrypted/prosody owner=prosody group=prosody
 
