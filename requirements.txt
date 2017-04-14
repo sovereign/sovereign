@@ -1,1 +1,1 @@
-ansible>=2.2
+ansible==2.2.2.0
