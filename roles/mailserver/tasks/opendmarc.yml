@@ -46,7 +46,7 @@
   when: db_created.changed
 
 - name: Copy nightly OpenDMARC report generation script into place
-  template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="755"
+  template: src=etc_opendmarc_report.sh.j2 dest=/etc/opendmarc/report.sh owner=root group=root mode="0755"
 
 - name: Ensure initial report dat file exists with correct permissions
   copy: content="" dest=/var/run/opendmarc/opendmarc.dat owner=opendmarc group=opendmarc

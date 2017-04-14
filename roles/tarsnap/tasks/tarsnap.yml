@@ -70,16 +70,16 @@
   command: make all install clean chdir=/root/tarsnap-autoconf-{{ tarsnap_version }} creates=/usr/local/bin/tarsnap
 
 - name: Copy Tarsnap key file into place
-  copy: src=decrypted_tarsnap.key dest=/decrypted/tarsnap.key owner=root group=root mode="600" force=no
+  copy: src=decrypted_tarsnap.key dest=/decrypted/tarsnap.key owner=root group=root mode="0600" force=no
 
 - name: Create Tarsnap cache directory
   file: state=directory path=/usr/tarsnap-cache
 
 - name: Install Tarsnap configuration file
-  copy: src=tarsnaprc dest=/root/.tarsnaprc mode="644"
+  copy: src=tarsnaprc dest=/root/.tarsnaprc mode="0644"
 
 - name: Install Tarsnap backup handler script
-  copy: src=tarsnap.sh dest=/root/tarsnap.sh mode="755"
+  copy: src=tarsnap.sh dest=/root/tarsnap.sh mode="0755"
 
 - name: Install nightly Tarsnap-generations cronjob
   cron: name="Tarsnap backup" hour="3" minute="0" job="sh /root/tarsnap.sh >> /var/log/tarsnap.log"
