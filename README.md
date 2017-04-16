@@ -87,9 +87,8 @@ For goodness sake, change the root password:
 
 Create a user account for Ansible to do its thing through:
 
-    useradd deploy
+    useradd -m deploy
     passwd deploy
-    mkdir /home/deploy
 
 Authorize your ssh key if you want passwordless ssh login (optional):
 
