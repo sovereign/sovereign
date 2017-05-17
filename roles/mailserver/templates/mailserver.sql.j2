@@ -1,16 +1,9 @@
--- If tables are not dropped, have to truncate before insert or use "insert or replace" (not postgres compatible)
-
-DROP TABLE IF EXISTS "virtual_users";
-DROP TABLE IF EXISTS "virtual_aliases";
-DROP TABLE IF EXISTS "virtual_domains";
 
 CREATE TABLE IF NOT EXISTS "virtual_domains" (
         "id" SERIAL,
-        "name" TEXT NOT NULL,
+        "name" TEXT NOT NULL UNIQUE,
         PRIMARY KEY ("id")
 );
-
-CREATE UNIQUE INDEX name_idx ON virtual_domains (name);
 
 CREATE TABLE IF NOT EXISTS "virtual_users" (
         "id" SERIAL,
@@ -21,9 +14,6 @@ CREATE TABLE IF NOT EXISTS "virtual_users" (
         FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 );
 
-
-CREATE UNIQUE INDEX email_idx ON virtual_users (email);
-
 CREATE TABLE IF NOT EXISTS "virtual_aliases" (
         "id" SERIAL,
         "domain_id" int NOT NULL,
@@ -33,25 +23,132 @@ CREATE TABLE IF NOT EXISTS "virtual_aliases" (
         FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 );
 
-CREATE INDEX source_idx ON virtual_aliases (source);
+{# this entire block is from [here](http://dba.stackexchange.com/questions/35616/create-index-if-it-does-not-exist) #}
+{% if postgres_minor.stdout|int <= 3 %}
+{# 9.3 and lower #}
+DO $$
+BEGIN
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM   pg_class c
+    JOIN   pg_namespace n ON n.oid = c.relnamespace
+    WHERE  c.relname = 'source_idx'
+    AND    n.nspname = 'public' -- 'public' by default
+    ) THEN
+
+    CREATE INDEX source_idx ON public.virtual_aliases (source);
+END IF;
+
+END$$;
+{% elif postgres_minor.stdout|int == 4 %}
+IF NOT EXISTS (
+  SELECT to_regclass('public.source_idx');
+  ) THEN
+  CREATE INDEX source_idx ON public.virtual_aliases (source);
+{% elif postgres_minor.stdout|int > 4 %}
+CREATE INDEX IF NOT EXISTS source_idx ON public.virtual_aliases (source);
+{% endif %}
+
+
+{# set a place to capture deleted domains #}
+{% set deleted_domains = [] %}
+
+{# set a place to capture active domains #}
+{% set active_domains = [] %}
 
 {% for virtual_domain in mail_virtual_domains %}
+{% if virtual_domain.active|default(True) %}
+{# we need to track all active domains to avoid inserting
+   aliases below for domains that we aren't adding #}
+{% do active_domains.append(virtual_domain.pk_id) %}
+{% endif %}
+{% if mail_domains.stdout.find(virtual_domain.name) == -1 and
+virtual_domain.active|default(True) %}
+{# active domain, not in database - add it #}
 INSERT INTO "virtual_domains" ("id", "name")
         VALUES ('{{ virtual_domain.pk_id }}', '{{ virtual_domain.name }}');
+
+{% elif mail_domains.stdout.find(virtual_domain.name) != -1 and
+not virtual_domain.active|default(True) %}
+{# inactive domain, in database - remove it #}
+DELETE FROM "virtual_domains" WHERE
+  id = '{{ virtual_domain.pk_id }}' AND
+  name = '{{ virtual_domain.name }}';
+
+{# add our domain to the list for later checking #}
+{% do deleted_domains.append(virtual_domain.name) %}
+{% endif %}
 {% endfor %}
 
+{# set up a place to store deleted users #}
+{% set deleted_users = [] %}
+
+{# set up a place to store active users #}
+{% set active_users = [] %}
+
 {% for virtual_user in mail_virtual_users %}
+{# store this user for later checking #}
+{% do active_users.append(virtual_user.account + '@' + virtual_user.domain) %}
+{% if mail_users.stdout.find(virtual_user.account + '@' + virtual_user.domain) == -1 and
+virtual_user.active|default(True) and
+virtual_user.domain not in deleted_domains and
+virtual_user.domain_pk_id in active_domains %}
+{# Active user, not in database - add it #}
 INSERT INTO "virtual_users"  ("domain_id", "password" , "email")
 	VALUES (
 		'{{ virtual_user.domain_pk_id }}',
 		'{{ virtual_user.password_hash }}',
 		'{{ virtual_user.account }}@{{ virtual_user.domain }}'
 	);
+
+{% elif mail_users.stdout.find(virtual_user.account + '@' + virtual_user.domain) != -1 and
+not virtual_user.active|default(True) %}
+{# inactive user, in database - remove it #}
+DELETE FROM "virtual_users" WHERE
+    domain_id = '{{ virtual_user.domain_pk_id }}' AND
+    email = '{{ virtual_user.account }}@{{ virtual_user.domain }}';
+
+{# store this user for later checking #}
+{% do deleted_users.append(virtual_user.account + '@' + virtual_user.domain) %}
+
+{% endif %}
+{% endfor %}
+
+{# do the check in reverse - delete anything that is in the db and not in config #}
+{% for email in mail_users.stdout_lines %}
+{% if email not in active_users and email not in deleted_users %}
+DELETE FROM "virtual_users" WHERE
+    email = '{{ email }}';
+{# remove the email to indicate that we deleted this user - used for aliases below #}
+{% do mail_users.stdout_lines.remove(email) %}
+{% endif %}
 {% endfor %}
 
 {% if mail_virtual_aliases is defined %}
 {% for virtual_alias in mail_virtual_aliases %}
+{% set source_name,source_domain = virtual_alias.source.split('@') %}
+{% set dest_name,dest_domain = virtual_alias.destination.split('@') %}
+{% set search_string = [virtual_alias.domain_pk_id, virtual_alias.source, virtual_alias.destination]|join(',') %}
+{% if mail_aliases.stdout.find(search_string) == -1 and
+virtual_alias.active|default(True) and
+source_domain not in deleted_domains and
+dest_domain not in deleted_domains and
+virtual_alias.domain_pk_id in active_domains and
+virtual_alias.destination in mail_users.stdout_lines %}
+{# active alias, active domains, not in database - add it #}
 INSERT INTO "virtual_aliases" ("domain_id", "source", "destination")
     VALUES ('{{ virtual_alias.domain_pk_id }}', '{{ virtual_alias.source }}', '{{virtual_alias.destination }}');
+{% elif mail_aliases.stdout.find(search_string) != -1 and
+(not virtual_alias.active|default(True) or
+source_domain in deleted_domains or
+dest_domain in deleted_domains) or
+virtual_alias.destination in deleted_users %}
+{# inactive alias or domains deleted, but is in database - remove it #}
+DELETE FROM "virtual_aliases" WHERE
+    domain_id = '{{ virtual_alias.domain_pk_id }}' AND
+    source = '{{ virtual_alias.source }}' AND
+    destination = '{{ virtual_alias.destination }}';
+{% endif %}
 {% endfor %}
 {% endif %}
