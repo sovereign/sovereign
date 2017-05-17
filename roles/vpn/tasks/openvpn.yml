@@ -76,7 +76,7 @@
   with_items: "{{ openvpn_clients }}"
 
 - name: Generate certificates for the clients
-  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in client.csr -out client.crt
+  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in client.csr -out client.crt -extfile {{ openvpn_path }}/openssl-server-certificate.cnf -extensions usr_cert
            chdir={{ openvpn_path }}/{{ item }}
            creates=client.crt
   with_items: "{{ openvpn_clients }}"
