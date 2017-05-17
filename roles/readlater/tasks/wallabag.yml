@@ -1,17 +1,3 @@
-- name: Determine whether wallabag is configured
-  stat: path=/var/www/wallabag/inc/poche/config.inc.php
-  register: wallabag_config
-
-- name: Clone wallabag
-  git: repo=https://github.com/wallabag/wallabag.git
-       dest=/var/www/wallabag
-       version={{ wallabag_version }}
-       accept_hostkey=yes
-
-- name: Remove wallabag 'install' directory if its configuration file is there
-  file: name=/var/www/wallabag/install state=absent
-  when: wallabag_config.stat.exists == True
-
 - name: Install wallabag dependencies
   apt: pkg={{ item }} state=present
   with_items:
@@ -38,7 +24,6 @@
                  name={{ wallabag_db_database }}
                  state=present
                  owner={{ wallabag_db_username }}
-  notify: import wallabag sql
 
 - name: Get Composer installer
   get_url: url=https://getcomposer.org/installer
@@ -49,10 +34,28 @@
            chdir=/root
            creates=/root/composer.phar
 
+- name: Clone wallabag
+  git: repo=https://github.com/wallabag/wallabag.git
+       dest=/var/www/wallabag
+       version={{ wallabag_version }}
+       force=True
+       accept_hostkey=yes
+
+- name: Create configuration
+  template: src=var_www_wallabag_app_config_parameters.yml.j2
+            dest=/var/www/wallabag/app/config/parameters.yml
+
 - name: Initialize composer
-  command: php /root/composer.phar install
+  command: php /root/composer.phar install --no-dev -o --prefer-dist
            chdir=/var/www/wallabag
            creates=/var/www/wallabag/vendor/autoload.php
+  environment:
+    SYMFONY_ENV: prod
+
+- name: Install wallabag
+  command: php bin/console wallabag:install --env=prod
+           chdir=/var/www/wallabag
+           creates=/var/www/wallabag/bin/doctrine.php
 
 - name: Set wallabag ownership
   file: owner=root
@@ -61,21 +64,20 @@
         recurse=yes
         state=directory
 
-# the httpd only needs write access to the wallabag assets, cache and db directories
-- name: Set wallabag assets, cache and db permissions
+- name: Set wallabag permissions
   file: path=/var/www/wallabag/{{ item }}
         mode=0775
         state=directory
+        owner=www-data
+        group=www-data
+        recurse=true
   with_items:
-    - assets
-    - cache
-    - db
-
-- name: Create the configuration file
-  template: src=var_www_wallabag_inc_poche_config.inc.php.j2
-            dest=/var/www/wallabag/inc/poche/config.inc.php
-            owner=root
-            group=www-data
+    - bin
+    - app/config
+    - vendor
+    - data
+    - app
+    - var
 
 - name: Rename existing Apache wallabag virtualhost
   command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf removes=/etc/apache2/sites-available/wallabag
