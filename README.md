@@ -67,7 +67,7 @@ Installation
 
 The following steps are done on the remote server by `ssh`ing into it and running these commands.
 
-### 1. Install required packages
+### 1. Install required packages e.g `aptitude` is required on Debian
 
     apt-get install sudo
 
@@ -115,6 +115,7 @@ Ansible (the tool setting up your server) runs locally on your computer and send
 Modify the settings in the `group_vars/sovereign` folder to your liking. If you want to see how they’re used in context, just search for the corresponding string.
 All of the variables in `group_vars/sovereign` must be set for sovereign to function.
 
+- Mail
 Setting `password_hash` for your mail users is a bit tricky. You can generate one using [doveadm-pw](http://wiki2.dovecot.org/Tools/Doveadm/Pw).
 
     # doveadm pw -p'YOUR_PASSWORD' -s SHA512-CRYPT | sed -e 's/{.*}//'
@@ -130,6 +131,7 @@ On OS X and other platforms the [passlib](https://pythonhosted.org/passlib/) pac
 
     python -c 'import passlib.hash; print(passlib.hash.sha512_crypt.encrypt("password", rounds=5000))'
 
+- ZNC
 Same for the IRC password hash…
 
     # znc --makepass
@@ -155,6 +157,7 @@ On OS X and other platforms the passlib:https://pythonhosted.org/passlib/ packag
 
     python -c 'import passlib.hash; print("irc_password_salt: {}\nirc_password_hash: {}".format(*passlib.hash.sha256_crypt.encrypt("password", rounds=5000).split("$")[2:]))'
 
+- Git
 For Git hosting, copy your public key into place:
 
 	cp ~/.ssh/id_rsa.pub roles/git/files/gitolite.pub
