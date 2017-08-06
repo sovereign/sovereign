@@ -1,3 +1,8 @@
+- name: Add group name ssl-cert for SSL certificates
+  group:
+    name: ssl-cert
+    state: present
+
 - name: Download LetsEncrypt release
   git: repo=https://github.com/letsencrypt/letsencrypt
        dest=/root/letsencrypt

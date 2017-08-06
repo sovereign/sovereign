@@ -67,7 +67,7 @@ Installation
 
 The following steps are done on the remote server by `ssh`ing into it and running these commands.
 
-### 1. Install required packages
+### 1. Install required packages e.g `aptitude` is required on Debian
 
     apt-get install sudo
 
