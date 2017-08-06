@@ -24,7 +24,7 @@ mail_virtual_domains:
 mail_virtual_users:
   - account: "{{ main_user_name }}"
     domain: "{{ domain }}"
-    password_hash: "$6$IYJfaF3jvmbAzlSe$1HBkbIdrOTWA31WYon7VSE2xAcFzYSZuVb8d3I0NDWzPxXBaqkHqKs4rLeNO9CVQEKv7wA15QctCyXbdRqFDy." #foo
+    password: "foo"
     domain_pk_id: 1
 mail_virtual_aliases:
   - source: "root@{{ domain }}"
@@ -46,8 +46,7 @@ irc_nick: sovereign
 irc_ident: sovereign
 irc_realname: Mr. Sovereign
 irc_quitmsg: Bye
-irc_password_hash: "310c5f99825e80d5b1d663a0a993b8701255f16b2f6056f335ba6e3e720e57ed" #foo
-irc_password_salt: "YdlPM5yjBmc/;JO6cfL5"
+irc_password: "foo"
 irc_timezone: "America/New_York" #Example: "America/New_York"
 
 # xmpp

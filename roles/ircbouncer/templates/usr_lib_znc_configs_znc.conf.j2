@@ -67,8 +67,8 @@ Version = 1.0
 
 	<Pass password>
 	        Method = sha256
-	        Hash = {{ irc_password_hash }}
-	        Salt = {{ irc_password_salt }}
+	        Hash = {{ irc_password | znc_pw_hash }}
+	        Salt = {{ irc_password | znc_pw_salt }}
 	</Pass>
 
 	<Network freenode>

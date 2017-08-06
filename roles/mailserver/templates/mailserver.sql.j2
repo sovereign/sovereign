@@ -44,7 +44,7 @@ INSERT INTO "virtual_domains" ("id", "name")
 INSERT INTO "virtual_users"  ("domain_id", "password" , "email")
 	VALUES (
 		'{{ virtual_user.domain_pk_id }}',
-		'{{ virtual_user.password_hash }}',
+		'{{ virtual_user.password | doveadm_pw_hash }}',
 		'{{ virtual_user.account }}@{{ virtual_user.domain }}'
 	);
 {% endfor %}
