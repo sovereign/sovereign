@@ -3,11 +3,25 @@
 
 - name: Ensure repository key for Rspamd is in place
   apt_key: url=https://rspamd.com/apt-stable/gpg.key state=present
+  when: ansible_architecture != "armv7l"
+  tags:
+    - dependencies
+
+- name: Ensure yunohost repository key for Rspamd is in place for ARM
+  apt_key: url=http://repo.yunohost.org/debian/yunohost.asc state=present
+  when: ansible_architecture == "armv7l"
   tags:
     - dependencies
 
 - name: Add Rspamd repository
   apt_repository: repo="deb https://rspamd.com/apt-stable/ {{ ansible_distribution_release }} main"
+  when: ansible_architecture != "armv7l"
+  tags:
+    - dependencies
+
+- name: Add yunohost Rspamd repository for ARM
+  apt_repository: repo="deb http://repo.yunohost.org/debian {{ ansible_distribution_release }} stable"
+  when: ansible_architecture == "armv7l"
   tags:
     - dependencies
 
