@@ -59,6 +59,10 @@
   template: src=etc_dovecot_conf.d_15-lda.conf.j2 dest=/etc/dovecot/conf.d/15-lda.conf
   notify: restart dovecot
 
+- name: Template 20-imap.conf
+  template: src=etc_dovecot_conf.d_20-imap.conf.j2 dest=/etc/dovecot/conf.d/20-imap.conf
+  notify: restart dovecot
+
 - name: Template dovecot-sql.conf.ext
   template: src=etc_dovecot_dovecot-sql.conf.ext.j2 dest=/etc/dovecot/dovecot-sql.conf.ext
   notify: restart dovecot
