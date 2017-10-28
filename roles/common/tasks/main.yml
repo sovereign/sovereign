@@ -23,7 +23,7 @@
     - iotop
     - molly-guard
     - mosh
-    - python-software-properties
+    - python3-software-properties
     - ruby
     - screen
     - sudo
