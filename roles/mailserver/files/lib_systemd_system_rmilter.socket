@@ -1,8 +1,0 @@
-[Unit]
-Description=Another sendmail milter for different mail checks
-
-[Socket]
-ListenStream=9900
-
-[Install]
-WantedBy=sockets.target
