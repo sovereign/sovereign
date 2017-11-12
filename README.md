@@ -20,15 +20,15 @@ What do you get if you point Sovereign at a server? All kinds of good stuff!
 -   [IMAP](https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol) over SSL via [Dovecot](http://dovecot.org/), complete with full text search provided by [Solr](https://lucene.apache.org/solr/).
 -   [POP3](https://en.wikipedia.org/wiki/Post_Office_Protocol) over SSL, also via Dovecot
 -   [SMTP](https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol) over SSL via Postfix, including a nice set of [DNSBLs](https://en.wikipedia.org/wiki/DNSBL) to discard spam before it ever hits your filters.
+-   Virtual domains for your email, backed by [PostgreSQL](http://www.postgresql.org/).
+-   Spam fighting via [Rspamd](https://www.rspamd.com/).
+-   Mail server verification using [DKIM](http://www.dkim.org/) and [DMARC](http://www.dmarc.org/) so the Internet knows your mailserver is legit.
+-   Secure on-disk storage for email and more via [EncFS](http://www.arg0.net/encfs).
 -   Webmail via [Roundcube](http://www.roundcube.net/).
 -   Mobile push notifications via [Z-Push](http://z-push.sourceforge.net/soswp/index.php?pages_id=1&t=home).
 -   Email client [automatic configuration](https://developer.mozilla.org/en-US/docs/Mozilla/Thunderbird/Autoconfiguration).
 -   Jabber/[XMPP](http://xmpp.org/) instant messaging via [Prosody](http://prosody.im/).
 -   An RSS Reader via [Selfoss](http://selfoss.aditu.de/).
--   Virtual domains for your email, backed by [PostgreSQL](http://www.postgresql.org/).
--   Secure on-disk storage for email and more via [EncFS](http://www.arg0.net/encfs).
--   Spam fighting via [Rspamd](https://www.rspamd.com/) and [Postgrey](http://postgrey.schweikert.ch/).
--   Mail server verification via [OpenDKIM](http://www.opendkim.org/) and [DMARC](http://www.dmarc.org/) so the Internet knows your mailserver is legit.
 -   [CalDAV](https://en.wikipedia.org/wiki/CalDAV) and [CardDAV](https://en.wikipedia.org/wiki/CardDAV) to keep your calendars and contacts in sync, via [ownCloud](http://owncloud.org/).
 -   Your own private storage cloud via [ownCloud](http://owncloud.org/).
 -   Your own VPN server via [OpenVPN](http://openvpn.net/index.php/open-source.html).
@@ -158,13 +158,13 @@ The `dependencies` tag just installs dependencies, performing no other operation
 
 Create an `MX` record for `example.com` which assigns `mail.example.com` as the domain’s mail server.
 
-To ensure your emails pass DKIM checks you need to add a `txt` record. The name field will be `default._domainkey.EXAMPLE.COM.` The value field contains the public key used by OpenDKIM. The exact value needed can be found in the file `/etc/opendkim/keys/EXAMPLE.COM/default.txt` it’ll look something like this:
+To ensure your emails pass DKIM checks you need to add a `txt` record. The name field will be `default._domainkey.EXAMPLE.COM.` The value field contains the public key used by DKIM. The exact value needed can be found in the file `/var/lib/rspamd/dkim/EXAMPLE.COM.default.txt`. It will look something like this:
 
     v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKKAQfMwKVx+oJripQI+Ag4uTwYnsXKjgBGtl7Tk6UMTUwhMqnitqbR/ZQEZjcNolTkNDtyKZY2Z6LqvM4KsrITpiMbkV1eX6GKczT8Lws5KXn+6BHCKULGdireTAUr3Id7mtjLrbi/E3248Pq0Zs39hkDxsDcve12WccjafJVwIDAQAB
 
-For DMARC you'll also need to add a `txt` record. The name field should be `_dmarc.EXAMPLE.COM` and the value should be `v=DMARC1; p=none`. More info on DMARC can be found [here](https://dmarc.org)
+For DMARC you'll also need to add a `txt` record. The name field should be `_dmarc.EXAMPLE.COM` and the value should be `v=DMARC1; p=none`. More info on DMARC can be found [here](https://dmarc.org).
 
-Set up SPF and reverse DNS [as per this post](http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/). Make sure to validate that it’s all working, for example by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
+Set up SPF and reverse DNS [as per this post](http://sealedabstract.com/code/nsa-proof-your-e-mail-in-2-hours/). Make sure to validate that it’s all working, for example, by sending an email to <a href="mailto:check-auth@verifier.port25.com">check-auth@verifier.port25.com</a> and reviewing the report that will be emailed back to you.
 
 ### 8. Miscellaneous Configuration
 

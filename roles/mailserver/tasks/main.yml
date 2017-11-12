@@ -2,8 +2,6 @@
   tags: postfix
 - include: dovecot.yml
   tags: dovecot
-- include: opendkim.yml
-  tags: opendkim
 - include: rspamd.yml
   tags: rspamd
 - include: solr.yml

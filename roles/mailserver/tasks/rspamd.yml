@@ -41,5 +41,19 @@
   copy: src=etc_rspamd_local.d_redis.conf dest=/etc/rspamd/local.d/redis.conf owner=root group=root mode="0644"
   notify: restart rspamd
 
+- name: Copy DKIM configuration into place
+  copy: src=etc_rspamd_override.d_dkim_signing.conf dest=/etc/rspamd/override.d/dkim_signing.conf owner=root group=root mode="0644"
+  notify: restart rspamd
+
+- name: Create dkim key directory
+  file: path=/var/lib/rspamd/dkim state=directory owner=_rspamd group=_rspamd
+
+- name: Generate DKIM keys
+  shell: rspamadm dkim_keygen -s default -d {{ item.name }} -k {{ item.name }}.default.key > {{ item.name }}.default.txt
+  args:
+    creates: /var/lib/rspamd/dkim/{{ item.name }}.default.key
+    chdir: /var/lib/rspamd/dkim/
+  with_items: "{{ mail_virtual_domains }}"
+
 - name: Start redis
   service: name=redis-server state=started

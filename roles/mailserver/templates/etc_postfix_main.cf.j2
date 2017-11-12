@@ -99,8 +99,8 @@ virtual_mailbox_maps = pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 virtual_alias_maps = pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf
 local_recipient_maps = $virtual_mailbox_maps
 
-# Milters: OpenDKIM, Rspamd
-smtpd_milters = inet:127.0.0.1:8891,inet:127.0.0.1:11332
+# Milters: Rspamd
+smtpd_milters = inet:127.0.0.1:11332
 non_smtpd_milters = $smtpd_milters
 milter_protocol = 6
 milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen} {auth_type}
