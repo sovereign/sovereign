@@ -33,8 +33,13 @@
   tags:
     - dependencies
 
+- name: Copy DMARC configuration into place
+  template: src=etc_rspamd_local.d_dmarc.conf.j2 dest=/etc/rspamd/local.d/dmarc.conf owner=root group=root mode="0644"
+  notify: restart rspamd
+
+- name: Configure Rspamd to use Redis
+  copy: src=etc_rspamd_local.d_redis.conf dest=/etc/rspamd/local.d/redis.conf owner=root group=root mode="0644"
+  notify: restart rspamd
+
 - name: Start redis
   service: name=redis-server state=started
-
-- name: Start rspamd systemd listener
-  service: name=rspamd state=started

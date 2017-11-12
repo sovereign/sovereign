@@ -1,0 +1,47 @@
+# Enables storing reporting information to redis
+reporting = true;
+
+# Actions to enforce based on DMARC disposition
+actions = {
+  quarantine = "add_header";
+  reject = "reject";
+}
+
+# From Rspamd 1.6 experimental support for generation of DMARC reports is provided.
+# send_reports MUST be true
+send_reports = true;
+
+# report_settings MUST be present
+report_settings {
+  # The following elements MUST be present
+  # organisation name to use for reports
+  org_name = "{{ organization }}";
+  
+  # organisation domain
+  domain = "{{ domain }}";
+
+  # sender address to use for reports
+  email = "postmaster@{{ domain }}";
+
+  # The following elements MAY be present
+  # SMTP host to send reports to ("127.0.0.1" if unset)
+  # smtp = "127.0.0.1";
+	
+  # TCP port to use for SMTP (25 if unset)
+  # smtp_port = 25;
+	
+  # HELO to use for SMTP ("rspamd" if unset)
+  # helo = "rspamd";
+	
+  # Number of retries on temporary errors (2 if unset)
+  # retries = 2;
+	
+  # Send DMARC reports here instead of domain owners
+  # override_address = "postmaster@example.net";
+	
+  # Send DMARC reports here in addition to domain owners
+  additional_address = "postmaster@{{ domain }}";
+	
+  # Number of records to request with HSCAN
+  # hscan_count = 200
+}

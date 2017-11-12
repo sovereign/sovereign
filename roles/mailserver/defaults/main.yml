@@ -18,11 +18,6 @@ mail_virtual_domains: []
 mail_virtual_users: []
 mail_virtual_aliases: []
 
-# opendmarc
-mail_db_opendmarc_username: opendmarc
-mail_db_opendmarc_database: opendmarc
-mail_db_opendmarc_password: "{{ lookup('password', secret + '/' + 'mail_db_opendmarc_password', length=32) }}"
-
 # zpush
 zpush_version: 2.1.1-1788
 # common_timezone is a sovereign variable

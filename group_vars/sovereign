@@ -6,6 +6,7 @@
 # common
 domain: (required)
 main_user_name: (required)
+organization: (required)
 
 # admin email
 # fail2ban reports will be sent to this address
