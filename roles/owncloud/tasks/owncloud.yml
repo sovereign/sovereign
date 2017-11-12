@@ -28,7 +28,7 @@
     - dependencies
 
 - name: Install ownCloud
-  apt: pkg=owncloud update_cache=yes
+  apt: pkg=owncloud-files update_cache=yes
   tags:
     - dependencies
 
