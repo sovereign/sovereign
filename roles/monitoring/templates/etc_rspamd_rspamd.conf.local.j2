@@ -1,0 +1,12 @@
+settings {
+  accept_logs {
+    id = "accept_logs";
+    priority = "high";
+    from = "root@{{ domain }}";
+    rcpt = "root@{{ domain }}";
+    apply {
+      groups_disabled = ["surbl"];
+      symbols_disabled = ["R_SUSPICIOUS_URL"];
+    }
+  }
+}
