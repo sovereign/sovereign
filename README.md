@@ -69,7 +69,7 @@ The following steps are done on the remote server by `ssh`ing into it and runnin
 
 ### 1. Install required packages e.g `aptitude` is required on Debian
 
-    apt-get install sudo
+    apt-get install sudo python
 
 ### 2. Get a Tarsnap machine key
 
