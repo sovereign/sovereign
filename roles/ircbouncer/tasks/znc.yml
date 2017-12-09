@@ -4,6 +4,8 @@
   apt: pkg={{ item }} state=installed
   with_items:
     - znc
+  tags:
+    - dependencies
 
 - name: Create znc group
   group: name=znc state=present

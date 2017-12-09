@@ -1,5 +1,7 @@
 - name: Install collectd
   apt: pkg=collectd state=installed
+  tags:
+      - dependencies
 
 - name: Copy collectd configuration file into place
   template: src=etc_collectd_collectd.conf.j2 dest=/etc/collectd/collectd.conf
