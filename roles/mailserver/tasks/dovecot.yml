@@ -1,5 +1,5 @@
 - name: Install Dovecot and related packages
-  apt: pkg={{ item }} update_cache=yes state=installed
+  apt: pkg={{ item }} update_cache=yes state=present
   with_items:
     - dovecot-core
     - dovecot-imapd

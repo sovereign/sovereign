@@ -6,7 +6,7 @@
   notify: restart apache
 
 - name: Install monit
-  apt: pkg=monit state=installed
+  apt: pkg=monit state=present
   tags:
     - dependencies
 
@@ -33,4 +33,3 @@
     - sshd
     - tomcat
   notify: restart monit
-

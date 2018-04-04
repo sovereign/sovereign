@@ -8,7 +8,7 @@
 
 - name: Install dependencies for Tarsnap
   when: tarsnap_installed|failed
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - e2fslibs-dev
     - libssl-dev

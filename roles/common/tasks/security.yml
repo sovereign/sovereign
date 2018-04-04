@@ -1,5 +1,5 @@
 - name: Install security-related packages
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - fail2ban
     - whois
@@ -25,4 +25,3 @@
 
 - name: Update ssh config for more secure defaults
   template: src=etc_ssh_ssh_config.j2 dest=/etc/ssh/ssh_config
-
