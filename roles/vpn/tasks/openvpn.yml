@@ -163,14 +163,14 @@
   tags:
     - skip_ansible_lint
   with_nested:
-    - openvpn_clients
+    - "{{ openvpn_clients }}"
     - ["ca.crt", "ta.key"]
 
 - name: Retrieve the files that clients will need in order to connect to the OpenVPN server
   fetch: src={{ openvpn_path }}/{{ item[0] }}/{{ item[1] }}
          dest=/tmp/sovereign-openvpn-files
   with_nested:
-    - openvpn_clients
+    - "{{ openvpn_clients }}"
     - ["client.crt", "client.key", "ca.crt", "ta.key", "{{ openvpn_server }}.ovpn"]
 
 - pause: seconds=5
