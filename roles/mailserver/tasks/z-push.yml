@@ -1,10 +1,11 @@
 - name: Install required packages for z-push
   apt: pkg={{ item }} state=installed
   with_items:
+    - libapache2-mod-php
     - php-soap
-    - php5
-    - php5-cli
-    - php5-imap
+    - php
+    - php-cli
+    - php-imap
   tags:
     - dependencies
 
