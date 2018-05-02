@@ -22,12 +22,14 @@
   apt: pkg={{ item }} state=present
   with_items:
     - php
-    - php-sqlite
+    - php-sqlite3
+    - php-mbstring
     - php-mcrypt
     - php-gd
     - php-pspell
     - php-intl
     - php-curl
+    - php-xml
     - aspell
     - aspell-en
   when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
