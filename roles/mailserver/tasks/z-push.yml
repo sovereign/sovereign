@@ -5,7 +5,7 @@
     - php5
     - php5-cli
     - php5-imap
-  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "stretch")
+  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "bionic" and ansible_distribution_release != "stretch")
   tags:
     - dependencies
 
@@ -16,7 +16,7 @@
     - php
     - php-cli
     - php-imap
-  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "stretch")
+  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
   tags:
     - dependencies
 
