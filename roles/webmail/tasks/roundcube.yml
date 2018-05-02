@@ -14,7 +14,7 @@
     - php5-curl
     - aspell
     - aspell-en
-  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "stretch")
+  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "bionic" and ansible_distribution_release != "stretch")
   tags:
     - dependencies
 
@@ -30,7 +30,7 @@
     - php-curl
     - aspell
     - aspell-en
-  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "stretch")
+  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
   tags:
     - dependencies
 
