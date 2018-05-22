@@ -4,7 +4,7 @@
   with_items:
     - groff
     - libssl-dev
-    - python3-pip
+    - libz-dev
   tags:
     - dependencies
 
@@ -36,6 +36,7 @@
   template: src=etc_cgitrc.j2 dest=/etc/cgitrc
             group=www-data
             owner=root
+            mode=0644
 
 - name: Rename existing Apache cgit virtualhost
   command: >-

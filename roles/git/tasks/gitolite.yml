@@ -28,8 +28,9 @@
 
 - name: Setup gitolite
   become_user: git
-  command: >-
-    gitolite setup -pk {{ main_user_name }}.pub
-    chdir=/home/git
+  command: gitolite setup -pk {{ main_user_name }}.pub
+  args:
+    chdir: /home/git
+    creates: /home/git/.gitolite
   tags:
     - skip_ansible_lint
