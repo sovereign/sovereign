@@ -1,2 +1,0 @@
-- name: restart prosody
-  command: systemctl restart prosody

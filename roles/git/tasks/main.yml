@@ -1,4 +1,0 @@
-- include: gitolite.yml
-  tags: gitolite
-- include: cgit.yml
-  tags: cgit
