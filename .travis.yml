@@ -6,6 +6,13 @@ cache:
 install:
   - pip install -r requirements.txt
   - pip install -r test-requirements.txt
+  - wget https://releases.hashicorp.com/terraform/0.11.1/terraform_0.11.1_linux_amd64.zip
+  - unzip terraform_0.11.1_linux_amd64.zip
 script:
+  - terraform init
+  - terraform get
+  - terraform validate
+  - terraform plan
+  - terraform apply -auto-approve
   - ansible-playbook --syntax-check -i hosts site.yml
   - ansible-lint site.yml

@@ -1,0 +1,14 @@
+#! /bin/bash
+
+useradd deploy
+passwd deploy
+mkdir /home/deploy
+
+mkdir /home/deploy/.ssh
+chmod 700 /home/deploy/.ssh
+cp /home/root/.ssh/authorized_keys /home/deploy/.ssh/authorized_keys
+chmod 400 /home/deploy/.ssh/authorized_keys
+chown deploy:deploy /home/deploy -R
+echo 'deploy ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/deploy
+
+adduser deploy sudo

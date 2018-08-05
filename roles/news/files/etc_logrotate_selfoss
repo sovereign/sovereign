@@ -1,8 +1,0 @@
-/var/www/selfoss/data/logs/*.log {
-        daily
-        missingok
-        rotate 5
-        compress
-        notifempty
-	su www-data www-data
-}
