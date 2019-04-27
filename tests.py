@@ -235,7 +235,8 @@ class MailTests(unittest.TestCase):
         """Email sent from an MUA via SMTPS is delivered"""
         import smtplib
         msg, subject = new_message(TEST_ADDRESS, 'root@sovereign.local')
-        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s = smtplib.SMTP(TEST_SERVER, 587)
+        s.starttls()
         s.login(TEST_ADDRESS, TEST_PASSWORD)
         s.sendmail(TEST_ADDRESS, ['root@sovereign.local'], msg)
         s.quit()
@@ -245,7 +246,8 @@ class MailTests(unittest.TestCase):
         """Email sent to address with delimiter is delivered"""
         import smtplib
         msg, subject = new_message(TEST_ADDRESS, 'root+foo@sovereign.local')
-        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s = smtplib.SMTP(TEST_SERVER, 587)
+        s.starttls()
         s.login(TEST_ADDRESS, TEST_PASSWORD)
         s.sendmail(TEST_ADDRESS, ['root+foo@sovereign.local'], msg)
         s.quit()
@@ -254,7 +256,8 @@ class MailTests(unittest.TestCase):
     def test_smtps_requires_auth(self):
         """SMTPS with no authentication is rejected"""
         import smtplib
-        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s = smtplib.SMTP(TEST_SERVER, 587)
+        s.starttls()
 
         with self.assertRaisesRegexp(smtplib.SMTPRecipientsRefused, 'Access denied'):
             s.sendmail(TEST_ADDRESS, ['root@sovereign.local'], 'Test')
@@ -287,7 +290,8 @@ class MailTests(unittest.TestCase):
 
         # Send a message to root
         msg, subject = new_message(TEST_ADDRESS, 'root@sovereign.local')
-        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s = smtplib.SMTP(TEST_SERVER, 587)
+        s.starttls()
         s.login(TEST_ADDRESS, TEST_PASSWORD)
         s.sendmail(TEST_ADDRESS, ['root@sovereign.local'], msg)
         s.quit()
@@ -353,7 +357,8 @@ class MailTests(unittest.TestCase):
         """Connects with POP3S and asserts the existance of an email, then deletes it"""
         import smtplib
         msg, subject = new_message(TEST_ADDRESS, 'root@sovereign.local')
-        s = smtplib.SMTP_SSL(TEST_SERVER, 465)
+        s = smtplib.SMTP(TEST_SERVER, 587)
+        s.starttls()
         s.login(TEST_ADDRESS, TEST_PASSWORD)
         s.sendmail(TEST_ADDRESS, ['root@sovereign.local'], msg)
         s.quit()
