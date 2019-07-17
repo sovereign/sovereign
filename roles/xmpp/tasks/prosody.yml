@@ -26,7 +26,7 @@
   file: state=directory path=/decrypted/prosody owner=prosody group=prosody
 
 - name: Configure Prosody
-  template: src=prosody.cfg.lua.j2 dest=/etc/prosody/prosody.cfg.lua group=root owner=root
+  template: src=prosody.cfg.lua.j2 dest=/etc/prosody/prosody.cfg.lua group=prosody owner=prosody
   notify: restart prosody
 
 - name: Create Prosody accounts
