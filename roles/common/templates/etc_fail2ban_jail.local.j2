@@ -6,7 +6,11 @@ banaction = iptables-multiport
 action    = %(action_)s
 
 # JAILS
+{% if ansible_distribution_release == "jessie" -%}
 [ssh]
+{% else -%}
+[sshd]
+{% endif -%}
 enabled   = true
 maxretry  = 3
 
@@ -14,10 +18,18 @@ maxretry  = 3
 enabled   = true
 banaction = iptables-allports
 
+{% if ansible_distribution_release == "jessie" -%}
 [ssh-ddos]
+{% else -%}
+[sshd-ddos]
+{% endif -%}
 enabled   = true
 
+{% if ansible_distribution_release == "jessie" -%}
 [apache]
+{% else -%}
+[apache-auth]
+{% endif -%}
 enabled = true
 
 [postfix]
