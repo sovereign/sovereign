@@ -35,6 +35,9 @@ enabled = true
 [postfix]
 enabled  = true
 maxretry = 1
+{% if ansible_distribution_release != "jessie" -%}
+logpath  = /var/log/mail.log
+{% endif %}
 
 [dovecot-pop3imap]
 enabled = true
