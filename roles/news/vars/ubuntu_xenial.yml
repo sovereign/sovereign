@@ -1,0 +1,5 @@
+---
+selfoss_package_dependencies:
+  - php5
+  - php5-gd
+  - php5-pgsql
