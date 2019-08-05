@@ -1,3 +1,4 @@
+apt_cache_valid_time: "{{ 24 * 60 * 60 }}" # 24 hours
 common_timezone: 'Etc/UTC'
 admin_email: "{{ main_user_name }}@{{ domain }}"
 main_user_shell: "/bin/bash"
