@@ -1,0 +1,3 @@
+---
+owncloud_apt_repository: http://download.owncloud.org/download/repositories/stable/Debian_9.0/
+owncloud_apt_key_url: https://download.owncloud.org/download/repositories/stable/Debian_9.0/Release.key

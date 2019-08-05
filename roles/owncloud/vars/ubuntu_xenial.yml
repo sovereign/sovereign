@@ -1,0 +1,3 @@
+---
+owncloud_apt_repository: https://download.owncloud.org/download/repositories/production/Ubuntu_16.04/
+owncloud_apt_key_url: https://download.owncloud.org/download/repositories/production/Ubuntu_16.04/Release.key
