@@ -1,0 +1,7 @@
+---
+wallabag_package_dependencies:
+  - php
+  - php-curl
+  - php-mcrypt
+  - php-pgsql
+  - php-tidy
