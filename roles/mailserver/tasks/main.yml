@@ -1,3 +1,6 @@
+---
+- include_vars: "{{ ansible_distribution | lower }}_{{ ansible_distribution_release }}.yml"
+
 - include: postfix.yml
   tags: postfix
 - include: dovecot.yml

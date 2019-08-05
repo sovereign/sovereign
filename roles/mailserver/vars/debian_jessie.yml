@@ -1,0 +1,7 @@
+---
+tomcat_package_name: tomcat7
+zpush_package_dependencies:
+  - php5
+  - php5-cli
+  - php5-imap
+  - php-soap
