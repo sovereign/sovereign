@@ -1,3 +1,6 @@
+---
+- include_vars: "{{ ansible_distribution | lower }}_{{ ansible_distribution_release }}.yml"
+
 - include: monit.yml tags=monit
 - include: logwatch.yml tags=logwatch
 - include: collectd.yml tags=collectd
