@@ -1,0 +1,13 @@
+---
+roundcube_package_dependencies:
+  - aspell
+  - aspell-en
+  - php
+  - php-curl
+  - php-gd
+  - php-intl
+  - php-mbstring
+  - php-mcrypt
+  - php-pspell
+  - php-sqlite3
+  - php-xml

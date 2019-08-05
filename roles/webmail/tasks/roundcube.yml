@@ -3,17 +3,7 @@
   register: roundcube_config
 
 - name: Install roundcube dependencies
-  apt: pkg={{ item }} state=present
-  with_items:
-    - php5
-    - php5-sqlite
-    - php5-mcrypt
-    - php5-gd
-    - php5-pspell
-    - php5-intl
-    - php5-curl
-    - aspell
-    - aspell-en
+  apt: pkg={{ roundcube_package_dependencies }} state=present
   tags:
     - dependencies
 

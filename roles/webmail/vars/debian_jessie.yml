@@ -1,0 +1,11 @@
+---
+roundcube_package_dependencies:
+  - php5
+  - php5-sqlite
+  - php5-mcrypt
+  - php5-gd
+  - php5-pspell
+  - php5-intl
+  - php5-curl
+  - aspell
+  - aspell-en
