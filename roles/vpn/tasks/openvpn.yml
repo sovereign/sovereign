@@ -11,6 +11,13 @@
   tags:
     - dependencies
 
+- name: Set the proper permissions on openvpn dir
+  file: path={{ openvpn_path }}
+        state=directory
+        owner=root
+        group=root
+        mode=0700
+
 - name: Generate RSA keys for the CA and Server
   command: openssl genrsa -out {{ item }}.key {{ openvpn_key_size }}
            chdir={{ openvpn_path }}
@@ -30,12 +37,11 @@
   with_items: "{{ openvpn_clients }}"
 
 - name: Set the proper permissions on all RSA keys
-  file: path={{ openvpn_path }}
-        recurse=yes
-        state=directory
+  file: path={{ openvpn_path }}/{{ item }}
         owner=root
         group=root
         mode=0600
+  with_items: "{{ openvpn_clients }}"
 
 - name: Generate CA certificate
   command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=sovereign-ca-certificate"
