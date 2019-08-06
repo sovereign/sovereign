@@ -12,6 +12,7 @@
 - name: Install necessities and nice-to-haves
   apt: pkg={{ item }} state=installed
   with_items:
+    - acl
     - apache2
     - apt-transport-https
     - apticron
