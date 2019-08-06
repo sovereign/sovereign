@@ -6,6 +6,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     apt-get install -y \
+      aptitude \
       python \
       python-apt
   SHELL
