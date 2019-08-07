@@ -19,10 +19,14 @@
 - name: If /encrypted is empty, create the encfs there
   shell: printf "p\n{{ encfs_password }}" | encfs /encrypted /decrypted --public --stdinpass && touch /decrypted/test
   when: encfs_check.rc > 0
+  tags:
+    - molecule-notest  # no fuse in docker
 
 - name: If /encrypted isn't empty, mount it (but only if /decrypted/test doesn't exist)
   shell: command="printf '{{ encfs_password }}' | encfs /encrypted /decrypted --public --stdinpass" creates="/decrypted/test"
   when: encfs_check.rc == 0
+  tags:
+    - molecule-notest  # no fuse in docker
 
 - name: Set decrypted directory permissions
   file: state=directory path=/decrypted group=mail mode=0775

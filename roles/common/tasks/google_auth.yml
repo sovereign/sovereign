@@ -28,13 +28,19 @@
            creates=/home/{{ main_user_name }}/.google_authenticator
   become: yes
   become_user: "{{ main_user_name }}"
-  when: ansible_ssh_user != "vagrant"
+  tags:
+    - molecule-notest
+    - skip_vagrant
 
 - name: Retrieve generated keys from server
   fetch: src=/home/{{ main_user_name }}/.google_authenticator
          dest=/tmp/sovereign-google-auth-files
-  when: ansible_ssh_user != "vagrant"
+  tags:
+    - molecule-notest
+    - skip_vagrant
 
 - pause: seconds=5
          prompt="Your Google Authentication keys are in /tmp/sovereign-google-auth-files. Press any key to continue..."
-  when: ansible_ssh_user != "vagrant"
+  tags:
+    - molecule-notest
+    - skip_vagrant

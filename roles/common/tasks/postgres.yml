@@ -9,6 +9,9 @@
   tags:
     - dependencies
 
+- name: Ensure PostgreSQL is running
+  service: name=postgresql state=started
+
 - name: Set password for PostgreSQL admin user
   become: true
   become_user: postgres

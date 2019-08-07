@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: common
+  vars:
+    db_admin_username: db-test-user
+    db_admin_password: db-test-password

@@ -6,6 +6,7 @@
 # selfoss_password_hash is the SHA512 hash of `foo`
 # 
 ###############################################################################
+testing: true
 
 # common
 domain: sovereign.local
