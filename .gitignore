@@ -1,4 +1,7 @@
 .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
 .vagrant/machines
-tests.pyc
+.vagrant/rgloader
+*.log
+*.pyc
+*.retry
 secret
