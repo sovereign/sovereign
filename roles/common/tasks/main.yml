@@ -1,4 +1,7 @@
 ---
+- name: Include distro/release specific variables
+  include_vars: "{{ ansible_distribution_release }}.yml"
+
 - name: Update apt cache
   apt: update_cache=yes cache_valid_time={{ 24 * 60 * 60 }}
   tags:
