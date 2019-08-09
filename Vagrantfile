@@ -51,7 +51,7 @@ Vagrant.configure('2') do |config|
   end
 
   # Debian 9 64-bit (in development)
-  config.vm.define 'stretch', primary: true do |stretch|
+  config.vm.define 'stretch', autostart: false do |stretch|
     stretch.vm.box = 'debian/contrib-stretch64'
   end
 
