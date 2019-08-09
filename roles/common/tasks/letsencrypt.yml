@@ -1,3 +1,4 @@
+---
 - name: Add group name ssl-cert for SSL certificates
   group:
     name: ssl-cert

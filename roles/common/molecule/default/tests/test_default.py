@@ -14,10 +14,12 @@ def test_hosts_file(host):
     assert f.user == 'root'
     assert f.group == 'root'
 
+
 def test_sshd_listening(host):
     sshd = host.socket('tcp://0.0.0.0:22')
 
     assert sshd.is_listening
+
 
 def test_sshd_banner(host):
     """SSH is responding with its banner"""

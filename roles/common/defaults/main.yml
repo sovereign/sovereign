@@ -1,3 +1,4 @@
+---
 common_timezone: 'Etc/UTC'
 admin_email: "{{ main_user_name }}@{{ domain }}"
 main_user_shell: "/bin/bash"
