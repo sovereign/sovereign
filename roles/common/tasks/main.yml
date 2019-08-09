@@ -45,10 +45,14 @@
 - name: timezone - Set localtime to UTC
   file: src=/usr/share/zoneinfo/Etc/UTC dest=/etc/localtime
   when: common_timezone_config.changed
+  tags:
+    - skip_ansible_lint
 
 - name: timezone - reconfigure tzdata
   command: dpkg-reconfigure --frontend noninteractive tzdata
   when: common_timezone_config.changed
+  tags:
+    - skip_ansible_lint
 
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf
