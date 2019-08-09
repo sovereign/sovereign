@@ -6,7 +6,7 @@ banaction = iptables-multiport
 action    = %(action_)s
 
 # JAILS
-[ssh]
+[sshd]
 enabled   = true
 maxretry  = 3
 
@@ -14,10 +14,15 @@ maxretry  = 3
 enabled   = true
 banaction = iptables-allports
 
-[ssh-ddos]
+[sshd-ddos]
 enabled   = true
 
-[apache]
+# protects agains invalid authorization attempts
+[apache-auth]
+enabled = true
+
+# protects against long URI and other overflow attaks
+[apache-overflows]
 enabled = true
 
 [postfix]

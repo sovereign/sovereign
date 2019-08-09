@@ -17,6 +17,11 @@ banaction = iptables-allports
 [sshd-ddos]
 enabled   = true
 
+# protects agains invalid authorization attempts
+[apache-auth]
+enabled = true
+
+# protects against long URI and other overflow attaks
 [apache-overflows]
 enabled = true
 
