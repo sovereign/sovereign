@@ -28,10 +28,22 @@
     - dependencies
 
 - name: Create database user for selfoss
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_username }} password="{{ selfoss_db_password }}" state=present
+  postgresql_user: >-
+    login_host=localhost
+    login_user={{ db_admin_username }}
+    login_password="{{ db_admin_password }}"
+    name={{ selfoss_db_username }}
+    password="{{ selfoss_db_password }}"
+    state=present
 
 - name: Create database for selfoss
-  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_database }} state=present owner={{ selfoss_db_username }}
+  postgresql_db: >-
+    login_host=localhost
+    login_user={{ db_admin_username }}
+    login_password="{{ db_admin_password }}"
+    name={{ selfoss_db_database }}
+    state=present
+    owner={{ selfoss_db_username }}
 
 - name: Install selfoss config.ini
   template: src=var_www_selfoss_config.ini.j2 dest=/var/www/selfoss/config.ini group=www-data owner=root mode=0640
@@ -49,20 +61,30 @@
   notify: restart apache
 
 - name: Rename existing Apache blog virtualhost
-  command: mv /etc/apache2/sites-available/selfoss /etc/apache2/sites-available/selfoss.conf removes=/etc/apache2/sites-available/selfoss
+  command: >-
+    mv /etc/apache2/sites-available/selfoss /etc/apache2/sites-available/selfoss.conf
+    removes=/etc/apache2/sites-available/selfoss
 
 - name: Remove old sites-enabled/selfoss symlink (new one will be created by a2ensite)
   file: path=/etc/apache2/sites-enabled/selfoss state=absent
 
 - name: Configure the Apache HTTP server for selfoss
-  template: src=etc_apache2_sites-available_selfoss.j2 dest=/etc/apache2/sites-available/selfoss.conf group=root owner=root
+  template: >-
+    src=etc_apache2_sites-available_selfoss.j2
+    dest=/etc/apache2/sites-available/selfoss.conf
+    group=root
+    owner=root
 
 - name: Enable the selfoss site
   command: a2ensite selfoss.conf creates=/etc/apache2/sites-enabled/selfoss.conf
   notify: restart apache
 
 - name: Install selfoss cronjob
-  cron: name="selfoss" user="www-data" minute="*/5" job="curl --silent --show-error -k 'https://{{ selfoss_domain }}/update' > /dev/null"
+  cron: >-
+    name="selfoss"
+    user="www-data"
+    minute="*/5"
+    job="curl --silent --show-error -k 'https://{{ selfoss_domain }}/update' > /dev/null"
 
 - name: Configure selfoss logrotate
   copy: src=etc_logrotate_selfoss dest=/etc/logrotate.d/selfoss owner=root group=root mode=0644

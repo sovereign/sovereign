@@ -100,6 +100,8 @@
     /etc/letsencrypt/live/{{ domain }}/chain.pem >
     /etc/letsencrypt/live/{{ domain }}/fullchain.pem
   when: (private_key.changed or certificate.changed or ca_certificate.changed) and ansible_ssh_user == "vagrant"
+  tags:
+    - skip_ansible_lint
 
 - name: Set permissions on combined SSL public cert
   file: name=/etc/letsencrypt/live/{{ domain }}/fullchain.pem mode=0644
