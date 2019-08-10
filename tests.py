@@ -148,7 +148,7 @@ class IRCTests(unittest.TestCase):
 
         # Check the encryption parameters
         cipher, version, bits = ssl_sock.cipher()
-        self.assertEquals(cipher, 'AES256-GCM-SHA384')
+        self.assertEquals(cipher, 'ECDHE-RSA-AES256-GCM-SHA384')
         self.assertEquals(version, 'TLSv1/SSLv3')
         self.assertEquals(bits, 256)
 
