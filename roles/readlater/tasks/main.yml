@@ -1,1 +1,2 @@
-- include: wallabag.yml tags=wallabag
+- import_tasks: wallabag.yml
+  tags: wallabag

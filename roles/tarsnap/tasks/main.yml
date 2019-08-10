@@ -1,1 +1,2 @@
-- include: tarsnap.yml tags=tarsnap
+- import_tasks: tarsnap.yml
+  tags: tarsnap
