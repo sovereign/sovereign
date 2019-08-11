@@ -1,4 +1,5 @@
 ---
+dovecot_ssl_protocols: "!SSLv3"
 tomcat_package_name: tomcat8
 zpush_package_dependencies:
   - php

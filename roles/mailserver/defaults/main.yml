@@ -4,7 +4,7 @@ secret: '{{ secret_root + "/" + secret_name }}'
 
 db_admin_username: 'postgres'
 db_admin_password: "{{ lookup('password', secret + '/' + 'db_admin_password', length=32) }}"
-
+dovecot_ssl_protocols: "!SSLv2 !SSLv3"
 mail_db_username: 'mailuser'
 mail_db_password: "{{ lookup('password', secret + '/' + 'mail_db_password', length=32) }}"
 mail_db_database: 'mailserver'
