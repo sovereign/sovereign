@@ -19,12 +19,12 @@
   register: znc_config_file
 
 - name: Copy ZNC monit service config files into place
-  copy: src=etc_monit_conf.d_znc dest=/etc/monit/conf.d/znc
+  template: src=etc_monit_conf.d_znc dest=/etc/monit/conf.d/znc
   notify: restart monit
   when: znc_config_file.stat.exists == True
 
 - name: Copy monit service config files into place
-  copy: src=etc_monit_conf.d_{{ item }} dest=/etc/monit/conf.d/{{ item }}
+  template: src=etc_monit_conf.d_{{ item }} dest=/etc/monit/conf.d/{{ item }}
   with_items:
     - apache2
     - dovecot

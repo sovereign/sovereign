@@ -1,2 +1,3 @@
 ---
+postgresql_major_minor_version: "9.6"
 tomcat_package_name: tomcat8

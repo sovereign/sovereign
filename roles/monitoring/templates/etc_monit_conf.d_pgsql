@@ -1,4 +1,4 @@
-check process postgres with pidfile /var/run/postgresql/9.4-main.pid
+check process postgres with pidfile /var/run/postgresql/{{ postgresql_major_minor_version }}-main.pid
   group database
   start program = "systemctl start postgresql"
   stop program = "systemctl stop postgresql"
