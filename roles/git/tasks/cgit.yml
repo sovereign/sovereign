@@ -1,6 +1,6 @@
 
 - name: Install cgit dependencies
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - groff
     - libssl-dev

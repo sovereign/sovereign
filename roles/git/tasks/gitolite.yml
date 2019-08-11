@@ -8,7 +8,7 @@
   user: name=www-data groups=git append=yes
 
 - name: Install gitolite3 package
-  apt: pkg=gitolite3 state=installed
+  apt: pkg=gitolite3 state=present
   tags:
     - dependencies
 
