@@ -6,6 +6,7 @@
   when: ansible_distribution_release == "jessie"
 
 - include_vars: "{{ ansible_distribution | lower }}_{{ ansible_distribution_release }}.yml"
+  tags: always
 
 - include: owncloud.yml tags=owncloud
   # https://github.com/sovereign/sovereign/issues/765
