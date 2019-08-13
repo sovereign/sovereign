@@ -1,5 +1,5 @@
 - name: Install encfs & fuse
-  apt: name={{ item }} state=present
+  apt: pkg={{ item }} state=present
   with_items:
     - encfs
     - fuse

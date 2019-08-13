@@ -8,4 +8,4 @@
 - import_tasks: owncloud.yml
   tags: owncloud
   # https://github.com/sovereign/sovereign/issues/765
-  when: ansible_distribution_release != "jessie"
+  when: ansible_distribution_release not in ["jessie", "trusty"]
