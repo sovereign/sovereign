@@ -21,13 +21,16 @@
 #                           # default Monit check immediately after Monit start)
 #
 #
-## Set syslog logging with the 'daemon' facility. If the FACILITY option is
-## omitted, Monit will use 'user' facility by default. If you want to log to
-## a standalone log file instead, specify the full path to the log file
+## Set syslog logging. If you want to log to a standalone log file instead,
+## specify the full path to the log file
 #
-# set logfile syslog facility log_daemon
   set logfile /var/log/monit.log
 #
+#
+## Set the location of the Monit lock file which stores the process id of the
+## running Monit instance. By default this file is stored in $HOME/.monit.pid
+#
+# set pidfile /var/run/monit.pid
 #
 ## Set the location of the Monit id file which stores the unique id for the
 ## Monit instance. The id is generated and stored on first Monit start. By
@@ -44,6 +47,31 @@
 #
   set statefile /var/lib/monit/state
 #
+#
+
+## Set limits for various tests. The following example shows the default values:
+##
+# set limits {
+#     programOutput:     512 B,      # check program's output truncate limit
+#     sendExpectBuffer:  256 B,      # limit for send/expect protocol test
+#     fileContentBuffer: 512 B,      # limit for file content test
+#     httpContentBuffer: 1 MB,       # limit for HTTP content test
+#     networkTimeout:    5 seconds   # timeout for network I/O
+#     programTimeout:    300 seconds # timeout for check program
+#     stopTimeout:       30 seconds  # timeout for service stop
+#     startTimeout:      30 seconds  # timeout for service start
+#     restartTimeout:    30 seconds  # timeout for service restart
+# }
+
+## Set global SSL options (just most common options showed, see manual for
+## full list).
+#
+# set ssl {
+#     verify     : enable, # verify SSL certificates (disabled by default but STRONGLY RECOMMENDED)
+#     selfsigned : allow   # allow self signed SSL certificates (reject by default)
+# }
+#
+#
 ## Set the list of mail servers for alert delivery. Multiple servers may be
 ## specified using a comma separator. If the first mail server fails, Monit
 # will use the second mail server in the list and so on. By default Monit uses
@@ -56,11 +84,12 @@
 
 set mailserver localhost
 
+#
 ## By default Monit will drop alert events if no mail servers are available.
 ## If you want to keep the alerts for later delivery retry, you can use the
 ## EVENTQUEUE statement. The base directory where undelivered alerts will be
-## stored is specified by the BASEDIR option. You can limit the maximal queue
-## size using the SLOTS option (if omitted, the queue is limited by space
+## stored is specified by the BASEDIR option. You can limit the queue size
+## by using the SLOTS option (if omitted, the queue is limited by space
 ## available in the back end filesystem).
 #
   set eventqueue
@@ -69,12 +98,14 @@ set mailserver localhost
 #
 #
 ## Send status and events to M/Monit (for more informations about M/Monit
-## see http://mmonit.com/). By default Monit registers credentials with
+## see https://mmonit.com/). By default Monit registers credentials with
 ## M/Monit so M/Monit can smoothly communicate back to Monit and you don't
 ## have to register Monit credentials manually in M/Monit. It is possible to
 ## disable credential registration using the commented out option below.
 ## Though, if safety is a concern we recommend instead using https when
-## communicating with M/Monit and send credentials encrypted.
+## communicating with M/Monit and send credentials encrypted. The password
+## should be URL encoded if it contains URL-significant characters like
+## ":", "?", "@".
 #
 # set mmonit http://monit:monit@192.168.1.10:8080/collector
 #     # and register without credentials     # Don't register credentials
@@ -84,7 +115,7 @@ set mailserver localhost
 ## statement is missing::
 ## --8<--
 ## set mail-format {
-##      from: monit@$HOST
+##   from:    Monit <monit@$HOST>
 ##   subject: monit alert --  $EVENT $SERVICE
 ##   message: $EVENT Service $SERVICE
 ##                 Date:        $DATE
@@ -109,20 +140,26 @@ set mailserver localhost
 ## events by using a filter as in the second example below.
 #
 # set alert sysadm@foo.bar                       # receive all alerts
-# set alert manager@foo.bar only on { timeout }  # receive just service-
-#                                                # timeout alert
+#
+## Do not alert when Monit starts, stops or performs a user initiated action.
+## This filter is recommended to avoid getting alerts for trivial cases.
+#
+# set alert your-name@your.domain not on { instance, action }
 #
 #
-## Monit has an embedded web server which can be used to view status of
-## services monitored and manage services from a web interface. See the
-## Monit Wiki if you want to enable SSL for the web server.
+## Monit has an embedded HTTP interface which can be used to view status of
+## services monitored and manage services from a web interface. The HTTP
+## interface is also required if you want to issue Monit commands from the
+## command line, such as 'monit status' or 'monit restart service' The reason
+## for this is that the Monit client uses the HTTP interface to send these
+## commands to a running Monit daemon. See the Monit Wiki if you want to
+## enable SSL for the HTTP interface.
 #
 set httpd port 2812 and
     use address localhost  # only accept connection from localhost
     allow localhost        # allow localhost to connect to the server and
     allow admin:monit      # require user 'admin' with password 'monit'
-#    allow @monit           # allow users of group 'monit' to connect (rw)
-#    allow @users readonly  # allow users of group 'users' to connect readonly
+    
 #
 ###############################################################################
 ## Services
@@ -132,14 +169,12 @@ set httpd port 2812 and
 ## usage. Each test specifies a resource, conditions and the action to be
 ## performed should a test fail.
 #
-#  check system myhost.mydomain.tld
+#  check system $HOST
 #    if loadavg (1min) > 4 then alert
 #    if loadavg (5min) > 2 then alert
+#    if cpu usage > 95% for 10 cycles then alert
 #    if memory usage > 75% then alert
 #    if swap usage > 25% then alert
-#    if cpu usage (user) > 70% then alert
-#    if cpu usage (system) > 30% then alert
-#    if cpu usage (wait) > 20% then alert
 #
 #
 ## Check if a file exists, checksum, permissions, uid and gid. In addition
@@ -178,11 +213,9 @@ set httpd port 2812 and
 #    if loadavg(5min) greater than 10 for 8 cycles then stop
 #    if failed host www.tildeslash.com port 80 protocol http
 #       and request "/somefile.html"
-#       then restart
-#    if failed port 443 type tcpssl protocol http
-#       with timeout 15 seconds
-#       then restart
-#    if 3 restarts within 5 cycles then timeout
+#    then restart
+#    if failed port 443 protocol https with timeout 15 seconds then restart
+#    if 3 restarts within 5 cycles then unmonitor
 #    depends on apache_bin
 #    group server
 #
@@ -232,11 +265,28 @@ set httpd port 2812 and
 ## connection to a port and an application level network check is performed.
 #
 #  check host myserver with address 192.168.1.1
-#    if failed icmp type echo count 3 with timeout 3 seconds then alert
+#    if failed ping then alert
 #    if failed port 3306 protocol mysql with timeout 15 seconds then alert
-#    if failed url http://user:password@www.foo.bar:8080/?querystring
-#       and content == 'action="j_security_check"'
-#       then alert
+#    if failed port 80 protocol http
+#       and request /some/path with content = "a string"
+#    then alert
+#
+#
+## Check a network link status (up/down), link capacity changes, saturation
+## and bandwidth usage.
+#
+#  check network public with interface eth0
+#    if failed link then alert
+#    if changed link then alert
+#    if saturation > 90% then alert
+#    if download > 10 MB/s then alert
+#    if total uploaded > 1 GB in last hour then alert
+#
+#
+## Check custom program status output.
+#
+#  check program myscript with path /usr/local/bin/myscript.sh
+#    if status != 0 then alert
 #
 #
 ###############################################################################
@@ -247,4 +297,5 @@ set httpd port 2812 and
 ## directories.
 #
    include /etc/monit/conf.d/*
-
+   include /etc/monit/conf-enabled/*
+#
