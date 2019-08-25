@@ -1,10 +1,2 @@
----
-- debug:
-    msg: >-
-      OwnCloud is no longer supported on Debian jessie
-      https://github.com/sovereign/sovereign/issues/765
-  when: ansible_distribution_release == "jessie"
-
-- include: owncloud.yml tags=owncloud
-  # https://github.com/sovereign/sovereign/issues/765
-  when: ansible_distribution_release != "jessie"
+- include: owncloud.yml
+  tags: owncloud
