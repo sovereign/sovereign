@@ -68,8 +68,15 @@
 protocol imap {
   # Space separated list of plugins to load (default is global mail_plugins).
   #mail_plugins = $mail_plugins
+  mail_plugins = $mail_plugins antispam fts fts_solr
 
   # Maximum number of IMAP connections allowed for a user from each IP address.
   # NOTE: The username is compared case-sensitively.
   #mail_max_userip_connections = 10
+}
+
+protocol lmtp {
+  # Space separated list of plugins to load (default is global mail_plugins).
+  mail_plugins = $mail_plugins sieve
+  postmaster_address = postmaster@{{ domain }}
 }
