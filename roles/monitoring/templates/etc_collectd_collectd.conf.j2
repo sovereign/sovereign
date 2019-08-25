@@ -1461,3 +1461,19 @@ LoadPlugin users
 	Filter "*.conf"
 </Include>
 
+{% if (collectd_librato_email|length and collectd_librato_api_token|length) %}
+LoadPlugin python
+LoadPlugin write_http
+
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+
+<Plugin write_http>
+  <URL "https://collectd.librato.com/v1/measurements">
+    User "{{ collectd_librato_email }}"
+    Password "{{ collectd_librato_api_token }}"
+    Format "JSON"
+  </URL>
+</Plugin>
+{% endif %}
