@@ -16,6 +16,9 @@
 # list of available options, their meanings and defaults, please see the
 # ssh_config(5) man page.
 
+Host github.com
+    KexAlgorithms {{ kex_algorithms }},diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1
+
 Host *
 #   ForwardAgent no
 #   ForwardX11 no
@@ -41,7 +44,8 @@ Host *
 #   Port 22
 #   Protocol 2
 #   Cipher 3des
-#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc
+    Ciphers {{ ciphers }}
+    KexAlgorithms {{ kex_algorithms }}
 #   MACs hmac-md5,hmac-sha1,umac-64@openssh.com,hmac-ripemd160
 #   EscapeChar ~
 #   Tunnel no

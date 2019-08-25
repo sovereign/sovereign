@@ -10,27 +10,31 @@
 # possible, but leave them commented.  Uncommented options override the
 # default value.
 
-#Port 22
+Port 22
 #AddressFamily any
 #ListenAddress 0.0.0.0
 #ListenAddress ::
 
-#HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_rsa_key
 #HostKey /etc/ssh/ssh_host_ecdsa_key
 #HostKey /etc/ssh/ssh_host_ed25519_key
 
 # Ciphers and keying
 #RekeyLimit default none
 
+KexAlgorithms {{ kex_algorithms }}
+Ciphers {{ ciphers }}
+MACs {{ macs }}
+
 # Logging
-#SyslogFacility AUTH
-#LogLevel INFO
+SyslogFacility AUTH
+LogLevel INFO
 
 # Authentication:
 
-#LoginGraceTime 2m
-#PermitRootLogin prohibit-password
-#StrictModes yes
+LoginGraceTime 2m
+PermitRootLogin no
+StrictModes yes
 #MaxAuthTries 6
 #MaxSessions 10
 
@@ -58,7 +62,7 @@
 
 # Change to yes to enable challenge-response passwords (beware issues with
 # some PAM modules and threads)
-ChallengeResponseAuthentication no
+ChallengeResponseAuthentication yes
 
 # Kerberos options
 #KerberosAuthentication no
