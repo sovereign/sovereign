@@ -1,35 +1,20 @@
-- name: Install required packages for z-push
-  apt: pkg={{ item }} state=installed
-  with_items:
-    - php-soap
-    - php5
-    - php5-cli
-    - php5-imap
+- name: Ensure repository key for z-push is in place
+  apt_key: url=http://repo.z-hub.io/z-push:/final/Debian_9.0/Release.key state=present
   tags:
     - dependencies
 
-- name: Download z-push release
-  get_url:
-    url=http://download.z-push.org/final/2.1/z-push-{{ zpush_version }}.tar.gz
-    dest=/root/z-push-{{ zpush_version }}.tar.gz
-
-- name: Decompress z-push source
-  unarchive: src=/root/z-push-{{ zpush_version }}.tar.gz
-             dest=/root copy=no
-             creates=/root/z-push-{{ zpush_version }}
-
-- name: Create /usr/share/z-push
-  file: state=directory path=/usr/share/z-push
-
-- name: Copy z-push source files to /usr/share/z-push
-  shell: cp -R z-push-{{ zpush_version }}/* /usr/share/z-push/ chdir=/root
+- name: Add z-push repository
+  apt_repository: repo='deb http://repo.z-hub.io/z-push:/final/Debian_9.0/ /'
   tags:
-    - skip_ansible_lint
+    - dependencies
 
-- name: Remove downloaded, temporary z-push source files
-  shell: rm -rf z-push* chdir=/root
+- name: Install required packages for z-push
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - z-push-config-apache
+    - z-push-backend-imap
   tags:
-    - skip_ansible_lint
+    - dependencies
 
 - name: Ensure z-push state and log directories are in place
   file: state=directory path={{ item }} owner=www-data group=www-data mode=0755
@@ -38,15 +23,11 @@
     - /var/log/z-push
   notify: restart apache
 
-- name: Copy z-push's config.php into place
+- name: Update z-push config.php
   template: src=usr_share_z-push_config.php.j2 dest=/usr/share/z-push/config.php
 
-- name: Create z-push apache alias and php configuration file
-  copy: src=etc_apache2_conf.d_z-push.conf dest=/etc/apache2/conf-available/z-push.conf
-
-- name: Enable z-push Apache alias and PHP configuration file
-  command: a2enconf z-push creates=/etc/apache2/conf-enabled/z-push.conf
-  notify: restart apache
+- name: Update z-push imap backend config.php
+  copy: src=usr_share_z-push_backend_imap_config.php dest=/usr/share/z-push/backend/imap/config.php
 
 - name: Configure z-push logrotate
   copy: src=etc_logrotate_z-push dest=/etc/logrotate.d/z-push owner=root group=root mode=0644
