@@ -4,30 +4,22 @@
     - php7.0
     - php7.0-pgsql
     - php7.0-gd
+    - composer
   tags:
     - dependencies
 
 - name: Clone Selfoss
+  become_user: www-data
   git: repo=https://github.com/SSilence/selfoss.git
        dest=/var/www/selfoss
        accept_hostkey=yes
        version={{ selfoss_version }}
 
-- name: Set selfoss ownership
-  action: file owner=root group=www-data path=/var/www/selfoss recurse=yes state=directory
-
-- name: Get Composer installer
-  get_url: url=https://getcomposer.org/installer
-           dest=/tmp/composer-installer
-
-- name: Install Composer
-  command: php /tmp/composer-installer
-           chdir=/root
-           creates=/root/composer.phar
-
 - name: Run composer to install dependencies
-  command: php /root/composer.phar install
+  become_user: www-data
+  command: composer install
            chdir=/var/www/selfoss
+           creates=/var/www/selfoss/vendor/autoload.php
 
 # only data/cache, data/favicons, data/logs, data/thumbnails, data/sqlite public/ should be writeable by httpd
 - name: Set selfoss permission
