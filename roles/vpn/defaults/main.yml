@@ -1,6 +1,10 @@
 # Notes about security: https://blog.g3rt.nl/openvpn-security-tips.html
 # Check privacy: http://witch.valdikss.org.ru/
 
+vpn_domain: "vpn.{{ domain }}"
+vpn_username: "{{ main_user_name }}"
+vpn_password:
+
 openvpn_key_country:  "US"
 openvpn_key_province: "California"
 openvpn_key_city: "Beverly Hills"

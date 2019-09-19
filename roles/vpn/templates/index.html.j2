@@ -1,0 +1,15 @@
+<html>
+    <title>Sovereign VPN Directory</title>
+    <h3>Sovereign VPN Directory</h3>
+    <p>Here you can download VPN credential files.</p>
+    <p>Use <i>Bundle</i> for one-file-has-everything (e.g. for NetworkManager Import Connection) or download the individual files for difficult setup cases.</p>
+
+    <ul>
+    {% for client in openvpn_clients %}
+        <li>
+            <a href="/{{ client }}/{{ openvpn_server }}.ovpn">{{ client | capitalize }} configuration bundle</a>
+                (or <a href="/{{ client }}/">individual files</a>)
+        </li>
+    {% endfor %}
+    </ul>
+</html>

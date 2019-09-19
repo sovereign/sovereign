@@ -1,0 +1,27 @@
+<VirtualHost *:80>
+    ServerName {{ vpn_domain }}
+
+    Redirect permanent / https://{{ vpn_domain }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ vpn_domain }}
+    SSLEngine On
+
+    DocumentRoot            /var/www/vpn
+    Options                 -Indexes
+
+    ErrorLog                /var/log/apache2/vpn.info-error_log
+    CustomLog               /var/log/apache2/vpn.info-access_log common
+
+    AddType application/octet-stream .ovpn .crt .key
+
+    <Directory "/var/www/vpn">
+        AuthType Basic
+        AuthName "Authentication Required"
+        AuthUserFile "/var/www/vpn/.htpasswd"
+        Require valid-user
+        Options +Indexes
+    </Directory>
+
+</VirtualHost>
