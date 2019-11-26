@@ -6,7 +6,7 @@
   with_items:
     - libpam-google-authenticator
     - libpam0g-dev
-    - libqrencode3
+    - libqrencode4
   tags:
     - dependencies
 
