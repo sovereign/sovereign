@@ -10,13 +10,23 @@ filegen loopstats file loopstats type day enable
 filegen peerstats file peerstats type day enable
 filegen clockstats file clockstats type day enable
 
-# Use servers configured via Ansible
+
+# You do need to talk to an NTP server or two (or three).
 {% for server in ntp_servers %}
 server {{ server }}
 {% endfor %}
 
 # fallback
 server tick.usno.navy.mil
+
+# pool.ntp.org maps to about 1000 low-stratum NTP servers.  Your server will
+# pick a different set every time it starts up.  Please consider joining the
+# pool: <http://www.pool.ntp.org/join.html>
+pool 0.debian.pool.ntp.org iburst
+pool 1.debian.pool.ntp.org iburst
+pool 2.debian.pool.ntp.org iburst
+pool 3.debian.pool.ntp.org iburst
+
 
 # Access control configuration; see /usr/share/doc/ntp-doc/html/accopt.html for
 # details.  The web page <http://support.ntp.org/bin/view/Support/AccessRestrictions>
@@ -27,16 +37,20 @@ server tick.usno.navy.mil
 # up blocking replies from your own upstream servers.
 
 # By default, exchange time with everybody, but don't allow configuration.
-restrict -4 default kod notrap nomodify nopeer noquery
-restrict -6 default kod notrap nomodify nopeer noquery
+restrict -4 default kod notrap nomodify nopeer noquery limited
+restrict -6 default kod notrap nomodify nopeer noquery limited
 
 # Local users may interrogate the ntp server more closely.
 restrict 127.0.0.1
 restrict ::1
 
+# Needed for adding pool entries
+restrict source notrap nomodify noquery
+
 # Clients from this (example!) subnet have unlimited access, but only if
 # cryptographically authenticated.
 #restrict 192.168.123.0 mask 255.255.255.0 notrust
+
 
 # If you want to provide time to your local subnet, change the next line.
 # (Again, the address is an example only.)

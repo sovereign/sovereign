@@ -5,7 +5,7 @@ if allof (header :regex "X-DSPAM-Result" "^(Spam|Virus|Bl[ao]cklisted)$",
   # Mark as read
   setflag "\\Seen";
   # Move into the Junk folder
-  fileinto "Spam";
+  fileinto "Junk";
   # Stop processing here
   stop;
 }

@@ -9,14 +9,10 @@
 - name: Work around Debian bug and copy Solr schema file into place
   copy: src=solr-schema.xml dest=/etc/solr/conf/schema.xml group=root owner=root
 
-- name: Copy tweaked Tomcat config file into place
-  copy: src=etc_tomcat7_server.xml dest=/etc/tomcat7/server.xml group=tomcat7 owner=root
-  notify: restart solr
-
 - name: Copy tweaked Solr config file into place
   copy: src=etc_solr_conf_solrconfig.xml dest=/etc/solr/conf/solrconfig.xml group=root owner=root
   notify: restart solr
 
 - name: Create Solr index directory
-  file: state=directory path=/decrypted/solr group=tomcat7 owner=tomcat7
+  file: state=directory path=/decrypted/solr group=tomcat8 owner=tomcat8
   notify: restart solr

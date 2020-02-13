@@ -64,13 +64,22 @@
     name: en_US.UTF-8
     state: present
 
-- include: encfs.yml tags=encfs
-- include: users.yml tags=users
-- include: apache.yml tags=apache
-- include: ssl.yml tags=ssl
-- include: letsencrypt.yml tags=letsencrypt
-- include: ufw.yml tags=ufw
-- include: security.yml tags=security
-- include: ntp.yml tags=ntp
-- include: google_auth.yml tags=google_auth
+- include: encfs.yml
+  tags: encfs
+- include: users.yml
+  tags: users
+- include: apache.yml
+  tags: apache
+- include: ssl.yml
+  tags: ssl
+- include: letsencrypt.yml
+  tags: letsencrypt
+- include: ufw.yml
+  tags: ufw
+- include: security.yml
+  tags: security
+- include: ntp.yml
+  tags: ntp
+- include: google_auth.yml
+  tags: google_auth
 - include: postgres.yml

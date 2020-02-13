@@ -27,5 +27,6 @@
         mode=0644
 
 - name: Setup gitolite
-  command: su - git -c 'gitolite setup -pk {{ main_user_name }}.pub'
+  become_user: git
+  command: gitolite setup -pk {{ main_user_name }}.pub
            chdir=/home/git

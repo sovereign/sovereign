@@ -5,42 +5,31 @@
 - name: Install roundcube dependencies
   apt: pkg={{ item }} state=present
   with_items:
-    - php5
-    - php5-sqlite
-    - php5-mcrypt
-    - php5-gd
-    - php5-pspell
-    - php5-intl
-    - php5-curl
+    - php7.0
+    - php7.0-sqlite3
+    - php7.0-mcrypt
+    - php7.0-gd
+    - php7.0-pspell
+    - php7.0-intl
+    - php7.0-curl
+    - php7.0-mbstring
     - aspell
     - aspell-en
+    - composer
   tags:
     - dependencies
 
 - name: Clone roundcube
+  become_user: www-data
   git: repo=https://github.com/roundcube/roundcubemail.git
        dest=/var/www/roundcube
        version={{ webmail_version }}
        update=no
        accept_hostkey=yes
 
-- name: Get Composer installer
-  get_url: url=https://getcomposer.org/installer
-           dest=/tmp/composer-installer
-
-- name: Copy composer configuration
-  copy: src=var_www_roundcube_composer.json dest=/var/www/roundcube/composer.json
-    owner=root
-    group=www-data
-    mode=0644
-
-- name: Install Composer
-  command: php /tmp/composer-installer
-           chdir=/root
-           creates=/root/composer.phar
-
 - name: Initialize composer
-  command: php /root/composer.phar install --no-dev
+  become_user: www-data
+  command: composer install --no-dev
            chdir=/var/www/roundcube
            creates=/var/www/roundcube/vendor/autoload.php
 
@@ -49,6 +38,11 @@
 
 - name: Install Roundcube configuration
   template: src=var_www_roundcube_config_config.inc.j2 dest=/var/www/roundcube/config/config.inc.php
+
+- name: Install javascript dependencies
+  command: ./install-jsdeps.sh
+           chdir=/var/www/roundcube/bin
+           creates=/var/www/roundcube/program/js/jquery.min.js
 
 - name: Create db directory
   file: path=/decrypted/roundcube group=www-data mode=0775 state=directory
@@ -65,28 +59,28 @@
 - name: Install sieve plugin configuration
   copy: src=var_www_roundcube_plugins_managesieve_config.inc.php
     dest=/var/www/roundcube/plugins/managesieve/config.inc.php
-    owner=root
+    owner=www-data
     group=www-data
     mode=0644
 
 - name: Install global sieve
   copy: src=var_www_roundcube_config_global.sieve
     dest=/var/www/roundcube/config/global.sieve
-    owner=root
+    owner=www-data
     group=www-data
     mode=0644
 
 - name: Install carddav plugin configuration
   copy: src=var_www_roundcube_plugins_carddav_config.inc.php
     dest=/var/www/roundcube/plugins/carddav/config.inc.php
-    owner=root
+    owner=www-data
     group=www-data
     mode=0644
 
 - name: Install Google 2-factor authentication plugin configuration
   copy: src=var_www_roundcube_plugins_twofactor_gauthenticator_config.inc.php
     dest=/var/www/roundcube/plugins/twofactor_gauthenticator/config.inc.php
-    owner=root
+    owner=www-data
     group=www-data
     mode=0644
 

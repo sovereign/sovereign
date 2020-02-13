@@ -1,11 +1,25 @@
+- name: Install selfoss dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php7.0
+    - php7.0-pgsql
+    - php7.0-gd
+    - composer
+  tags:
+    - dependencies
+
 - name: Clone Selfoss
+  become_user: www-data
   git: repo=https://github.com/SSilence/selfoss.git
        dest=/var/www/selfoss
        accept_hostkey=yes
        version={{ selfoss_version }}
 
-- name: Set selfoss ownership
-  action: file owner=root group=www-data path=/var/www/selfoss recurse=yes state=directory
+- name: Run composer to install dependencies
+  become_user: www-data
+  command: composer install
+           chdir=/var/www/selfoss
+           creates=/var/www/selfoss/vendor/autoload.php
 
 # only data/cache, data/favicons, data/logs, data/thumbnails, data/sqlite public/ should be writeable by httpd
 - name: Set selfoss permission
@@ -17,15 +31,6 @@
     - data/thumbnails
     - data/sqlite
     - public
-
-- name: Install selfoss dependencies
-  apt: pkg={{ item }} state=present
-  with_items:
-    - php5
-    - php5-pgsql
-    - php5-gd
-  tags:
-    - dependencies
 
 - name: Create database user for selfoss
   postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ selfoss_db_username }} password="{{ selfoss_db_password }}" state=present
