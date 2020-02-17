@@ -2,12 +2,15 @@
 # Defines tasks applicable for postgreSQL
 
 - name: Install Postgres
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - postgresql
     - python-psycopg2
   tags:
     - dependencies
+
+- name: Ensure PostgreSQL is running
+  service: name=postgresql state=started
 
 - name: Set password for PostgreSQL admin user
   become: true

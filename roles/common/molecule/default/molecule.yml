@@ -1,0 +1,41 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+  # enabled: false
+platforms:
+  - name: common-xenial
+    image: ubuntu:xenial
+    groups:
+      - testing
+    # Additional privileges required for systemd-based platforms
+    command: /sbin/init
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: common-jessie
+    image: debian:jessie
+    groups:
+      - testing
+    # Additional privileges required for systemd-based platforms
+    command: /sbin/init
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  inventory:
+    links:
+      group_vars: ../../../../group_vars
+
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

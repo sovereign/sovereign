@@ -211,3 +211,38 @@ IRC
 ===
 
 Ask questions and provide feedback in `#sovereign` on [Freenode](http://freenode.net).
+
+## Automated testing
+
+Prerequisites:
+- [Docker Engine](https://docs.docker.com/install/) v18+
+
+Automated tests are run via CI and can be helpful to develop and unit test
+Ansible roles. We're using
+[molecule](https://molecule.readthedocs.io/en/stable/index.html), which allows
+us to run playbooks against docker containers and make assertions against them.
+molecule will setup the docker containers based on platforms we support, lint
+the playbooks, converge (run) the playbooks, verify the image using tests, and
+clean up the containers.
+
+Each test is per role. Change directory to the role and run the tests.
+
+    $ cd roles/common
+    $ molecule test
+
+When developing a playbook, it's helpful to run the playbook, without linting or
+tests.
+
+    $ molecule converge
+
+You can include ansible-playbook arguments for debugging.
+
+    $ molecule converge -- --start-at-task="Create main user account" -e custom_var=test
+
+If you need to inspect the container, you can login to it.
+
+    $ molecule login --host common-jessie
+
+Once you get the container configured correctly, verify it with pytest.
+
+    $ molecule verify

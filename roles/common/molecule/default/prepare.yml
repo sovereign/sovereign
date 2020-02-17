@@ -1,0 +1,11 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: install os packages assumed to be pre-baked
+      apt: name={{ packages }} state=present
+      vars:
+        packages:
+          - iproute2
+          - locales
+          - openssh-server

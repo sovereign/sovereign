@@ -1,8 +1,10 @@
+---
 common_timezone: 'Etc/UTC'
 admin_email: "{{ main_user_name }}@{{ domain }}"
 main_user_shell: "/bin/bash"
 friendly_networks:
   - ""
+
 
 # encfs
 secret_root: '{{ inventory_dir | realpath }}'
@@ -10,6 +12,8 @@ secret_name: 'secret'
 secret: '{{ secret_root + "/" + secret_name }}'
 encfs_password: "{{ lookup('password', secret + '/' + 'encfs_password', length=32) }}"
 
+# fail2ban
+common_fail2ban_version: v0.8.x
 
 # let's encrypt
 letsencrypt_server: "https://acme-v02.api.letsencrypt.org/directory"

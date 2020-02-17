@@ -14,11 +14,15 @@
 
 - name: Set firewall rule for DNS
   ufw: rule=allow port=domain
-  tags: ufw
+  tags:
+    - molecule-notest
+    - ufw
 
 - name: Set firewall rule for mosh
   ufw: rule=allow port=60000:61000 proto=udp
-  tags: ufw
+  tags:
+    - molecule-notest
+    - ufw
 
 - name: Set firewall rules for web traffic and SSH
   ufw: rule=allow port={{ item }} proto=tcp
@@ -26,11 +30,15 @@
     - http
     - https
     - ssh
-  tags: ufw
+  tags:
+    - molecule-notest
+    - ufw
 
 - name: Enable UFW
   ufw: state=enabled
-  tags: ufw
+  tags:
+    - molecule-notest
+    - ufw
 
 - name: Check config of ufw
   command: cat /etc/ufw/ufw.conf

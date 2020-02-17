@@ -1,6 +1,9 @@
 ---
+- name: Include distro/release specific variables
+  include_vars: "{{ ansible_distribution_release }}.yml"
+
 - name: Update apt cache
-  apt: update_cache=yes
+  apt: update_cache=yes cache_valid_time={{ 24 * 60 * 60 }}
   tags:
     - dependencies
 
@@ -10,7 +13,7 @@
     - dependencies
 
 - name: Install necessities and nice-to-haves
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - apache2
     - apt-transport-https
@@ -45,10 +48,14 @@
 - name: timezone - Set localtime to UTC
   file: src=/usr/share/zoneinfo/Etc/UTC dest=/etc/localtime
   when: common_timezone_config.changed
+  tags:
+    - skip_ansible_lint
 
 - name: timezone - reconfigure tzdata
   command: dpkg-reconfigure --frontend noninteractive tzdata
   when: common_timezone_config.changed
+  tags:
+    - skip_ansible_lint
 
 - name: Apticron email configuration
   template: src=apticron.conf.j2 dest=/etc/apticron/apticron.conf

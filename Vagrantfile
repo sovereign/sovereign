@@ -13,13 +13,13 @@ Vagrant.configure('2') do |config|
   config.vm.provision :ansible do |ansible|
     ansible.playbook = 'site.yml'
     ansible.host_key_checking = false
-    ansible.extra_vars = { ansible_ssh_user: 'vagrant', testing: true }
+    ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+    ansible.skip_tags = ['skip_vagrant']
     ansible.groups = {
       "testing" => ["jessie", "xenial"]
     }
 
     # ansible.tags = ['blog']
-    # ansible.skip_tags = ['openvpn']
     # ansible.verbose = 'vvvv'
   end
 
