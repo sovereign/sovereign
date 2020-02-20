@@ -2,7 +2,7 @@
   stat: path=/var/www/roundcube/config.inc.php
   register: roundcube_config
 
-- name: Install roundcube dependencies
+- name: Install roundcube dependencies (PHP5 variant)
   apt: pkg={{ item }} state=present
   with_items:
     - php5
@@ -14,6 +14,25 @@
     - php5-curl
     - aspell
     - aspell-en
+  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "bionic" and ansible_distribution_release != "stretch")
+  tags:
+    - dependencies
+
+- name: Install roundcube dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php
+    - php-sqlite3
+    - php-mbstring
+    - php-mcrypt
+    - php-gd
+    - php-pspell
+    - php-intl
+    - php-curl
+    - php-xml
+    - aspell
+    - aspell-en
+  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
   tags:
     - dependencies
 

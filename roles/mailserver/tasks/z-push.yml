@@ -1,10 +1,22 @@
-- name: Install required packages for z-push
+- name: Install required packages for z-push (PHP5 variant)
   apt: pkg={{ item }} state=installed
   with_items:
     - php-soap
     - php5
     - php5-cli
     - php5-imap
+  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "bionic" and ansible_distribution_release != "stretch")
+  tags:
+    - dependencies
+
+- name: Install required packages for z-push
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - php-soap
+    - php
+    - php-cli
+    - php-imap
+  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
   tags:
     - dependencies
 

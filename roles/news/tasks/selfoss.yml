@@ -18,12 +18,23 @@
     - data/sqlite
     - public
 
-- name: Install selfoss dependencies
+- name: Install selfoss dependencies (PHP5 variant)
   apt: pkg={{ item }} state=present
   with_items:
     - php5
     - php5-pgsql
     - php5-gd
+  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "bionic" and ansible_distribution_release != "stretch")
+  tags:
+    - dependencies
+
+- name: Install selfoss dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php
+    - php-pgsql
+    - php-gd
+  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
   tags:
     - dependencies
 

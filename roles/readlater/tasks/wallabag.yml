@@ -12,7 +12,7 @@
   file: name=/var/www/wallabag/install state=absent
   when: wallabag_config.stat.exists == True
 
-- name: Install wallabag dependencies
+- name: Install wallabag dependencies (PHP5 variant)
   apt: pkg={{ item }} state=present
   with_items:
     - php5
@@ -20,6 +20,19 @@
     - php5-mcrypt
     - php5-pgsql
     - php5-tidy
+  when: (ansible_distribution_release != "xenial" and ansible_distribution_release != "bionic" and ansible_distribution_release != "stretch")
+  tags:
+    - dependencies
+
+- name: Install wallabag dependencies
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php
+    - php-curl
+    - php-mcrypt
+    - php-pgsql
+    - php-tidy
+  when: (ansible_distribution_release == "xenial" or ansible_distribution_release == "bionic" or ansible_distribution_release == "stretch")
   tags:
     - dependencies
 
