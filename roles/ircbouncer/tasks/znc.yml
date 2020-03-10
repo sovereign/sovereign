@@ -1,7 +1,7 @@
 # more or less as per http://wiki.znc.in/Running_ZNC_as_a_system_daemon
 
 - name: Install znc
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - znc
   tags:

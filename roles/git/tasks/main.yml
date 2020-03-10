@@ -1,4 +1,4 @@
-- include: gitolite.yml
+- import_tasks: gitolite.yml
   tags: gitolite
-- include: cgit.yml
+- import_tasks: cgit.yml
   tags: cgit

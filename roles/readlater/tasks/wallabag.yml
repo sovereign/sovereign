@@ -10,7 +10,7 @@
 
 - name: Remove wallabag 'install' directory if its configuration file is there
   file: name=/var/www/wallabag/install state=absent
-  when: wallabag_config.stat.exists == True
+  when: wallabag_config.stat.exists
 
 - name: Install wallabag dependencies
   apt: pkg={{ item }} state=present
@@ -78,7 +78,9 @@
             group=www-data
 
 - name: Rename existing Apache wallabag virtualhost
-  command: mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf removes=/etc/apache2/sites-available/wallabag
+  command: >-
+    mv /etc/apache2/sites-available/wallabag /etc/apache2/sites-available/wallabag.conf
+    removes=/etc/apache2/sites-available/wallabag
 
 - name: Remove old sites-enabled/wallabag symlink (new one will be created by a2ensite)
   file: path=/etc/apache2/sites-enabled/wallabag state=absent

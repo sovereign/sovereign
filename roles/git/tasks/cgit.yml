@@ -1,6 +1,6 @@
 
 - name: Install cgit dependencies
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - groff
     - libssl-dev
@@ -38,7 +38,9 @@
             owner=root
 
 - name: Rename existing Apache cgit virtualhost
-  command: mv /etc/apache2/sites-available/cgit /etc/apache2/sites-available/cgit.conf removes=/etc/apache2/sites-available/cgit
+  command: >-
+    mv /etc/apache2/sites-available/cgit /etc/apache2/sites-available/cgit.conf
+    removes=/etc/apache2/sites-available/cgit
 
 - name: Remove old sites-enabled/cgit symlink (new one will be created by a2ensite)
   file: path=/etc/apache2/sites-enabled/cgit state=absent

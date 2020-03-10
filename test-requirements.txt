@@ -1,1 +1,1 @@
-ansible-lint>=2.3.9,<3
+ansible-lint~=4.0.0

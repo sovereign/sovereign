@@ -1,2 +1,2 @@
-- include: roundcube.yml
+- import_tasks: roundcube.yml
   tags: roundcube

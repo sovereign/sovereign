@@ -3,7 +3,7 @@
 # ref: https://library.linode.com/networking/openvpn/debian-6-squeeze
 
 - name: Install OpenVPN and dependencies
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - dnsmasq
     - openvpn
@@ -20,7 +20,7 @@
     - server
 
 - name: Create directories for clients
-  file: path={{ openvpn_path}}/{{ item }} state=directory
+  file: path={{ openvpn_path }}/{{ item }} state=directory
   with_items: "{{ openvpn_clients }}"
 
 - name: Generate RSA keys for the clients
@@ -38,8 +38,11 @@
         mode=0600
 
 - name: Generate CA certificate
-  command: openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt -days {{ openvpn_days_valid }} -subj "{{ openssl_request_subject }}/CN=sovereign-ca-certificate"
-           creates={{ openvpn_ca }}.crt
+  command: >-
+    openssl req -nodes -batch -new -x509 -key {{ openvpn_ca }}.key -out {{ openvpn_ca }}.crt
+    -days {{ openvpn_days_valid }}
+    -subj "{{ openssl_request_subject }}/CN=sovereign-ca-certificate"
+    creates={{ openvpn_ca }}.crt
 
 - name: Generate the OpenSSL configuration that will be used for the Server certificate's req and ca commands
   # Properly sets the attributes that are described here:
@@ -60,9 +63,11 @@
         dest={{ openvpn_path }}/serial
 
 - name: Generate CSR for the Server
-  command: openssl req -batch -extensions server -new -key server.key -out server.csr -config {{ openvpn_path }}/openssl-server-certificate.cnf
-           chdir={{ openvpn_path }}
-           creates=server.csr
+  command: >-
+    openssl req -batch -extensions server -new -key server.key -out server.csr
+    -config {{ openvpn_path }}/openssl-server-certificate.cnf
+    chdir={{ openvpn_path }}
+    creates=server.csr
 
 - name: Generate certificate for the Server
   command: openssl ca -batch -extensions server -in server.csr -out server.crt -config openssl-server-certificate.cnf
@@ -76,9 +81,11 @@
   with_items: "{{ openvpn_clients }}"
 
 - name: Generate certificates for the clients
-  command: openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key -CAcreateserial -req -days {{ openvpn_days_valid }} -in client.csr -out client.crt
-           chdir={{ openvpn_path }}/{{ item }}
-           creates=client.crt
+  command: >-
+    openssl x509 -CA {{ openvpn_ca }}.crt -CAkey {{ openvpn_ca }}.key
+    -CAcreateserial -req -days {{ openvpn_days_valid }} -in client.csr -out client.crt
+    chdir={{ openvpn_path }}/{{ item }}
+    creates=client.crt
   with_items: "{{ openvpn_clients }}"
 
 - name: Generate HMAC firewall key
@@ -89,23 +96,31 @@
   command: cat ca.crt
            chdir={{ openvpn_path }}
   register: openvpn_ca_contents
+  tags:
+    - skip_ansible_lint
 
 - name: Register client certificate contents
   command: cat client.crt
            chdir={{ openvpn_path }}/{{ item }}
   with_items: "{{ openvpn_clients }}"
   register: openvpn_client_certificates
+  tags:
+    - skip_ansible_lint
 
 - name: Register client key contents
   command: cat client.key
            chdir={{ openvpn_path }}/{{ item }}
   with_items: "{{ openvpn_clients }}"
   register: openvpn_client_keys
+  tags:
+    - skip_ansible_lint
 
 - name: Register HMAC firewall contents
   command: cat ta.key
            chdir={{ openvpn_path }}
   register: openvpn_hmac_firewall_contents
+  tags:
+    - skip_ansible_lint
 
 - name: Create the client configs
   template: src=client.cnf.j2
@@ -173,5 +188,10 @@
     - "{{ openvpn_clients }}"
     - ["client.crt", "client.key", "ca.crt", "ta.key", "{{ openvpn_server }}.ovpn"]
 
-- pause: seconds=5
-         prompt="You are ready to set up your OpenVPN clients. The files that you need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is enabled and that you provide the ta.key file for the TLS-Auth option with a direction of '1'. Press any key to continue..."
+- name: Pause for OpenVPN instructions...
+  pause: >-
+     seconds=5
+     prompt="You are ready to set up your OpenVPN clients. The files that you
+     need are in /tmp/sovereign-openvpn-files. Make sure LZO compression is
+     enabled and that you provide the ta.key file for the TLS-Auth option with
+     a direction of '1'. Press any key to continue..."

@@ -23,9 +23,13 @@
               insertbefore=BOF
               state=present
 
-- name: Generate a timed-based, no reuse, rate-limited (3 logins per 30 seconds) with one concurrently valid code for default user
-  command: /usr/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=ANSI -r 3 -R 30 -w 1 --secret=/home/{{ main_user_name }}/.google_authenticator
-           creates=/home/{{ main_user_name }}/.google_authenticator
+# Generate a timed-based, no reuse, rate-limited (3 logins per 30 seconds)
+# with one concurrently valid code for default user
+- name: Generate a time-based secret code
+  command: >-
+    /usr/bin/google-authenticator -t -f -d --label="{{ main_user_name }}@{{ domain }}" --qr-mode=ANSI -r 3 -R 30 -w 1
+    --secret=/home/{{ main_user_name }}/.google_authenticator
+    creates=/home/{{ main_user_name }}/.google_authenticator
   become: yes
   become_user: "{{ main_user_name }}"
   when: ansible_ssh_user != "vagrant"
@@ -35,6 +39,7 @@
          dest=/tmp/sovereign-google-auth-files
   when: ansible_ssh_user != "vagrant"
 
-- pause: seconds=5
-         prompt="Your Google Authentication keys are in /tmp/sovereign-google-auth-files. Press any key to continue..."
+- name: Pause for Google Authenticator instructions
+  pause: seconds=5
+       prompt="Your Google Authentication keys are in /tmp/sovereign-google-auth-files. Press any key to continue..."
   when: ansible_ssh_user != "vagrant"

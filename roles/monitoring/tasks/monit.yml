@@ -6,7 +6,7 @@
   notify: restart apache
 
 - name: Install monit
-  apt: pkg=monit state=installed
+  apt: pkg=monit state=present
   tags:
     - dependencies
 
@@ -21,7 +21,7 @@
 - name: Copy ZNC monit service config files into place
   copy: src=etc_monit_conf.d_znc dest=/etc/monit/conf.d/znc
   notify: restart monit
-  when: znc_config_file.stat.exists == True
+  when: znc_config_file.stat.exists
 
 - name: Copy monit service config files into place
   copy: src=etc_monit_conf.d_{{ item }} dest=/etc/monit/conf.d/{{ item }}
