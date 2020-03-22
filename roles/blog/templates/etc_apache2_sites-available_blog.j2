@@ -12,8 +12,10 @@
     SSLEngine On
 
     DocumentRoot            "/var/www/{{ domain }}"
-    DirectoryIndex          index.html
-    Options                 -Indexes
+    <Location />
+        DirectoryIndex          index.html
+        Options                 -Indexes
+    </Location>
 
     HostnameLookups         Off
 </VirtualHost>
