@@ -87,7 +87,7 @@ allow_registration = false;
 -- to use SSL/TLS, you may comment or remove this
 ssl = {
 	key = "/etc/letsencrypt/live/{{ domain }}/privkey.pem";
-	certificate = "/etc/letsencrypt/live/{{ domain }}/cert.pem";
+	certificate = "/etc/letsencrypt/live/{{ domain }}/fullchain.pem";
 }
 
 -- Force clients to use encrypted connections? This option will

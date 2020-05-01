@@ -1,5 +1,5 @@
 - name: Install Postfix and related packages
-  apt: pkg={{ item }} state=installed
+  apt: pkg={{ item }} state=present
   with_items:
     - libsasl2-modules
     - postfix
@@ -12,11 +12,24 @@
     - dependencies
 
 - name: Create database user for mail server
-  postgresql_user: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_username }} password="{{ mail_db_password }}" encrypted=yes state=present
+  postgresql_user: >-
+    login_host=localhost
+    login_user={{ db_admin_username }}
+    login_password="{{ db_admin_password }}"
+    name={{ mail_db_username }}
+    password="{{ mail_db_password }}"
+    encrypted=yes
+    state=present
   notify: import sql postfix
 
 - name: Create database for mail server
-  postgresql_db: login_host=localhost login_user={{ db_admin_username }} login_password="{{ db_admin_password }}" name={{ mail_db_database }} state=present owner={{ mail_db_username }}
+  postgresql_db: >-
+    login_host=localhost
+    login_user={{ db_admin_username }}
+    login_password="{{ db_admin_password }}"
+    name={{ mail_db_database }}
+    state=present
+    owner={{ mail_db_username }}
   notify: import sql postfix
 
 - name: Copy import.sql
@@ -28,7 +41,11 @@
   when: mail_header_privacy == 1
 
 - name: Copy smtp_header_checks.pcre
-  copy: src=etc_postfix_maps_smtp_header_checks.pcre dest=/etc/postfix/maps/smtp_header_checks.pcre owner=root group=root
+  copy: >-
+    src=etc_postfix_maps_smtp_header_checks.pcre
+    dest=/etc/postfix/maps/smtp_header_checks.pcre
+    owner=root
+    group=root
   when: mail_header_privacy == 1
 
 - name: Copy main.cf

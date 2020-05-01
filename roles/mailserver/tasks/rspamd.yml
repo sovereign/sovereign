@@ -26,7 +26,7 @@
     - dependencies
 
 - name: Install Rspamd and Redis
-  apt: pkg={{ item }} state=installed update_cache=yes
+  apt: pkg={{ item }} state=present update_cache=yes
   with_items:
     - rspamd
     - redis-server
@@ -42,7 +42,12 @@
   notify: restart rspamd
 
 - name: Copy DKIM configuration into place
-  copy: src=etc_rspamd_override.d_dkim_signing.conf dest=/etc/rspamd/override.d/dkim_signing.conf owner=root group=root mode="0644"
+  copy: >-
+    src=etc_rspamd_override.d_dkim_signing.conf
+    dest=/etc/rspamd/override.d/dkim_signing.conf
+    owner=root
+    group=root
+    mode="0644"
   notify: restart rspamd
 
 - name: Create dkim key directory

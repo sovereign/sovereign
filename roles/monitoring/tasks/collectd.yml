@@ -1,5 +1,5 @@
 - name: Install collectd
-  apt: pkg=collectd state=installed
+  apt: pkg=collectd state=present
   tags:
       - dependencies
 

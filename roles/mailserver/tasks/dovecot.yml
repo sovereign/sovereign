@@ -1,5 +1,5 @@
 - name: Install Dovecot and related packages
-  apt: pkg={{ item }} update_cache=yes state=installed
+  apt: pkg={{ item }} update_cache=yes state=present
   with_items:
     - dovecot-core
     - dovecot-imapd
@@ -38,7 +38,11 @@
   notify: restart dovecot
 
 - name: Configure sieve script moving spam into Junk folder
-  copy: src=etc_dovecot_sieve_before.d_no-spam.sieve dest=/etc/dovecot/sieve/before.d/no-spam.sieve owner=vmail group=dovecot
+  copy: >-
+    src=etc_dovecot_sieve_before.d_no-spam.sieve
+    dest=/etc/dovecot/sieve/before.d/no-spam.sieve
+    owner=vmail
+    group=dovecot
   notify: restart dovecot
 
 - name: Copy additional Dovecot configuration files in place

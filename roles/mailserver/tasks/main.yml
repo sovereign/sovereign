@@ -2,18 +2,18 @@
 - include_vars: "{{ ansible_distribution | lower }}_{{ ansible_distribution_release }}.yml"
   tags: always
 
-- include: postfix.yml
+- import_tasks: postfix.yml
   tags: postfix
-- include: dovecot.yml
+- import_tasks: dovecot.yml
   tags: dovecot
-- include: rspamd.yml
+- import_tasks: rspamd.yml
   tags: rspamd
-- include: solr.yml
+- import_tasks: solr.yml
   tags: solr
-- include: checkrbl.yml
+- import_tasks: checkrbl.yml
   tags: checkrbl
-- include: z-push.yml
+- import_tasks: z-push.yml
   tags: zpush
-- include: autoconfig.yml
+- import_tasks: autoconfig.yml
   tags: autoconfig
 

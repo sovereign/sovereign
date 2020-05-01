@@ -2,4 +2,5 @@
 - include_vars: "{{ ansible_distribution | lower }}_{{ ansible_distribution_release }}.yml"
   tags: always
 
-- include: roundcube.yml tags=roundcube
+- import_tasks: roundcube.yml
+  tags: roundcube

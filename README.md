@@ -79,6 +79,8 @@ Create a new machine key for your server:
 
     tarsnap-keygen --keyfile roles/tarsnap/files/decrypted_tarsnap.key --user me@example.com --machine example.com
 
+Download a copy of this key and keep it somewhere safe!  There's no point having backups if you can't retrieve them when needed.
+
 ### 3. Prep the server
 
 For goodness sake, change the root password:
