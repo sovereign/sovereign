@@ -10,7 +10,7 @@ selfoss_version: 2.16
 
 selfoss_username: "{{ main_user_name }}"
 # this is the sha512 hash of the desired password
-selfoss_password_hash: "{{ lookup('password', secret + '/' + 'selfoss_password_hash', length=32, crypt='sha512')|hash('sha512') }}"
+selfoss_password_hash: "{{ lookup('password', secret + '/' + 'selfoss_password_hash', length=32, encrypt='sha512')|hash('sha512') }}"
 
 # must match values in roles/mailserver
 db_admin_username: 'postgres'
