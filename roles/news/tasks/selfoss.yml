@@ -18,6 +18,12 @@
     - data/sqlite
     - public
 
+# By default the www-data group seems to only have read permissions to log file
+- name: Ensure www-data user can write to log file
+  file:
+    path: /var/www/selfoss/data/logs/default.log
+    mode: g+w
+
 - name: Install selfoss dependencies
   apt: pkg={{ selfoss_package_dependencies }} state=present
   tags:
