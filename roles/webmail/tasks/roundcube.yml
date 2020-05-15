@@ -3,6 +3,7 @@
   register: roundcube_config
 
 - name: Install roundcube dependencies
+  when: ansible_facts['distribution_release'] != 'focal'
   apt: pkg={{ item }} state=present
   with_items:
     - php5
@@ -14,6 +15,39 @@
     - php5-curl
     - aspell
     - aspell-en
+    - php-mbstring
+  tags:
+    - dependencies
+
+- name: Install roundcube dependencies
+  when: ansible_facts['distribution_release'] == 'focal'
+  apt: pkg={{ item }} state=present
+  with_items:
+    - php
+    - php-sqlite3
+    - php-gd
+    - php-pspell
+    - php-intl
+    - php-curl
+    - aspell
+    - aspell-en
+    - php-mbstring
+  tags:
+    - dependencies
+
+- name: Install mbcrypt pear
+  when: ansible_facts['distribution_release'] == 'focal'
+  pear:
+    name: pecl/mcrypt
+    state: present
+  tags:
+    - dependencies
+
+- name: Register mcrypt module
+  when: ansible_facts['distribution_release'] == 'focal'
+  command:
+    cmd: 'echo extension=mcrypt.so > /etc/php/7.4/mods-available/mcrypt.ini; phpenmod mcrypt'
+    creates: /etc/php/7.4/apache2/conf.d/20-mcrypt.ini
   tags:
     - dependencies
 

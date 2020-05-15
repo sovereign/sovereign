@@ -19,8 +19,29 @@
     owner=root
     group=root
 
+- name: Install letsencrypt python dependencies
+  when: ansible_facts['distribution_release'] == 'focal'
+  apt: pkg={{ item }} state=present
+  with_items:
+    - python-is-python3
+    - python3-venv
+    - python3-virtualenv
+    - python3-dev
+    - libssl-dev
+    - gcc
+    - openssl
+    - libffi-dev
+    - ca-certificates
+
 - name: Install LetsEncrypt package dependencies
+  when: ansible_facts['distribution_release'] != 'focal'
   command: /root/letsencrypt/letsencrypt-auto --help
+  register: le_deps_result
+  changed_when: "'Bootstrapping dependencies' in le_deps_result.stdout"
+
+- name: Install LetsEncrypt package dependencies
+  when: ansible_facts['distribution_release'] == 'focal'
+  command: /root/letsencrypt/letsencrypt-auto --help --no-bootstrap
   register: le_deps_result
   changed_when: "'Bootstrapping dependencies' in le_deps_result.stdout"
 

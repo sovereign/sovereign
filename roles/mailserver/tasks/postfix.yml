@@ -1,4 +1,5 @@
 - name: Install Postfix and related packages
+  when: ansible_facts['distribution_release'] != 'focal'
   apt: pkg={{ item }} state=present
   with_items:
     - libsasl2-modules
@@ -7,6 +8,20 @@
     - postfix-pgsql
     - postgrey
     - python-psycopg2
+    - sasl2-bin
+  tags:
+    - dependencies
+ 
+- name: Install Postfix and related packages
+  when: ansible_facts['distribution_release'] == 'focal'
+  apt: pkg={{ item }} state=present
+  with_items:
+    - libsasl2-modules
+    - postfix
+    - postfix-pcre
+    - postfix-pgsql
+    - postgrey
+    - python3-psycopg2
     - sasl2-bin
   tags:
     - dependencies

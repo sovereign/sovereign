@@ -7,7 +7,9 @@
     - dependencies
 
 - name: Install dependencies for Tarsnap
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   apt: pkg={{ item }} state=present
   with_items:
     - e2fslibs-dev
@@ -17,59 +19,102 @@
     - dependencies
 
 - name: Download the current tarsnap code signing key
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   get_url:
     url=https://www.tarsnap.com/tarsnap-signing-key.asc
     dest=/root/tarsnap-signing-key.asc
 
 - name: Add the tarsnap code signing key to your list of keys
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   command:
     gpg --import tarsnap-signing-key.asc
     chdir=/root/
 
 - name: Download tarsnap SHA file
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   get_url:
     url="https://www.tarsnap.com/download/tarsnap-sigs-{{ tarsnap_version }}.asc"
     dest="/root/tarsnap-sigs-{{ tarsnap_version }}.asc"
 
 - name: Make the command that gets the current SHA
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   template:
     src=getSha.sh
     dest=/root/getSha.sh
     mode=0755
 
 - name: Get the SHA256sum for this tarsnap release
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   command:
     ./getSha.sh
     chdir=/root
   register: tarsnap_sha
 
 - name: Download Tarsnap source
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   get_url:
     url="https://www.tarsnap.com/download/tarsnap-autoconf-{{ tarsnap_version }}.tgz"
     dest="/root/tarsnap-autoconf-{{ tarsnap_version }}.tgz"
     sha256sum={{ tarsnap_sha.stdout_lines[0] }}
 
 - name: Decompress Tarsnap source
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   unarchive: src=/root/tarsnap-autoconf-{{ tarsnap_version }}.tgz
              dest=/root copy=no
              creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/COPYING
 
 - name: Configure Tarsnap for local build
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   command: >-
     ./configure chdir=/root/tarsnap-autoconf-{{ tarsnap_version }}
     creates=/root/tarsnap-autoconf-{{ tarsnap_version }}/Makefile
 
 - name: Build and install Tarsnap
-  when: tarsnap_installed is failed
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] != 'focal'
   command: make all install clean chdir=/root/tarsnap-autoconf-{{ tarsnap_version }} creates=/usr/local/bin/tarsnap
+
+- name: Install Tarsnap repo key
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] == 'focal'
+  apt_key:
+    url: https://pkg.tarsnap.com/tarsnap-deb-packaging-key.asc
+    id: FC72A10BF6B692AA
+    state: present
+
+- name: Install Tarsnap repo
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] == 'focal'
+  apt_repository:
+    repo: deb http://pkg.tarsnap.com/deb/focal ./
+    state: present
+
+- name: Install Tarsnap repo
+  when: 
+    - tarsnap_installed is failed
+    - ansible_facts['distribution_release'] == 'focal'
+  apt: pkg={{ item }} state=present
+  with_items:
+    - tarsnap
 
 - name: Copy Tarsnap key file into place
   copy: src=decrypted_tarsnap.key dest=/decrypted/tarsnap.key owner=root group=root mode="0600" force=no
