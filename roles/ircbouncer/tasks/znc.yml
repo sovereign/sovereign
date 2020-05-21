@@ -45,18 +45,11 @@
   file: path=/usr/lib/znc/znc.pem group=znc owner=znc mode=0640
   notify: restart znc
 
-- name: Check for existing config file
-  command: cat /usr/lib/znc/configs/znc.conf
-  register: znc_config
-  ignore_errors: True
-  changed_when: False  # never report as "changed"
-
 - name: Create znc config directory
   file: state=directory path=/usr/lib/znc/configs group=znc owner=znc
 
 - name: Copy znc configuration file into place
   template: src=usr_lib_znc_configs_znc.conf.j2 dest=/usr/lib/znc/configs/znc.conf owner=znc group=znc
-  when: znc_config.rc != 0
   notify: restart znc
 
 - name: Set firewall rule for znc
