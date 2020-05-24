@@ -1,0 +1,24 @@
+- name: Install coturn
+  apt:
+    pkg: ['coturn']
+    update_cache: yes
+  tags:
+    - dependencies
+
+- name: Configure coturn
+  template:
+    src: etc_turnserver.conf.j2
+    dest: /etc/turnserver.conf
+    group: root
+    owner: root
+
+- name: Set firewall rules for coturn
+  ufw:
+    rule: allow
+    port: "{{ coturn_port }}"
+    proto: udp
+  tags: ufw
+
+- name: Restart coturn service
+  command: /bin/true
+  notify: restart coturn

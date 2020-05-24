@@ -1,3 +1,7 @@
 prosody_admin: "{{ admin_email }}"
 prosody_virtual_domain: "{{ domain }}"
 prosody_accounts: []
+prosody_db_username: prosody
+prosody_db_database: prosody
+
+coturn_port: "5349"
