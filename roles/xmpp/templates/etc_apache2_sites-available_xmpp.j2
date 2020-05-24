@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+    ServerName {{ domain }}
+
+    Redirect permanent / https://{{ domain }}/
+</VirtualHost>
+
+
+<VirtualHost *:443>
+    ServerName {{ domain }}
+    SSLEngine On
+
+    # start of xmpp config
+    <Location /http-bind>
+      Order allow,deny
+      Allow from all
+    </Location>
+    RewriteEngine On
+    RewriteRule ^/http-bind$ http://localhost:5280/http-bind [P,L]
+
+    DocumentRoot            "/var/www/{{ domain }}"
+    DirectoryIndex          index.html
+    Options                 -Indexes
+
+    HostnameLookups         Off
+</VirtualHost>

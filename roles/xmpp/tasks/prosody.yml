@@ -100,3 +100,10 @@
     - "5269"  # xmpp s2s
     - "5000"  # proxy
   tags: ufw
+
+- name: Configure the Apache HTTP server for XMPP
+  template: src=etc_apache2_sites-available_xmpp.j2 dest=/etc/apache2/sites-available/xmpp.conf group=root owner=root
+
+- name: Enable XMPP site
+  command: a2ensite xmpp.conf creates=/etc/apache2/sites-enabled/xmpp.conf
+  notify: restart apache
