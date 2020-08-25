@@ -205,6 +205,10 @@ You will need to manually enter the password for any encrypted volumes on reboot
 
     encfs /encrypted /decrypted --public
 
+Or
+
+    encfs -o nonempty /encrypted /decrypted --public
+
 It is possible that some daemons may need to be restarted after you enter your password for the encrypted volume(s). Some services may stall out while looking for resources that will only be available once the `/decrypted` volume is available and visible to daemon user accounts.
 
 IRC
