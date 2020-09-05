@@ -44,6 +44,10 @@
 - name: Move ownCloud data to encrypted filesystem
   command: mv /var/www/owncloud/data /decrypted/owncloud-data creates=/decrypted/owncloud-data
 
+# The following is needed if the directory is recreated with an update
+- name: Remove ownCloud data directory if exists
+  file: path=/var/www/owncloud/data state=absent
+
 - name: Link ownCloud data directory to encrypted filesystem
   file: src=/decrypted/owncloud-data dest=/var/www/owncloud/data owner=www-data group=www-data state=link
 
