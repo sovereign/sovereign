@@ -1,4 +1,8 @@
 ---
+- import_tasks: php_sources.yml
+  tags: php_sources
+  when: debian_stretch
+
 - name: Update apt cache
   apt: update_cache=yes cache_valid_time={{ apt_cache_valid_time }}
   tags:
@@ -73,6 +77,9 @@
   tags: encfs
 - import_tasks: users.yml
   tags: users
+- import_tasks: php.yml
+  tags: php
+  when: debian_stretch
 - import_tasks: apache.yml
   tags: apache
 - import_tasks: ssl.yml

@@ -1,0 +1,13 @@
+---
+# PHP sources for a more up-to-date php version
+# Currently required for debian
+# PPA by debian developer: https://deb.sury.org/
+
+- name: Ensure php key from https://deb.sury.org exists
+  apt_key:
+    url: "https://packages.sury.org/php/apt.gpg"
+    state: present
+
+- name: Add PHP repository from https://packages.sury.org/php
+  apt_repository:
+    repo: 'deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main'

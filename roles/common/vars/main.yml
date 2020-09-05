@@ -1,0 +1,1 @@
+debian_stretch: (ansible_facts["distribution"].lower() == "debian" and ansible_facts["distribution_release"].lower() == "stretch")

@@ -15,3 +15,17 @@
 - name: Set ServerName for Apache
   command: a2enconf fqdn creates=/etc/apache2/conf-enabled/fqdn.conf
   notify: restart apache
+
+- name: Disable php 7.0 for debian stretch
+  command:
+    cmd: a2dismod php7.0
+    removes: /etc/apache2/conf-enabled/php7.0.conf
+  when: debian_stretch
+  notify: restart apache
+
+- name: Enable php 7.2 for debian stretch
+  command:
+    cmd: a2enmod php7.2
+    creates: /etc/apache2/conf-enabled/php7.2.conf
+  when: debian_stretch
+  notify: restart apache

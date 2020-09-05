@@ -6,6 +6,7 @@
   with_items:
     - postgresql
     - python-psycopg2
+    - php7.2-zip
   tags:
     - dependencies
 

@@ -1,0 +1,13 @@
+---
+# Install a more up-to-date php than ships with debian stretch
+# Needed for owncloud
+
+- name: Install php 7.2 and related packages
+  apt:
+    pkg:
+      - php7.2
+      - php7.2-cli
+      - php7.2-common
+      - php7.2-opcache
+    state:
+      present

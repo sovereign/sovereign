@@ -2,7 +2,7 @@
 dovecot_ssl_protocols: "!SSLv3"
 tomcat_package_name: tomcat8
 zpush_package_dependencies:
-  - php
-  - php-cli
-  - php-imap
-  - php-soap
+  - php7.2
+  - php7.2-cli
+  - php7.2-imap
+  - php7.2-soap

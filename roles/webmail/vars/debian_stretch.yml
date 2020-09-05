@@ -2,12 +2,11 @@
 roundcube_package_dependencies:
   - aspell
   - aspell-en
-  - php
-  - php-curl
-  - php-gd
-  - php-intl
-  - php-mbstring
-  - php-mcrypt
-  - php-pspell
-  - php-sqlite3
-  - php-xml
+  - php7.2
+  - php7.2-curl
+  - php7.2-gd
+  - php7.2-intl
+  - php7.2-mbstring
+  - php7.2-pspell
+  - php7.2-sqlite3
+  - php7.2-xml

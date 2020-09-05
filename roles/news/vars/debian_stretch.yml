@@ -1,5 +1,5 @@
 ---
 selfoss_package_dependencies:
-  - php
-  - php-gd
-  - php-pgsql
+  - php7.2
+  - php7.2-gd
+  - php7.2-pgsql
