@@ -59,13 +59,11 @@ modules_enabled = {
 		"turncredentials"; -- STUN/TURN
 
     -- Required for Conversations
-        "proxy65";
         "blocklist";
         "smacks";
         "carbons";
         "mam";
         "csi";
-        "http_upload";
         "cloud_notify";
 
 	-- Admin interfaces
@@ -129,6 +127,8 @@ log = {
 	"*syslog";
 }
 
+-- NB: Those addresses will be publicly visible.
+-- Make sure that these exist in group_vars/sovereign.
 contact_info = {
   abuse = { "mailto:abuse@{{ domain }}" };
   admin = { "mailto:webmaster@{{ domain }}", "xmpp:{{ main_user_name }}@{{ domain }}" };
@@ -148,7 +148,7 @@ pidfile = "/var/run/prosody/prosody.pid"
 
 VirtualHost "{{ prosody_virtual_domain }}"
 
-Component "muc.{{ domain }}" "muc"
+Component "channels.{{ domain }}" "muc"
     modules_enabled = {
       "muc_mam";
       "muc_log";
@@ -156,19 +156,16 @@ Component "muc.{{ domain }}" "muc"
     }
     muc_log_by_default = true;
     max_history_messages = 20;
-    name = "The {{ domain }} multi user chat";
+    name = "{{ prosody_muc_name }}";
     muc_room_default_change_subject = true;
     muc_room_default_history_length = 20;
-    muc_room_default_language = "en";
+    muc_room_default_language = "{{ prosody_muc_default_language }}";
     restrict_room_creation = "local";
 
 Component "proxy.{{ domain }}" "proxy65"
-    proxy65_address = "proxy.{{ domain }}";
+    proxy65_address = "{{ domain }}";
     proxy65_acl = { "{{ domain }}" };
 
 Component "upload.{{ domain }}" "http_upload"
-    http_upload_file_size_limit = 52428800 -- 50MB
-    http_max_content_size = 52428800 -- 50MB
-    modules_enabled = {
-        "http";
-    }
+    http_upload_file_size_limit = 52428800; -- 50MB
+    http_max_content_size = 52428800; -- 50MB

@@ -1,6 +1,6 @@
 #!/bin/bash
 d="$1"
-for i in www mail autoconfig read news cloud git; do
+for i in www mail autoconfig read news cloud git channels upload; do
   if (getent hosts $i.$1 > /dev/null); then
     d="$d,$i.$1";
   fi

@@ -137,8 +137,7 @@ Create `A` or `CNAME` records which point to your server's IP address:
 * `news.example.com` (for Selfoss)
 * `cloud.example.com` (for ownCloud)
 * `git.example.com` (for cgit)
-* `muc.example.com` (for XMPP Multi User Chat)
-* `proxy.example.com` (for XMPP SOCKS5)
+* `channels.example.com` (for XMPP Multi User Chat)
 * `upload.example.com` (for XMPP File Upload)
 
 Create `SRV` records for XMPP:

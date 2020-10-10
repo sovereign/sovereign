@@ -3,5 +3,7 @@ prosody_virtual_domain: "{{ domain }}"
 prosody_accounts: []
 prosody_db_username: prosody
 prosody_db_database: prosody
+prosody_muc_default_language: en
+prosody_muc_name: "The {{ domain }} multi user chat"
 
 coturn_port: "5349"
