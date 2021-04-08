@@ -1,0 +1,24 @@
+ServerSignature Off
+ServerTokens Prod
+
+<VirtualHost *:443>
+
+	ServerName dav.{{ domain }}
+	DocumentRoot /var/www/baikal/html
+
+	SSLEngine On
+
+	RewriteEngine On
+	RewriteRule /.well-known/carddav /dav.php [R,L]
+	RewriteRule /.well-known/caldav /dav.php [R,L]
+
+	<Directory "/var/www/baikal/html">
+		Options None
+		Options +FollowSymlinks
+		AllowOverride All
+		Options None
+		Options +FollowSymlinks
+		AllowOverride All
+	</Directory>
+
+</VirtualHost>
