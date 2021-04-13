@@ -3,9 +3,19 @@
 
 - name: Install Postgres
   apt: pkg={{ item }} state=present
+  when: ansible_facts['distribution_release'] != 'focal'
   with_items:
     - postgresql
     - python-psycopg2
+  tags:
+    - dependencies
+
+- name: Install Postgres
+  apt: pkg={{ item }} state=present
+  when: ansible_facts['distribution_release'] == 'focal'
+  with_items:
+    - postgresql
+    - python3-psycopg2
   tags:
     - dependencies
 

@@ -5,8 +5,6 @@
   apt: pkg={{ item }} state=present
   with_items:
     - libpam-google-authenticator
-    - libpam0g-dev
-    - libqrencode3
   tags:
     - dependencies
 
