@@ -24,6 +24,7 @@
     - molly-guard
     - mosh
     - python3-software-properties
+    - python3-pip
     - ruby
     - screen
     - sudo
