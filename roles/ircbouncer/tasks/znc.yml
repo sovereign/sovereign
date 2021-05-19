@@ -4,8 +4,14 @@
   apt: pkg={{ item }} state=present
   with_items:
     - znc
+    - python-pip
   tags:
     - dependencies
+
+- name: Install pexpect
+  pip:
+    name: pexpect
+    executable: pip
 
 - name: Create znc group
   group: name=znc state=present
@@ -22,6 +28,7 @@
     - moddata
     - modules
     - users
+    - configs
 
 - name: Copy znc service file into place
   copy: src=etc_systemd_system_znc.service dest=/etc/systemd/system/znc.service mode=0644
@@ -45,12 +52,23 @@
   file: path=/usr/lib/znc/znc.pem group=znc owner=znc mode=0640
   notify: restart znc
 
-- name: Create znc config directory
-  file: state=directory path=/usr/lib/znc/configs group=znc owner=znc
-
 - name: Copy znc configuration file into place
   template: src=usr_lib_znc_configs_znc.conf.j2 dest=/usr/lib/znc/configs/znc.conf owner=znc group=znc
   notify: restart znc
+
+- name: Generate znc hash and salt interactively
+  expect:
+    command: /usr/bin/znc --makepass
+    responses:
+      (?i).*Enter password.*: "{{ irc_password }}"
+      (?i).*Confirm password.*:  "{{ irc_password }}"
+  register: znc_password_interaction
+
+- name: Put generated hash and salt into configuration file
+  blockinfile:
+    block: '{{ znc_password_interaction.stdout | regex_search("<Pass password>[\s\S]*</Pass>") }}'
+    path: /usr/lib/znc/configs/znc.conf
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
 
 - name: Set firewall rule for znc
   ufw: rule=allow port=6697 proto=tcp

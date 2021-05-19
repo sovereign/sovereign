@@ -44,7 +44,7 @@ irc_nick: (required)
 irc_ident: (required)
 irc_realname: (required)
 irc_quitmsg: (required)
-irc_password: TODO
+irc_password: (required)
 
 # xmpp
 prosody_admin: "{{ admin_email }}"

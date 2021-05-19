@@ -23,6 +23,7 @@ def doveadm_pw_hash(password):
     # We use the implicit 5000 rounds as per spec
     return passlib.hash.sha512_crypt.encrypt(password, rounds=5000)
 
+
 def sha256_hash(password):
     check_lib()
     if type(password) is StrictUndefined:
@@ -30,21 +31,10 @@ def sha256_hash(password):
     # We use the implicit 5000 rounds as per spec
     return passlib.hash.sha256_crypt.encrypt(password, rounds=5000)
 
-def znc_pw_salt(password):
-    # Hash has looks like $5$salt$hash
-    return sha256_hash(password).split("$")[2]
-
-
-def znc_pw_hash(password):
-    # Hash has looks like $5$salt$hash
-    return sha256_hash(password).split("$")[3]
-
 
 class FilterModule(object):
 
     def filters(self):
         return {
             'doveadm_pw_hash': doveadm_pw_hash,
-            'znc_pw_salt': znc_pw_salt,
-            'znc_pw_hash': znc_pw_hash,
         }

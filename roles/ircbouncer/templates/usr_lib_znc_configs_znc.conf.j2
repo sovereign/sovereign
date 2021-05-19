@@ -65,11 +65,8 @@ Version = 1.0
 	TimestampFormat = [%H:%M:%S]
 	Timezone = {{ irc_timezone }}
 
-	<Pass password>
-	        Method = sha256
-	        Hash = {{ irc_password | znc_pw_hash }}
-	        Salt = {{ irc_password | znc_pw_salt }}
-	</Pass>
+// BEGIN ANSIBLE MANAGED BLOCK
+// END ANSIBLE MANAGED BLOCK
 
 	<Network freenode>
 		BindHost = 0.0.0.0
