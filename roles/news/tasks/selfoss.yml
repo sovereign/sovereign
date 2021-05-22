@@ -84,3 +84,14 @@
 
 - name: Configure selfoss logrotate
   copy: src=etc_logrotate_selfoss dest=/etc/logrotate.d/selfoss owner=root group=root mode=0644
+
+- name: Check if log file exists
+  stat:
+    path: /var/www/selfoss/data/logs/default.log
+  register: log_file
+
+- name: Ensure Group (Apache) has write permissions
+  file:
+    path: /var/www/selfoss/data/logs/default.log
+    mode: g+rw
+  when: log_file.stat.exists
