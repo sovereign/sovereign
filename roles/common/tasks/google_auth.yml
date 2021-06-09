@@ -6,9 +6,26 @@
   with_items:
     - libpam-google-authenticator
     - libpam0g-dev
+  tags:
+    - dependencies
+
+# Ubuntu >= 20.04 (focal) and Debian >= 4.0.2 (buster)
+- name: Ensure distribution-specific required packages are installed
+  apt: pkg={{ item }} state=present
+  with_items:
+    - libqrencode4
+  tags:
+    - dependencies
+  when: ansible_distribution_release == 'buster' or ansible_distribution_release == 'focal'
+
+# Older Ubuntu, Debian, all others
+- name: Ensure distribution-specific required packages are installed
+  apt: pkg={{ item }} state=present
+  with_items:
     - libqrencode3
   tags:
     - dependencies
+  when: ansible_distribution_release != 'buster' and ansible_distribution_release != 'focal'
 
 - name: Update sshd config to enable challenge responses
   lineinfile: dest=/etc/ssh/sshd_config
