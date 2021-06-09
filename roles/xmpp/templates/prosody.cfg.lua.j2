@@ -25,6 +25,8 @@ admins = { "{{ prosody_admin }}" }
 -- For more information see: http://prosody.im/doc/libevent
 --use_libevent = true;
 
+plugin_paths = { "/opt/prosody-modules" }
+
 -- This is the list of modules Prosody will load on startup.
 -- It looks for mod_modulename.lua in the plugins folder, so make sure that exists too.
 -- Documentation on modules can be found at: http://prosody.im/doc/modules
@@ -40,33 +42,43 @@ modules_enabled = {
 
 	-- Not essential, but recommended
 		"private"; -- Private XML storage (for room bookmarks, etc.)
-		"vcard"; -- Allow users to set vCards
+	    "vcard_legacy"; -- User Avatar to vCard-Based Avatars Conversion
+	    "bookmarks"; -- Bookmarks Conversion
+	    "server_contact_info"; -- Provide Contact Information
 
 	-- These are commented by default as they have a performance impact
-		"privacy"; -- Support privacy lists
-		--"compression"; -- Stream compression (requires the lua-zlib package installed)
+		"privacy_lists"; -- Support privacy lists
 
 	-- Nice to have
 		"version"; -- Replies to server version requests
 		"uptime"; -- Report how long server has been running
 		"time"; -- Let others know the time here on this server
 		"ping"; -- Replies to XMPP pings with pongs
-		-- "pep"; -- Enables users to publish their mood, activity, playing music and more
+		"pep"; -- Enables users to publish their mood, activity, playing music and more
 		"register"; -- Allow users to register on this server using a client and change passwords
+		"turncredentials"; -- STUN/TURN
+
+    -- Required for Conversations
+        "blocklist";
+        "smacks";
+        "carbons";
+        "mam";
+        "mod_csi_simple";
+        "cloud_notify";
 
 	-- Admin interfaces
 		"admin_adhoc"; -- Allows administration via an XMPP client that supports ad-hoc commands
 		--"admin_telnet"; -- Opens telnet console interface on localhost port 5582
 
 	-- HTTP modules
-		--"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
+		"bosh"; -- Enable BOSH clients, aka "Jabber over HTTP"
 		--"http_files"; -- Serve static files from a directory over HTTP
 
 	-- Other specific functionality
-		--"groups"; -- Shared roster support
-		--"announce"; -- Send announcement to all online users
+		"groups"; -- Shared roster support
+		"announce"; -- Send announcement to all online users
 		--"welcome"; -- Welcome users who register accounts
-		--"watchregistrations"; -- Alert admins of registrations
+		"watchregistrations"; -- Alert admins of registrations
 		--"motd"; -- Send a message to users when they log in
 		--"legacyauth"; -- Legacy authentication. Only used by some old clients and bots.
 };
@@ -82,94 +94,78 @@ modules_disabled = {
 -- Disable account creation by default, for security
 -- For more information see http://prosody.im/doc/creating_accounts
 allow_registration = false;
+data_path = "/decrypted/prosody"
+authentication = "internal_hashed"
+use_libevent = true;
+cross_domain_bosh = true
+consider_bosh_secure = true
+http_external_url = "https://{{ prosody_virtual_domain }}/"
+trusted_proxies = { "127.0.0.1", "::1"}
+
+http_ports = { 5280 }
+http_interfaces = { "127.0.0.1", "::1" }
+https_ports = { 5281 }
+https_interfaces = { "127.0.0.1", "::1" }
+
+c2s_require_encryption = true
+s2s_secure_auth = true
+--s2s_insecure_domains = { "gmail.com" }
 
 -- These are the SSL/TLS-related settings. If you don't want
 -- to use SSL/TLS, you may comment or remove this
+legacy_ssl_ports = { 5223 }
 ssl = {
 	key = "/etc/letsencrypt/live/{{ domain }}/privkey.pem";
 	certificate = "/etc/letsencrypt/live/{{ domain }}/fullchain.pem";
+	protocol = "tlsv1_2+";
+	ciphers = "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:!PSK:!SRP:!3DES:!aNULL";
 }
 
--- Force clients to use encrypted connections? This option will
--- prevent clients from authenticating unless they are using encryption.
-
-c2s_require_encryption = true
-
--- Force certificate authentication for server-to-server connections?
--- This provides ideal security, but requires servers you communicate
--- with to support encryption AND present valid, trusted certificates.
--- NOTE: Your version of LuaSec must support certificate verification!
--- For more information see http://prosody.im/doc/s2s#security
-
-s2s_secure_auth = false
-
--- Many servers don't support encryption or have invalid or self-signed
--- certificates. You can list domains here that will not be required to
--- authenticate using certificates. They will be authenticated using DNS.
-
---s2s_insecure_domains = { "gmail.com" }
-
--- Even if you leave s2s_secure_auth disabled, you can still require valid
--- certificates for some domains by specifying a list here.
-
---s2s_secure_domains = { "jabber.org" }
-
--- Required for init scripts and prosodyctl
-pidfile = "/var/run/prosody/prosody.pid"
-
--- Select the authentication backend to use. The 'internal' providers
--- use Prosody's configured data storage to store the authentication data.
--- To allow Prosody to offer secure authentication mechanisms to clients, the
--- default provider stores passwords in plaintext. If you do not trust your
--- server please see http://prosody.im/doc/modules/mod_auth_internal_hashed
--- for information about using the hashed backend.
-
-authentication = "internal_hashed"
-
--- Select the storage backend to use. By default Prosody uses flat files
--- in its configured data directory, but it also supports more backends
--- through modules. An "sql" backend is included by default, but requires
--- additional dependencies. See http://prosody.im/doc/storage for more info.
-
---storage = "sql" -- Default is "internal"
-
--- For the "sql" backend, you can uncomment *one* of the below to configure:
---sql = { driver = "SQLite3", database = "prosody.sqlite" } -- Default. 'database' is the filename.
---sql = { driver = "MySQL", database = "prosody", username = "prosody", password = "secret", host = "localhost" }
---sql = { driver = "PostgreSQL", database = "prosody", username = "prosody", password = "secret", host = "localhost" }
-
--- Logging configuration
--- For advanced logging see http://prosody.im/doc/logging
 log = {
 	info = "/var/log/prosody/prosody.log"; -- Change 'info' to 'debug' for verbose logging
 	error = "/var/log/prosody/prosody.err";
 	"*syslog";
 }
 
-data_path = "/decrypted/prosody"
+-- NB: Those addresses will be publicly visible.
+-- Make sure that these exist in group_vars/sovereign.
+contact_info = {
+  abuse = { "mailto:abuse@{{ domain }}" };
+  admin = { "mailto:webmaster@{{ domain }}", "xmpp:{{ main_user_name }}@{{ domain }}" };
+  feedback = { "mailto:webmaster@{{ domain }}" };
+  security = { "mailto:abuse@{{ domain }}" };
+  support = { "mailto:webmaster@{{ domain }}" };
+};
 
------------ Virtual hosts -----------
--- You need to add a VirtualHost entry for each domain you wish Prosody to serve.
--- Settings under each VirtualHost entry apply *only* to that host.
+turncredentials_host = "{{ prosody_virtual_domain }}"
+turncredentials_secret = "{{ coturn_secret }}"
+
+storage = "sql"
+sql = { driver = "PostgreSQL", database = "{{ prosody_db_database }}", username = "{{ prosody_db_username }}", password = "{{ prosody_db_password }}", host = "localhost" }
+
+-- Required for init scripts and prosodyctl
+pidfile = "/var/run/prosody/prosody.pid"
 
 VirtualHost "{{ prosody_virtual_domain }}"
 
------- Components ------
--- You can specify components to add hosts that provide special services,
--- like multi-user conferences, and transports.
--- For more information on components, see http://prosody.im/doc/components
+Component "channels.{{ domain }}" "muc"
+    modules_enabled = {
+      "muc_mam";
+      "muc_log";
+      "vcard_muc"; -- vCard-Based Avatar (MUC)
+    }
+    muc_log_by_default = true;
+    max_history_messages = 20;
+    name = "{{ prosody_muc_name }}";
+    muc_room_default_change_subject = true;
+    muc_room_default_history_length = 20;
+    muc_room_default_language = "{{ prosody_muc_default_language }}";
+    restrict_room_creation = "local";
 
----Set up a MUC (multi-user chat) room server on conference.example.com:
---Component "conference.example.com" "muc"
+Component "proxy.{{ domain }}" "proxy65"
+    proxy65_address = "{{ domain }}";
+    proxy65_acl = { "{{ domain }}" };
 
--- Set up a SOCKS5 bytestream proxy for server-proxied file tr3ansfers:
---Component "proxy.example.com" "proxy65"
-
----Set up an external component (default component port is 5347)
---
--- External components allow adding various services, such as gateways/
--- transports to other networks like ICQ, MSN and Yahoo. For more info
--- see: http://prosody.im/doc/components#adding_an_external_component
---
---Component "gateway.example.com"
---	component_secret = "password"
+Component "upload.{{ domain }}" "http_upload"
+    http_upload_file_size_limit = 52428800; -- 50MB
+    http_max_content_size = 52428800; -- 50MB

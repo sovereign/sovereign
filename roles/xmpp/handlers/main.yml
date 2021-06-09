@@ -1,2 +1,13 @@
 - name: restart prosody
-  service: name=prosody state=restarted
+  systemd:
+    name: prosody
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+
+- name: restart coturn
+  systemd:
+    name: coturn
+    daemon_reload: yes
+    enabled: yes
+    state: restarted

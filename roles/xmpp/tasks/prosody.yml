@@ -1,33 +1,83 @@
 - name: Ensure repository key for Prosody is in place
-  apt_key: url=https://prosody.im/files/prosody-debian-packages.key state=present
+  apt_key:
+    url: https://prosody.im/files/prosody-debian-packages.key
+    state: present
   tags:
     - dependencies
 
 - name: Add Prosody repository
-  apt_repository: repo="deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
+  apt_repository:
+    repo: "deb http://packages.prosody.im/debian {{ ansible_distribution_release }} main"
   tags:
     - dependencies
 
 - name: Install Prosody and dependencies from official repository
-  apt: pkg={{ item }} update_cache=yes
-  with_items:
-    - prosody
-    - lua-sec
+  apt:
+    pkg: ['prosody', 'lua-sec', 'lua-zlib', 'lua-event', 'lua-dbi-postgresql', 'mercurial']
+    update_cache: yes
   tags:
     - dependencies
 
 - name: Add prosody user to ssl-cert group
-  user: name=prosody group=ssl-cert
+  user:
+    name: prosody
+    group: ssl-cert
+    system: yes
+    shell: /usr/sbin/nologin
+
+- name: Create postgres user for prosody
+  postgresql_user:
+    login_host: localhost
+    login_user: "{{ db_admin_username }}"
+    login_password: "{{ db_admin_password }}"
+    name: "{{ prosody_db_username }}"
+    password: "{{ prosody_db_password }}"
+    state: present
+
+- name: Create database for prosody
+  postgresql_db:
+    login_host: localhost
+    login_user: "{{ db_admin_username }}"
+    login_password: "{{ db_admin_password }}"
+    name: "{{ prosody_db_database }}"
+    state: present
+    owner: "{{ prosody_db_username }}"
 
 - name: Add cert postrenew task
-  copy: src=etc_letsencrypt_postrenew_prosody.sh dest=/etc/letsencrypt/postrenew/prosody.sh mode=0755
+  copy:
+    src: etc_letsencrypt_postrenew_prosody.sh
+    dest: /etc/letsencrypt/postrenew/prosody.sh
+    mode: 0755
 
 - name: Create Prosody data directory
   file: state=directory path=/decrypted/prosody owner=prosody group=prosody
 
+- name: Clone Prosody community modules
+  hg:
+    repo: "https://hg.prosody.im/prosody-modules"
+    revision: default
+    dest: "/opt/prosody-modules"
+    purge: yes
+    update: yes
+
 - name: Configure Prosody
-  template: src=prosody.cfg.lua.j2 dest=/etc/prosody/prosody.cfg.lua group=prosody owner=root mode=0644
-  notify: restart prosody
+  template:
+    src: prosody.cfg.lua.j2
+    dest: /etc/prosody/prosody.cfg.lua
+    group: prosody
+    owner: prosody
+
+- name: Delete the default cert config
+  file:
+    path: /etc/prosody/certs
+    state: absent
+
+- name: Set prosody configuration permissions
+  file:
+    path: /etc/prosody
+    owner: prosody
+    group: prosody
+    recurse: yes
 
 - name: Create Prosody accounts
   command: prosodyctl register {{ item.name }} {{ prosody_virtual_domain }} "{{ item.password }}"
@@ -35,9 +85,25 @@
   tags:
     - skip_ansible_lint
 
+- name: Restart Prosody service
+  command: /bin/true
+  notify: restart prosody
+
 - name: Set firewall rules for Prosody
-  ufw: rule=allow port={{ item }} proto=tcp
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
   with_items:
-    - 5222  # xmpp c2s
-    - 5269  # xmpp s2s
+    - "5222"  # xmpp c2s
+    - "5223"  # xmpp legacy c2s
+    - "5269"  # xmpp s2s
+    - "5000"  # proxy
   tags: ufw
+
+- name: Configure the Apache HTTP server for XMPP
+  template: src=etc_apache2_sites-available_xmpp.j2 dest=/etc/apache2/sites-available/xmpp.conf group=root owner=root
+
+- name: Enable XMPP site
+  command: a2ensite xmpp.conf creates=/etc/apache2/sites-enabled/xmpp.conf
+  notify: restart apache

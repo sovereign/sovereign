@@ -136,6 +136,14 @@ Create `A` or `CNAME` records which point to your server's IP address:
 * `news.example.com` (for Selfoss)
 * `cloud.example.com` (for ownCloud)
 * `git.example.com` (for cgit)
+* `channels.example.com` (for XMPP Multi User Chat)
+* `upload.example.com` (for XMPP File Upload)
+
+Create `SRV` records for XMPP:
+
+* `_xmpp-client._tcp.example.com` -> `0 5 5222 example.com` (`{priority: 0, weight: 5, port: 5222}`)
+* `_xmpps-client._tcp.example.com` -> `0 5 5223 example.com` (`{priority: 0, weight: 5, port: 5223}`)
+* `_xmpp-server._tcp.example.com` -> `0 5 5269 example.com` (`{priority: 0, weight: 5, port: 5269}`)
 
 ### 6. Run the Ansible Playbooks
 

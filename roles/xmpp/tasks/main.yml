@@ -1,5 +1,5 @@
 ---
 # Provides the Prosody Jabber/XMPP server.
 
-- import_tasks: prosody.yml
-  tags: prosody
+- include: coturn.yml tags=prosody
+- include: prosody.yml tags=prosody

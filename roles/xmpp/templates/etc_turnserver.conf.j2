@@ -1,0 +1,26 @@
+tls-listening-port={{ coturn_port }}
+lt-cred-mech
+fingerprint
+stale-nonce
+use-auth-secret
+static-auth-secret={{ coturn_secret }}
+server-name={{ domain }}
+realm={{ domain }}
+cert=/etc/letsencrypt/live/{{ domain }}/fullchain.pem
+pkey=/etc/letsencrypt/live/{{ domain }}/privkey.pem
+no-stdout-log
+log-file=/var/log/turnserver/turn.log
+simple-log
+pidfile=”/var/run/turnserver/turnserver.pid”
+mobility
+no-tlsv1
+no-tlsv1_1
+no-tcp-relay
+user-quota=12
+total-quota=1200
+denied-peer-ip=10.0.0.0-10.255.255.255
+denied-peer-ip=192.168.0.0-192.168.255.255
+denied-peer-ip=172.16.0.0-172.31.255.255
+no-loopback-peers
+no-multicast-peers
+no-tcp
