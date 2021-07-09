@@ -6,3 +6,9 @@ owncloud_domain: "cloud.{{ domain }}"
 owncloud_db_username: owncloud
 owncloud_db_password: "{{ lookup('password', secret + '/' + 'owncloud_db_password', length=32) }}"
 owncloud_db_database: owncloud
+owncloud_user_username: "{{ main_user_name }}"
+owncloud_user_password: "{{ lookup('password', secret + '/' + 'owncloud_user_password', length=32) }}"
+
+# must match values in roles/mailserver
+db_admin_username: 'postgres'
+db_admin_password: "{{ lookup('password', secret + '/' + 'db_admin_password', length=32) }}"

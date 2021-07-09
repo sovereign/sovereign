@@ -8,6 +8,9 @@ domain: (required)
 main_user_name: (required)
 organization: (required)
 
+# owncloud
+owncloud_user_password: (required)
+
 # admin email
 # fail2ban reports will be sent to this address
 admin_email: "{{ main_user_name }}@{{ domain }}"

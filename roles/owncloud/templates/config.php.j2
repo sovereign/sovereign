@@ -1,0 +1,72 @@
+<?php
+$CONFIG = array (
+  'datadirectory' => '/var/www/owncloud/data',
+  'dbtype' => 'pgsql',
+  'dbhost' => 'localhost',
+  'dbname' => '{{ owncloud_db_database }}',
+  'dbuser' => '{{ owncloud_db_username }}',
+  'dbpassword' => '{{ owncloud_db_password }}',
+  'dbtableprefix' => 'oc_',
+  'logtimezone' => 'UTC',
+  'trusted_domains' => ['localhost'],
+  'overwrite.cli.url' => 'http://localhost',
+  'log_type' => 'syslog', // owncloud/syslog/errorlog (php log)
+  'log_authfailip' => true,
+  'loglevel' => '2',
+
+  /**
+   * trashbin_retention_obligation
+   * ``auto`` keep for 30 days, then delete IF space needed
+   * ``D, auto`` keep at least D+ days, then delete IF space needed
+   * ``auto, D`` max D days, but delete if space needed
+   * ``D1, D2`` keep lat east D1 days and max D2 days
+   * ``disabled`` auto clean disabled
+   */
+
+  'trashbin_retention_obligation' => 'auto',
+  'upgrade.disable-web' => true,
+);
+
+/**
+ * Other options (see config.sample.php and documentation)
+ *  'default_language' => 'en',
+ *  'defaultapp' => 'files',
+ *  'skeletondirectory' => '/path/to/owncloud/core/skeleton',
+ *  'lost_password_link' => 'https://example.org/link/to/password/reset',
+ *  'mail_domain' => 'example.com',
+ *  'mail_from_address' => 'owncloud',
+ *  'mail_smtpmode' => 'sendmail', (smtp/sendmail/qmail)
+ *  'mail_smtphost' => '127.0.0.1',
+ *  'mail_smtpport' => 25,
+ *  'mail_smtptimeout' => 10,
+ *  'mail_smtpsecure' => '', (tls/ssl)
+ *  'mail_smtpauth' => false,
+ *  'mail_smtpauthtype' => 'LOGIN',
+ *  'mail_smtpname' => '',
+ * 'mail_smtppassword' => '',
+ * 'updater.server.url' => 'https://updates.owncloud.com/server/',
+ * 'has_internet_connection' => true,
+ * 'config_is_read_only' => false,
+ * 'log_type' => 'owncloud',
+ * 'logfile' => '/var/log/owncloud.log',
+ * 'loglevel' => 2, (0Debug,1info,2warning,3error,4fatal)
+ * 'logdateformat' => 'F d, Y H:i:s',
+ * 'customclient_desktop' =>
+ *         'https://owncloud.org/install/#install-clients',
+ * 'customclient_android' =>
+ *         'https://play.google.com/store/apps/details?id=com.owncloud.android',
+ * 'customclient_ios' =>
+ *         'https://itunes.apple.com/us/app/owncloud/id543672169?mt=8',
+ * 'appstoreenabled' => true,
+ * 'appstoreurl' => 'https://api.owncloud.com/v1',
+ * 'appstore.experimental.enabled' => false,
+ * 'enable_previews' => true,
+ * 'preview_max_x' => 2048,
+ * 'preview_max_y' => 2048,
+ * 'preview_max_filesize_image' => 50,
+ * 'preview_libreoffice_path' => '/usr/bin/libreoffice',
+ * 'singleuser' => false, (admins login only)
+ * 'maintenance' => false,
+ * 'memcache.local' => '\OC\Memcache\APCu', (php-apc/memcached...)
+ * 'share_folder' => '/', (default folder for shares)
+ */

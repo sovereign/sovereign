@@ -51,6 +51,33 @@
   template: src=etc_apache2_sites-available_owncloud.j2 dest=/etc/apache2/sites-available/owncloud.conf group=root
   notify: restart apache
 
+- name: Check if owncloud is already installed
+  command: bash -c 'cat /var/www/owncloud/config/config.php | grep installed'
+  register: owncloud_installed
+  ignore_errors: yes
+
+- name: Configure owncloud
+  template: src=config.php.j2 dest=/var/www/owncloud/config/config.php group=www-data owner=www-data
+  when: not owncloud_installed.stdout
+
+- name: Seed ownCloud database and create the main user
+  become: true
+  become_user: www-data
+  command: /var/www/owncloud/occ maintenance:install -n
+    --database=pgsql --database-name="{{ owncloud_db_database }}" --database-user="{{ owncloud_db_username }}" --database-pass="{{ owncloud_db_password }}"
+    --admin-user="{{ owncloud_user_username }}" --admin-pass="{{ owncloud_user_password }}"
+  when: not owncloud_installed.stdout
+
+- name: add fqdn to owncloud trusted domains
+  become: true
+  become_user: www-data
+  command: chdir=/var/www/owncloud/ /usr/bin/php occ config:system:set trusted_domains 1 --value={{ owncloud_domain }}
+
+- name: set fqdn for owncloud cli-mode
+  become: true
+  become_user: www-data
+  command: chdir=/var/www/owncloud/ /usr/bin/php occ config:system:set overwrite.cli.url --value={{ owncloud_domain }}
+
 - name: Enable ownCloud site
   command: a2ensite owncloud.conf creates=/etc/apache2/sites-enabled/owncloud.conf
   notify: restart apache
