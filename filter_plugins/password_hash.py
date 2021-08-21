@@ -20,15 +20,24 @@ def doveadm_pw_hash(password):
     check_lib()
     if type(password) is StrictUndefined:
         raise AnsibleUndefinedVariable('Please pass a string into this password_hash-based filter')
+    # We use the implicit 5000 rounds as per spec
     return passlib.hash.sha512_crypt.encrypt(password, rounds=5000)
 
+def sha256_hash(password):
+    check_lib()
+    if type(password) is StrictUndefined:
+        raise AnsibleUndefinedVariable('Please pass a string into this password_hash-based filter')
+    # We use the implicit 5000 rounds as per spec
+    return passlib.hash.sha256_crypt.encrypt(password, rounds=5000)
 
 def znc_pw_salt(password):
-    return doveadm_pw_hash(password).split("$")[0]
+    # Hash has looks like $5$salt$hash
+    return sha256_hash(password).split("$")[2]
 
 
 def znc_pw_hash(password):
-    return doveadm_pw_hash(password).split("$")[1]
+    # Hash has looks like $5$salt$hash
+    return sha256_hash(password).split("$")[3]
 
 
 class FilterModule(object):
