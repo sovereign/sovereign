@@ -2,7 +2,7 @@
 # Configures the Apache HTTP server with sane defaults.
 
 - name: Disable default Apache site
-  command: a2dissite 000-default removes=/etc/apache2/sites-enabled/000-default
+  command: a2dissite 000-default removes=/etc/apache2/sites-enabled/000-default.conf
   notify: restart apache
 
 - name: Enable Apache headers module
