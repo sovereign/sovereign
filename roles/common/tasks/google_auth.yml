@@ -36,10 +36,10 @@
 
 - name: Retrieve generated keys from server
   fetch: src=/home/{{ main_user_name }}/.google_authenticator
-         dest=/tmp/sovereign-google-auth-files
+         dest=/keys_stored/sovereign-google-auth-files
   when: ansible_ssh_user != "vagrant"
 
 - name: Pause for Google Authenticator instructions
   pause: seconds=5
-       prompt="Your Google Authentication keys are in /tmp/sovereign-google-auth-files. Press any key to continue..."
+       prompt="Your Google Authentication keys are in /keys_stored/sovereign-google-auth-files. Press any key to continue..."
   when: ansible_ssh_user != "vagrant"
